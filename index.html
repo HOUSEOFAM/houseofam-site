@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House of AM</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--gold:#C9A84C;--gold-light:#E8C96A;--gold-dim:#8B6820;
+--black:#0a0a0a;--dark:#111;--dark2:#1a1a1a;
+--cream:#F5F0EB;--cream2:#EDE6DC;--mid:#555;--light:#ccc;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--black)}
+
+/* LOADING */
+#loader{position:fixed;inset:0;background:var(--black);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.8s ease}
+#loader.hide{opacity:0;pointer-events:none}
+.loader-mark{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--gold);letter-spacing:8px;animation:pulse 2s ease-in-out infinite}
+.loader-sub{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:6px;color:var(--gold-dim);margin-top:12px;text-transform:uppercase}
+.loader-bar{width:120px;height:1px;background:var(--dark2);margin-top:40px;overflow:hidden}
+.loader-bar-fill{height:100%;background:var(--gold);animation:load 2s ease forwards}
+@keyframes pulse{0%,100%{opacity:0.6}50%{opacity:1}}
+@keyframes load{0%{width:0}100%{width:100%}}
+
+/* TRANSITION */
+#transition{position:fixed;inset:0;background:var(--black);z-index:8888;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s ease}
+#transition.active{opacity:1;pointer-events:all}
+.transition-mark{font-family:'Cormorant Garamond',serif;font-size:60px;color:var(--gold);letter-spacing:6px}
+
+/* PAGES */
+.page{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transition:opacity 0.5s ease}
+.page.active{opacity:1;pointer-events:all}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:500;padding:20px 48px;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15)}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:3px;color:var(--gold-dim);text-decoration:none;cursor:pointer}
+.nav-brand span{display:block;font-size:20px;font-weight:500;letter-spacing:6px;color:#fff;line-height:1}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2.5px;color:var(--light);text-decoration:none;text-transform:uppercase;cursor:pointer;transition:color 0.3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-book{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gold);border:1px solid var(--gold);padding:8px 20px;text-decoration:none;text-transform:uppercase;cursor:pointer;transition:all 0.3s}
+.nav-book:hover{background:var(--gold);color:var(--black)}
+
+/* ═══════════════════════════════
+   HOME PAGE
+═══════════════════════════════ */
+#home{background:var(--black)}
+.home-hero{height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0a0a0a 0%,#1a1209 50%,#0a0a0a 100%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);background-size:80px 80px}
+.hero-content{position:relative;text-align:center;z-index:2}
+.hero-eyebrow{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:6px;color:var(--gold-dim);margin-bottom:28px;text-transform:uppercase}
+.hero-mark{font-family:'Cormorant Garamond',serif;font-size:clamp(80px,14vw,160px);font-weight:300;color:#fff;letter-spacing:16px;line-height:0.9;margin-bottom:8px}
+.hero-of{font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2vw,20px);font-weight:300;letter-spacing:18px;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+.hero-empire{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,72px);font-weight:300;color:#fff;letter-spacing:10px}
+.hero-line{width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);margin:32px auto}
+.hero-tagline{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:4px;color:var(--mid);text-transform:uppercase}
+.hero-corner{position:absolute;width:40px;height:40px}
+.hero-corner.tl{top:80px;left:48px;border-top:1px solid var(--gold-dim);border-left:1px solid var(--gold-dim)}
+.hero-corner.tr{top:80px;right:48px;border-top:1px solid var(--gold-dim);border-right:1px solid var(--gold-dim)}
+.hero-corner.bl{bottom:40px;left:48px;border-bottom:1px solid var(--gold-dim);border-left:1px solid var(--gold-dim)}
+.hero-corner.br{bottom:40px;right:48px;border-bottom:1px solid var(--gold-dim);border-right:1px solid var(--gold-dim)}
+
+/* MANIFESTO */
+.manifesto{background:var(--dark);padding:120px 48px;text-align:center;border-top:1px solid rgba(201,168,76,0.1)}
+.manifesto-label{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:5px;color:var(--gold-dim);margin-bottom:40px;text-transform:uppercase}
+.manifesto-text{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,40px);font-weight:300;color:#fff;line-height:1.6;max-width:800px;margin:0 auto;font-style:italic}
+.manifesto-text span{color:var(--gold)}
+
+/* PILLARS */
+.pillars{background:var(--black);padding:100px 48px;border-top:1px solid rgba(201,168,76,0.1)}
+.pillars-label{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:5px;color:var(--gold-dim);text-align:center;margin-bottom:64px}
+.pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,168,76,0.1);max-width:1000px;margin:0 auto}
+.pillar{background:var(--black);padding:48px 36px;text-align:center}
+.pillar-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:rgba(201,168,76,0.2);line-height:1;margin-bottom:16px}
+.pillar-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);letter-spacing:3px;margin-bottom:12px}
+.pillar-desc{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1.5px;color:var(--mid);line-height:1.8;text-transform:uppercase}
+
+/* FOUR DOORS */
+.four-doors{background:var(--dark);padding:100px 48px;border-top:1px solid rgba(201,168,76,0.1)}
+.four-doors-label{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:5px;color:var(--gold-dim);text-align:center;margin-bottom:64px}
+.doors-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(201,168,76,0.1);max-width:1200px;margin:0 auto}
+.door{background:var(--dark);padding:56px 32px;text-align:center;cursor:pointer;transition:background 0.3s;position:relative;overflow:hidden}
+.door::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform 0.4s ease}
+.door:hover{background:var(--dark2)}
+.door:hover::after{transform:scaleX(1)}
+.door-num{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:3px;color:var(--gold-dim);margin-bottom:24px}
+.door-mark{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;color:#fff;letter-spacing:4px;margin-bottom:8px}
+.door-name{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:16px}
+.door-desc{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:1px;color:var(--mid);line-height:1.8}
+.door-arrow{font-size:16px;color:var(--gold-dim);margin-top:24px;transition:transform 0.3s}
+.door:hover .door-arrow{transform:translateX(4px)}
+
+/* HOME FOOTER */
+.home-footer{background:var(--black);padding:48px;border-top:1px solid rgba(201,168,76,0.1);display:flex;justify-content:space-between;align-items:center}
+.footer-mark{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--gold-dim);letter-spacing:4px}
+.footer-address{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--mid);text-align:center;line-height:2}
+.footer-copy{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:2px;color:#333}
+
+/* ═══════════════════════════════
+   INNER PAGES SHARED
+═══════════════════════════════ */
+.inner-page{background:var(--black);min-height:100vh}
+.inner-hero{padding:160px 48px 80px;border-bottom:1px solid rgba(201,168,76,0.1);position:relative;overflow:hidden}
+.inner-hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0a0a0a 0%,#1a1209 60%,#0a0a0a 100%);opacity:0.6}
+.inner-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);background-size:60px 60px}
+.inner-hero-content{position:relative;z-index:2}
+.inner-eyebrow{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:5px;color:var(--gold-dim);margin-bottom:20px;text-transform:uppercase}
+.inner-title{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,8vw,100px);font-weight:300;color:#fff;letter-spacing:8px;line-height:1;margin-bottom:16px}
+.inner-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,22px);font-style:italic;color:var(--gold);letter-spacing:3px}
+.inner-corner{position:absolute;width:32px;height:32px}
+.inner-corner.tr{top:160px;right:48px;border-top:1px solid var(--gold-dim);border-right:1px solid var(--gold-dim)}
+.inner-corner.br{bottom:30px;right:48px;border-bottom:1px solid var(--gold-dim);border-right:1px solid var(--gold-dim)}
+
+/* NOTICE BAR */
+.notice{background:var(--dark2);border-bottom:1px solid rgba(201,168,76,0.15);padding:14px 48px;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--mid);line-height:1.8}
+.notice strong{color:var(--gold);font-weight:400}
+
+/* SERVICES TABLE */
+.services-section{padding:80px 48px}
+.services-label{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:5px;color:var(--gold-dim);margin-bottom:48px;text-transform:uppercase}
+.services-table{width:100%;max-width:900px;border-collapse:collapse}
+.services-table thead tr{border-bottom:1px solid rgba(201,168,76,0.3)}
+.services-table thead th{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:3px;color:var(--gold-dim);text-transform:uppercase;padding:0 0 16px;text-align:left;font-weight:400}
+.services-table thead th:not(:first-child){text-align:right}
+.services-table .cat-row td{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;padding:32px 0 12px;border-bottom:1px solid rgba(201,168,76,0.1)}
+.services-table .service-row td{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:1px;color:var(--light);padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.services-table .service-row td:not(:first-child){text-align:right;color:var(--mid)}
+.services-table .service-row td.members-price{color:var(--gold);font-weight:400}
+
+/* MEMBERS BLOCK */
+.members-block{max-width:900px;margin:64px 0 0;border:1px solid rgba(201,168,76,0.2);padding:36px 40px;position:relative}
+.members-block::before{content:'AM MEMBERS';position:absolute;top:-9px;left:32px;background:var(--black);padding:0 12px;font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:4px;color:var(--gold);text-transform:uppercase}
+.members-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;letter-spacing:2px;margin-bottom:8px}
+.members-desc{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1.5px;color:var(--mid);line-height:1.8;font-style:italic;margin-bottom:16px}
+.members-status{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:3px;color:var(--gold-dim);text-transform:uppercase}
+
+/* BOOK CTA */
+.book-cta{padding:80px 48px;border-top:1px solid rgba(201,168,76,0.1);text-align:center}
+.book-cta-text{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3vw,32px);font-style:italic;color:var(--mid);margin-bottom:32px;letter-spacing:2px}
+.book-btn{display:inline-block;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:3px;color:var(--gold);border:1px solid var(--gold);padding:16px 40px;text-decoration:none;text-transform:uppercase;cursor:pointer;transition:all 0.3s;background:transparent}
+.book-btn:hover{background:var(--gold);color:var(--black)}
+
+/* INNER FOOTER */
+.inner-footer{background:var(--dark);padding:40px 48px;border-top:1px solid rgba(201,168,76,0.1);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:3px;color:var(--gold-dim);cursor:pointer;text-transform:uppercase;transition:color 0.3s}
+.back-link:hover{color:var(--gold)}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold-dim);letter-spacing:4px}
+
+/* ═══════════════════════════════
+   ABOUT PAGE
+═══════════════════════════════ */
+.about-hero{padding:160px 48px 100px;border-bottom:1px solid rgba(201,168,76,0.1);position:relative;overflow:hidden}
+.about-hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0a0a0a 0%,#1a1209 60%,#0a0a0a 100%)}
+.about-hero-content{position:relative;z-index:2;max-width:700px}
+.about-eyebrow{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:5px;color:var(--gold-dim);margin-bottom:24px;text-transform:uppercase}
+.about-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,60px);font-weight:300;color:#fff;letter-spacing:2px;line-height:1.2;font-style:italic}
+.about-body{padding:80px 48px;max-width:760px}
+.about-para{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:1px;color:var(--mid);line-height:2.2;margin-bottom:32px}
+.about-quote{border-left:2px solid var(--gold);padding:24px 32px;margin:48px 0;font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.5vw,26px);color:#fff;font-style:italic;line-height:1.6;letter-spacing:1px}
+.about-principle{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid rgba(201,168,76,0.08)}
+.about-principle-num{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:var(--gold);letter-spacing:2px;margin-bottom:8px}
+.about-principle-text{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1.5px;color:var(--mid);line-height:2;text-transform:uppercase}
+.about-section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3vw,32px);color:#fff;letter-spacing:4px;margin-bottom:32px}
+.about-dark{background:var(--dark);padding:64px 48px;border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1)}
+.about-close{padding:80px 48px;max-width:760px}
+.about-close-text{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.5vw,26px);font-style:italic;color:var(--mid);line-height:1.8;letter-spacing:1px;margin-bottom:48px}
+.house-links{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(201,168,76,0.1);max-width:600px;margin-bottom:48px}
+.house-link{background:var(--black);padding:28px 24px;cursor:pointer;transition:background 0.3s}
+.house-link:hover{background:var(--dark2)}
+.house-link-name{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+.house-link-desc{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:1px;color:var(--mid)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+nav{padding:16px 24px}
+.nav-links{display:none}
+.home-hero{height:100svh}
+.inner-hero,.about-hero{padding:120px 24px 60px}
+.manifesto,.pillars,.four-doors,.services-section,.book-cta,.about-body,.about-close,.about-dark,.inner-footer,.home-footer{padding-left:24px;padding-right:24px}
+.doors-grid,.pillars-grid{grid-template-columns:repeat(2,1fr)}
+.house-links{grid-template-columns:1fr}
+.notice{padding:14px 24px}
+.members-block{padding:28px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-mark">AM</div>
+  <div class="loader-sub">House of AM</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<!-- TRANSITION -->
+<div id="transition"><div class="transition-mark">AM</div></div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a class="nav-brand" onclick="goTo('home')">
+    <span>AM</span>HOUSE OF
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="goTo('barber')">Barber Lounge</a></li>
+    <li><a onclick="goTo('renovair')">Rénovaïr</a></li>
+    <li><a onclick="goTo('essence')">Essence</a></li>
+    <li><a onclick="goTo('attire')">Attire</a></li>
+    <li><a onclick="goTo('about')">About</a></li>
+  </ul>
+  <a class="nav-book" href="https://www.fresha.com" target="_blank">Book</a>
+</nav>
+
+<!-- ═══ HOME ═══ -->
+<div id="home" class="page active">
+  <div class="home-hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-corner tl"></div>
+    <div class="hero-corner tr"></div>
+    <div class="hero-corner bl"></div>
+    <div class="hero-corner br"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">329 High Road · Harrow · London</div>
+      <div class="hero-mark">AM</div>
+      <div class="hero-of">House of</div>
+      <div class="hero-empire">AM</div>
+      <div class="hero-line"></div>
+      <div class="hero-tagline">Grooming · Wellness · Cosmetics · Fashion</div>
+    </div>
+  </div>
+
+  <div class="manifesto">
+    <div class="manifesto-label">The Manifesto</div>
+    <div class="manifesto-text">
+      "This is not a barbershop. Not a brand. It is a <span>standard</span> — built for those who refuse to settle for ordinary."
+    </div>
+  </div>
+
+  <div class="pillars">
+    <div class="pillars-label">The Foundation</div>
+    <div class="pillars-grid">
+      <div class="pillar">
+        <div class="pillar-num">I</div>
+        <div class="pillar-name">Craft</div>
+        <div class="pillar-desc">Every detail deliberate.<br>Every service elevated.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">II</div>
+        <div class="pillar-name">Legacy</div>
+        <div class="pillar-desc">Built to last.<br>Designed to lead.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">III</div>
+        <div class="pillar-name">Standard</div>
+        <div class="pillar-desc">Not the industry norm.<br>The new benchmark.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="four-doors">
+    <div class="four-doors-label">Enter The House</div>
+    <div class="doors-grid">
+      <div class="door" onclick="goTo('barber')">
+        <div class="door-num">01</div>
+        <div class="door-mark">AM</div>
+        <div class="door-name">Barber Lounge</div>
+        <div class="door-desc">Precision cuts.<br>Luxury grooming.<br>Membership culture.</div>
+        <div class="door-arrow">→</div>
+      </div>
+      <div class="door" onclick="goTo('renovair')">
+        <div class="door-num">02</div>
+        <div class="door-mark">AM</div>
+        <div class="door-name">Rénovaïr</div>
+        <div class="door-desc">Recovery.<br>Cupping therapy.<br>Skin treatments.</div>
+        <div class="door-arrow">→</div>
+      </div>
+      <div class="door" onclick="goTo('essence')">
+        <div class="door-num">03</div>
+        <div class="door-mark">AM</div>
+        <div class="door-name">Essence</div>
+        <div class="door-desc">Fragrance.<br>Skincare.<br>Grooming products.</div>
+        <div class="door-arrow">→</div>
+      </div>
+      <div class="door" onclick="goTo('attire')">
+        <div class="door-num">04</div>
+        <div class="door-mark">AM</div>
+        <div class="door-name">Attire</div>
+        <div class="door-desc">Luxury streetwear.<br>Designer positioning.<br>Limited drops.</div>
+        <div class="door-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-footer">
+    <div class="footer-mark">AM</div>
+    <div class="footer-address">329 High Road · Harrow · London<br>houseofam.co.uk</div>
+    <div class="footer-copy">© House of AM</div>
+  </div>
+</div>
+
+<!-- ═══ BARBER LOUNGE ═══ -->
+<div id="barber" class="page">
+  <div class="inner-page">
+    <div class="inner-hero">
+      <div class="inner-hero-bg"></div>
+      <div class="inner-hero-grid"></div>
+      <div class="inner-corner tr"></div>
+      <div class="inner-corner br"></div>
+      <div class="inner-hero-content">
+        <div class="inner-eyebrow">House of AM · 01</div>
+        <div class="inner-title">Barber<br>Lounge</div>
+        <div class="inner-sub">Precision · Luxury · Craft</div>
+      </div>
+    </div>
+
+    <div class="notice">
+      <strong>PRICE INCREASED APRIL 1.</strong> AM MEMBERS LOCK THEIR RATE FOR 12 MONTHS — ASK IN STORE.<br>
+      Appointment times are a guideline. Please allow up to a 15–20 minute delay. Thank you for your patience.
+    </div>
+
+    <div class="services-section">
+      <div class="services-label">Services</div>
+      <table class="services-table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Standard</th>
+            <th>Members</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cat-row"><td colspan="3">Cuts</td></tr>
+          <tr class="service-row"><td>Skinfade / Taperfade &amp; Beard</td><td>£35</td><td class="members-price">£32</td></tr>
+          <tr class="service-row"><td>Skinfade / Taperfade</td><td>£28</td><td class="members-price">£25</td></tr>
+          <tr class="service-row"><td>Cut &amp; Beard</td><td>£30</td><td class="members-price">£27</td></tr>
+          <tr class="service-row"><td>Cut</td><td>£23</td><td class="members-price">£20</td></tr>
+          <tr class="service-row"><td>Kid's Cut (under 10)</td><td>£18</td><td class="members-price">£16</td></tr>
+          <tr class="service-row"><td>Kid's Fade (under 10)</td><td>£22</td><td class="members-price">£20</td></tr>
+
+          <tr class="cat-row"><td colspan="3">Shaving</td></tr>
+          <tr class="service-row"><td>Hot Towel Shave</td><td>£25</td><td class="members-price">£22</td></tr>
+          <tr class="service-row"><td>Head Shave</td><td>£25</td><td class="members-price">£22</td></tr>
+
+          <tr class="cat-row"><td colspan="3">Beard</td></tr>
+          <tr class="service-row"><td>Beard Trim &amp; Shape</td><td>£15</td><td class="members-price">£13</td></tr>
+          <tr class="service-row"><td>Beard Colour</td><td>£20</td><td class="members-price">£18</td></tr>
+
+          <tr class="cat-row"><td colspan="3">Skin &amp; Extras</td></tr>
+          <tr class="service-row"><td>Face Mask</td><td>£10</td><td class="members-price">£9</td></tr>
+          <tr class="service-row"><td>Eyebrow Threading / Wax</td><td>£8</td><td class="members-price">£7</td></tr>
+          <tr class="service-row"><td>Nose Wax</td><td>£8</td><td class="members-price">£7</td></tr>
+          <tr class="service-row"><td>Ear Wax</td><td>£8</td><td class="members-price">£7</td></tr>
+        </tbody>
+      </table>
+
+      <div class="members-block">
+        <div class="members-title">AM Members</div>
+        <div class="members-desc">This is not a discount. It's locked pricing — your rate, protected.</div>
+        <div class="members-status">Lock your rate for 12 months — Closed after 12 months</div>
+      </div>
+    </div>
+
+    <div class="book-cta">
+      <div class="book-cta-text">"The standard you've been looking for."</div>
+      <a class="book-btn" href="https://www.fresha.com" target="_blank">Book Appointment</a>
+    </div>
+
+    <div class="inner-footer">
+      <span class="back-link" onclick="goTo('home')">← The House</span>
+      <div class="footer-brand">AM</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RÉNOVAÏR ═══ -->
+<div id="renovair" class="page">
+  <div class="inner-page">
+    <div class="inner-hero">
+      <div class="inner-hero-bg"></div>
+      <div class="inner-hero-grid"></div>
+      <div class="inner-corner tr"></div>
+      <div class="inner-corner br"></div>
+      <div class="inner-hero-content">
+        <div class="inner-eyebrow">House of AM · 02</div>
+        <div class="inner-title">Rénovaïr</div>
+        <div class="inner-sub">Recovery · Wellness · Restoration</div>
+      </div>
+    </div>
+
+    <div class="notice">
+      <strong>AM MEMBERS LOCK THEIR RATE FOR 12 MONTHS</strong> — ASK IN STORE.
+    </div>
+
+    <div class="services-section">
+      <div class="services-label">Services</div>
+      <table class="services-table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Standard</th>
+            <th>Members</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cat-row"><td colspan="3">Cupping</td></tr>
+          <tr class="service-row"><td>Hijama (Full Body)</td><td>£80</td><td class="members-price">£72</td></tr>
+          <tr class="service-row"><td>Hijama (Half Body)</td><td>£55</td><td class="members-price">£50</td></tr>
+          <tr class="service-row"><td>Dry Cupping (Full Body)</td><td>£65</td><td class="members-price">£58</td></tr>
+          <tr class="service-row"><td>Dry Cupping (Half Body)</td><td>£45</td><td class="members-price">£40</td></tr>
+          <tr class="service-row"><td>Compression Therapy</td><td>£40</td><td class="members-price">£36</td></tr>
+
+          <tr class="cat-row"><td colspan="3">Skin</td></tr>
+          <tr class="service-row"><td>Deluxe Facial</td><td>£75</td><td class="members-price">£68</td></tr>
+          <tr class="service-row"><td>Facial</td><td>£55</td><td class="members-price">£50</td></tr>
+          <tr class="service-row"><td>Express Facial</td><td>£35</td><td class="members-price">£32</td></tr>
+        </tbody>
+      </table>
+
+      <div class="members-block">
+        <div class="members-title">AM Members</div>
+        <div class="members-desc">This is not a discount. It's locked pricing — your rate, protected.</div>
+        <div class="members-status">Lock your rate for 12 months — Closed after 12 months</div>
+      </div>
+    </div>
+
+    <div class="book-cta">
+      <div class="book-cta-text">"Restore. Recover. Renew."</div>
+      <a class="book-btn" href="https://www.fresha.com" target="_blank">Book Appointment</a>
+    </div>
+
+    <div class="inner-footer">
+      <span class="back-link" onclick="goTo('home')">← The House</span>
+      <div class="footer-brand">AM</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ESSENCE ═══ -->
+<div id="essence" class="page">
+  <div class="inner-page">
+    <div class="inner-hero">
+      <div class="inner-hero-bg"></div>
+      <div class="inner-hero-grid"></div>
+      <div class="inner-corner tr"></div>
+      <div class="inner-corner br"></div>
+      <div class="inner-hero-content">
+        <div class="inner-eyebrow">House of AM · 03</div>
+        <div class="inner-title">Essence</div>
+        <div class="inner-sub">Fragrance · Skincare · Grooming</div>
+      </div>
+    </div>
+
+    <div class="services-section" style="text-align:center;padding-top:120px;padding-bottom:120px">
+      <div class="manifesto-text" style="font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3vw,36px);color:#fff;font-weight:300;font-style:italic;letter-spacing:2px;max-width:600px;margin:0 auto 32px">
+        "The scent of the house.<br>Coming soon."
+      </div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:4px;color:var(--gold-dim);text-transform:uppercase">AM Midnight · AM Skincare · AM Grooming</div>
+    </div>
+
+    <div class="inner-footer">
+      <span class="back-link" onclick="goTo('home')">← The House</span>
+      <div class="footer-brand">AM</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ATTIRE ═══ -->
+<div id="attire" class="page">
+  <div class="inner-page">
+    <div class="inner-hero">
+      <div class="inner-hero-bg"></div>
+      <div class="inner-hero-grid"></div>
+      <div class="inner-corner tr"></div>
+      <div class="inner-corner br"></div>
+      <div class="inner-hero-content">
+        <div class="inner-eyebrow">House of AM · 04</div>
+        <div class="inner-title">Attire</div>
+        <div class="inner-sub">Luxury · Streetwear · Limited</div>
+      </div>
+    </div>
+
+    <div class="services-section" style="text-align:center;padding-top:120px;padding-bottom:120px">
+      <div class="manifesto-text" style="font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3vw,36px);color:#fff;font-weight:300;font-style:italic;letter-spacing:2px;max-width:600px;margin:0 auto 32px">
+        "Dressed in the standard.<br>Coming soon."
+      </div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:4px;color:var(--gold-dim);text-transform:uppercase">Designer Positioning · Limited Drops · AM Trainer</div>
+    </div>
+
+    <div class="inner-footer">
+      <span class="back-link" onclick="goTo('home')">← The House</span>
+      <div class="footer-brand">AM</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div id="about" class="page">
+  <div class="inner-page">
+    <div class="about-hero">
+      <div class="about-hero-bg"></div>
+      <div class="inner-corner tr"></div>
+      <div class="about-hero-content">
+        <div class="about-eyebrow">About The House</div>
+        <div class="about-headline">It started with<br>a passion.<br>Not a plan.</div>
+      </div>
+    </div>
+
+    <div class="about-body">
+      <p class="about-para">AM Barber Lounge opened in October 2022 on 329 High Road, Harrow. What started as one chair and a vision became the foundation of something larger — a house. Not a franchise model, not a chain. A standard.</p>
+      <p class="about-para">Seven years of barbering. A background in sales. And a deep refusal to accept the ordinary as inevitable. That combination built AM Barber Lounge into the core of what is now House of AM — a multi-vertical luxury brand ecosystem operating across grooming, wellness, cosmetics, and fashion.</p>
+      <p class="about-para">Every decision in this house is deliberate. Every price point is earned. Every service exists because it meets the standard — or it doesn't exist at all.</p>
+
+      <div class="about-quote">"I didn't open a barbershop to cut hair. I opened it to change what a barbershop means."</div>
+
+      <div class="about-section-title">The Philosophy</div>
+
+      <div class="about-principle">
+        <div class="about-principle-num">I. Quality Over Volume</div>
+        <div class="about-principle-text">Every client leaves having experienced the standard. Not processed. Not rushed. Served.</div>
+      </div>
+      <div class="about-principle">
+        <div class="about-principle-num">II. System Over Self</div>
+        <div class="about-principle-text">Built to run without the founder present. Infrastructure first. Legacy second. Revenue third.</div>
+      </div>
+      <div class="about-principle">
+        <div class="about-principle-num">III. Margin Over Noise</div>
+        <div class="about-principle-text">Not the loudest brand in the room. The most precise. Brand equity compounds quietly.</div>
+      </div>
+    </div>
+
+    <div class="about-dark">
+      <div style="max-width:700px">
+        <div class="about-section-title">Why It Exists</div>
+        <p class="about-para">Because the standard in this industry is too low. Because luxury grooming in London shouldn't mean travelling to Mayfair. Because Harrow deserves a house that takes it seriously.</p>
+        <p class="about-para" style="margin-bottom:0">329 High Road is not just an address. It is the first door of many.</p>
+      </div>
+    </div>
+
+    <div class="about-close">
+      <div class="about-section-title">The House</div>
+      <div class="house-links">
+        <div class="house-link" onclick="goTo('barber')">
+          <div class="house-link-name">Barber Lounge</div>
+          <div class="house-link-desc">Precision grooming & membership</div>
+        </div>
+        <div class="house-link" onclick="goTo('renovair')">
+          <div class="house-link-name">Rénovaïr</div>
+          <div class="house-link-desc">Wellness & recovery treatments</div>
+        </div>
+        <div class="house-link" onclick="goTo('essence')">
+          <div class="house-link-name">Essence</div>
+          <div class="house-link-desc">Fragrance, skincare & cosmetics</div>
+        </div>
+        <div class="house-link" onclick="goTo('attire')">
+          <div class="house-link-name">Attire</div>
+          <div class="house-link-desc">Luxury streetwear & limited drops</div>
+        </div>
+      </div>
+      <div class="about-close-text">"The House exists for those who choose differently."</div>
+    </div>
+
+    <div class="inner-footer">
+      <span class="back-link" onclick="goTo('home')">← The House</span>
+      <div class="footer-brand">AM</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Router
+function goTo(page){
+  const t=document.getElementById('transition');
+  t.classList.add('active');
+  setTimeout(()=>{
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
+    document.getElementById(page).scrollTop=0;
+    t.classList.remove('active');
+  },400);
+}
+
+// Loader
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('loader').classList.add('hide');
+  },2200);
+});
+</script>
+</body>
+</html>
