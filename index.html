@@ -1005,5 +1005,30 @@ a{color:inherit;text-decoration:none}
   showPage('home');
 })();
 </script>
+
+<style id="wp-override">
+html { height: auto !important; overflow-y: scroll !important; }
+body { height: auto !important; min-height: 100vh !important; overflow-y: auto !important; }
+.page.active { display: block !important; min-height: 100vh !important; }
+</style>
+<script>
+// Override WordPress body height collapse
+(function(){
+  function fixBody(){
+    document.documentElement.style.setProperty('height','auto','important');
+    document.documentElement.style.setProperty('overflow-y','scroll','important');
+    document.body.style.setProperty('height','auto','important');
+    document.body.style.setProperty('min-height','100vh','important');
+    document.body.style.setProperty('overflow-y','auto','important');
+  }
+  fixBody();
+  document.addEventListener('DOMContentLoaded', fixBody);
+  window.addEventListener('load', fixBody);
+  // Also run every 500ms for first 3 seconds to override any WP scripts
+  var t=0;
+  var iv=setInterval(function(){ fixBody(); t++; if(t>6) clearInterval(iv); },500);
+})();
+</script>
+
 </body>
 </html>
