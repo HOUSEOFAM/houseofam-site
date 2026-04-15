@@ -993,7 +993,18 @@ a{color:inherit;text-decoration:none}
       navList.classList.remove('open');
       toggle.setAttribute('aria-expanded','false');
       document.body.style.overflow='';
-      setTimeout(function(){transition.classList.remove('show');transBar.classList.remove('go');},350);
+      setTimeout(function(){
+        transition.classList.remove('show');
+        transBar.classList.remove('go');
+        // Force reflow so page renders
+        var target2=document.getElementById('page-'+id);
+        if(target2){
+          target2.style.display='none';
+          target2.offsetHeight; // trigger reflow
+          target2.style.display='';
+          window.scrollTo(0,0);
+        }
+      },350);
     },600);
   }
 
