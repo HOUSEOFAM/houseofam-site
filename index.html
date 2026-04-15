@@ -326,6 +326,43 @@ a{color:inherit;text-decoration:none}
 .section-cream .price-row{border-color:rgba(26,23,20,.1)}
 .section-cream .price-row-name{color:var(--ink)}
 
+
+/* PRICING CARD LAYOUT */
+.pricing-card-wrap{max-width:960px;margin:0 auto}
+.pricing-cols{display:grid;grid-template-columns:1fr 1fr;gap:1px;border:1px solid rgba(184,146,42,.25);background:rgba(184,146,42,.25);margin-bottom:clamp(2rem,4vw,3rem)}
+.pricing-col{background:var(--parchment);padding:2rem 2.5rem}
+.pricing-col.col-std{background:var(--cream)}
+.pricing-col-head{font-family:var(--ff-body);font-size:9px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:var(--muted);text-align:center;padding-bottom:1rem;margin-bottom:1.25rem;border-bottom:1px solid rgba(184,146,42,.3)}
+.pricing-col-head.gold{color:var(--gold)}
+.pc-cat{font-family:var(--ff-body);font-size:8px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;color:var(--gold);margin:1.25rem 0 .5rem;display:block}
+.pc-row{display:flex;justify-content:space-between;align-items:baseline;padding:.45rem 0;border-bottom:1px solid rgba(26,23,20,.07);font-family:var(--ff-display);font-size:1rem;color:var(--ink)}
+.pc-row:last-child{border-bottom:0}
+.pc-price{color:var(--gold);font-weight:600;font-size:1.05rem;white-space:nowrap;margin-left:1rem}
+.pc-note{font-family:var(--ff-body);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-p);display:block;margin-top:.1rem}
+.disc-section{padding:clamp(2.5rem,5vw,4rem) 0;background:var(--cream);border-top:1px solid rgba(184,146,42,.15)}
+.disc-inner{max-width:960px;margin:0 auto;padding:0 var(--shell)}
+.disc-eyebrow{font-family:var(--ff-body);font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:600;text-align:center;margin-bottom:.4rem}
+.disc-sub{font-family:var(--ff-body);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted-p);text-align:center;margin-bottom:2rem}
+.disc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(184,146,42,.25);border:1px solid rgba(184,146,42,.25);margin-bottom:1.25rem}
+.disc-card{background:var(--parchment);padding:2rem 1.5rem;text-align:center}
+.disc-card-label{font-family:var(--ff-body);font-size:8px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:1rem;display:block}
+.disc-card-price{font-family:var(--ff-display);font-size:clamp(2rem,4vw,3rem);font-weight:600;color:var(--ink);line-height:1;margin-bottom:.5rem}
+.disc-card-note{font-family:var(--ff-display);font-size:.85rem;font-style:italic;color:var(--muted-p)}
+.disc-avail{font-family:var(--ff-display);font-size:.95rem;font-style:italic;color:var(--muted);text-align:center}
+.addl-section{padding:clamp(2.5rem,5vw,4rem) 0;background:var(--parchment);border-top:1px solid rgba(184,146,42,.15)}
+.addl-inner{max-width:960px;margin:0 auto;padding:0 var(--shell)}
+.addl-eyebrow{font-family:var(--ff-body);font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:600;text-align:center;margin-bottom:2rem}
+.addl-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(184,146,42,.25);border:1px solid rgba(184,146,42,.25)}
+.addl-card{background:var(--cream);padding:2rem 2rem}
+.addl-card-head{font-family:var(--ff-body);font-size:8px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;color:var(--gold);text-align:center;padding-bottom:.75rem;margin-bottom:1rem;border-bottom:1px solid rgba(184,146,42,.3)}
+.addl-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid rgba(26,23,20,.07);font-family:var(--ff-display);font-size:1rem;color:var(--ink)}
+.addl-row:last-child{border-bottom:0}
+.addl-price{color:var(--gold);font-weight:600}
+.treat-opts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(184,146,42,.25);border:1px solid rgba(184,146,42,.25);max-width:600px;margin:2rem auto 0}
+.treat-opt{background:var(--cream);padding:2rem;text-align:center}
+.treat-opt-name{font-family:var(--ff-display);font-size:1.5rem;font-weight:600;color:var(--ink);margin-bottom:.35rem}
+.treat-opt-desc{font-family:var(--ff-body);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted-p)}
+@media(max-width:700px){.pricing-cols,.disc-cards,.addl-cards{grid-template-columns:1fr}.treat-opts{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -482,50 +519,119 @@ a{color:inherit;text-decoration:none}
       <span class="page-hero-sub">Defined by standards. Not routine.</span>
     </div>
   </section>
-  <section class="section-parch">
+    <section class="section-parch">
     <div class="shell">
       <div class="section-head"><span class="section-eyebrow">AM Barber Lounge</span><h2>The <em>Services</em></h2><hr class="gold-rule-center"></div>
-
-      <div class="price-table">
-        <div class="price-table-head">
-          <span>Service</span><span>Standard</span><span>Members</span>
+      <div class="pricing-card-wrap">
+        <div class="pricing-cols">
+          <div class="pricing-col col-std">
+            <div class="pricing-col-head">Standard</div>
+            <span class="pc-cat">Full Grooming</span>
+            <div class="pc-row"><span>Skinfade / Taperfade &amp; Beard</span><span class="pc-price">£46</span></div>
+            <div class="pc-row"><span>Hair &amp; Beard</span><span class="pc-price">£43</span></div>
+            <span class="pc-cat">Cuts</span>
+            <div class="pc-row"><span>Skinfade / Taperfade</span><span class="pc-price">£29</span></div>
+            <div class="pc-row"><span>Haircut</span><span class="pc-price">£26</span></div>
+            <span class="pc-cat">Shaving</span>
+            <div class="pc-row"><span>Luxury Wet Shave</span><span class="pc-price">£29</span></div>
+            <div class="pc-row"><span>Wet Shave</span><span class="pc-price">£22</span></div>
+            <div class="pc-row"><span>Head Shave — Razor</span><span class="pc-price">£22</span></div>
+            <div class="pc-row"><span>Head Shave — Foils</span><span class="pc-price">£18</span></div>
+            <span class="pc-cat">Beard</span>
+            <div class="pc-row"><span>Beard Trim &amp; Shape Up</span><span class="pc-price">£18</span></div>
+            <div class="pc-row"><span>Beard Tidy &amp; Line Up</span><span class="pc-price">£12</span></div>
+            <div class="pc-row"><span>Beard Line Up</span><span class="pc-price">£8</span></div>
+            <span class="pc-cat">Skin &amp; Extras</span>
+            <div class="pc-row"><span>Deluxe Facial</span><span class="pc-price">£48</span></div>
+            <div class="pc-row"><span>Facial</span><span class="pc-price">£30</span></div>
+            <div class="pc-row"><span>Express Facial</span><span class="pc-price">£12</span></div>
+            <div class="pc-row"><span>Gold Mask</span><span class="pc-price">£18</span></div>
+            <div class="pc-row"><span>Black Mask</span><span class="pc-price">£12</span></div>
+            <div class="pc-row"><span>Full Face Waxing</span><span class="pc-price">£12</span></div>
+            <div class="pc-row"><span>Ear &amp; Nose Waxing</span><span class="pc-price">£6</span></div>
+          </div>
+          <div class="pricing-col">
+            <div class="pricing-col-head gold">Members</div>
+            <span class="pc-cat">Full Grooming</span>
+            <div class="pc-row"><span>Skinfade / Taperfade &amp; Beard</span><span class="pc-price">£32</span></div>
+            <div class="pc-row"><span>Hair &amp; Beard</span><span class="pc-price">£30</span></div>
+            <span class="pc-cat">Cuts</span>
+            <div class="pc-row"><span>Skinfade / Taperfade</span><span class="pc-price">£20</span></div>
+            <div class="pc-row"><span>Haircut</span><span class="pc-price">£18</span></div>
+            <span class="pc-cat">Shaving</span>
+            <div class="pc-row"><span>Luxury Wet Shave</span><span class="pc-price">£24</span></div>
+            <div class="pc-row"><span>Wet Shave</span><span class="pc-price">£18</span></div>
+            <div class="pc-row"><span>Head Shave — Razor</span><span class="pc-price">£20</span></div>
+            <div class="pc-row"><span>Head Shave — Foils</span><span class="pc-price">£15</span></div>
+            <span class="pc-cat">Beard</span>
+            <div class="pc-row"><span>Beard Trim &amp; Shape Up</span><span class="pc-price">£15</span></div>
+            <div class="pc-row"><span>Beard Tidy &amp; Line Up</span><span class="pc-price">£10</span></div>
+            <div class="pc-row"><span>Beard Line Up</span><span class="pc-price">£7</span></div>
+            <span class="pc-cat">Skin &amp; Extras</span>
+            <div class="pc-row"><span>Deluxe Facial</span><span class="pc-price">TBC</span></div>
+            <div class="pc-row"><span>Facial</span><span class="pc-price">£25</span></div>
+            <div class="pc-row"><span>Express Facial</span><span class="pc-price">£10</span></div>
+            <div class="pc-row"><span>Gold Mask</span><span class="pc-price">£15</span></div>
+            <div class="pc-row"><span>Black Mask</span><span class="pc-price">£10</span></div>
+            <div class="pc-row"><span>Full Face Waxing</span><span class="pc-price">£10</span></div>
+            <div class="pc-row"><span>Ear &amp; Nose Waxing</span><span class="pc-price">£5</span></div>
+          </div>
         </div>
-
-        <span class="price-cat">Cuts</span>
-        <div class="price-row"><span class="price-row-name">Skinfade / Taperfade &amp; Beard</span><span class="price-row-std">£46</span><span class="price-row-mem">£32</span></div>
-        <div class="price-row"><span class="price-row-name">Hair &amp; Beard</span><span class="price-row-std">£43</span><span class="price-row-mem">£30</span></div>
-        <div class="price-row"><span class="price-row-name">Skinfade / Taperfade</span><span class="price-row-std">£29</span><span class="price-row-mem">£20</span></div>
-        <div class="price-row"><span class="price-row-name">Haircut</span><span class="price-row-std">£26</span><span class="price-row-mem">£18</span></div>
-        <div class="price-row"><span class="price-row-name">Senior <span class="price-row-note">67+ · No Skinfade · Mon–Wed</span></span><span class="price-row-std">£19</span><span class="price-row-mem">£16</span></div>
-        <div class="price-row"><span class="price-row-name">Under 16 <span class="price-row-note">No Skinfade · Mon–Wed</span></span><span class="price-row-std">£19</span><span class="price-row-mem">£16</span></div>
-        <div class="price-row"><span class="price-row-name">Under 12 <span class="price-row-note">No Skinfade · Mon–Wed</span></span><span class="price-row-std">£14</span><span class="price-row-mem">£12</span></div>
-
-        <span class="price-cat">Shaving</span>
-        <div class="price-row"><span class="price-row-name">Luxury Wet Shave</span><span class="price-row-std">£29</span><span class="price-row-mem">£24</span></div>
-        <div class="price-row"><span class="price-row-name">Wet Shave</span><span class="price-row-std">£22</span><span class="price-row-mem">£18</span></div>
-        <div class="price-row"><span class="price-row-name">Head Shave — Razor</span><span class="price-row-std">£22</span><span class="price-row-mem">£20</span></div>
-        <div class="price-row"><span class="price-row-name">Head Shave — Foils</span><span class="price-row-std">£18</span><span class="price-row-mem">£15</span></div>
-
-        <span class="price-cat">Beard</span>
-        <div class="price-row"><span class="price-row-name">Beard Trim &amp; Shape Up</span><span class="price-row-std">£18</span><span class="price-row-mem">£15</span></div>
-        <div class="price-row"><span class="price-row-name">Beard Tidy &amp; Line Up</span><span class="price-row-std">£12</span><span class="price-row-mem">£10</span></div>
-        <div class="price-row"><span class="price-row-name">Beard Line Up</span><span class="price-row-std">£8</span><span class="price-row-mem">£7</span></div>
-
-        <span class="price-cat">Skin &amp; Extras</span>
-        <div class="price-row"><span class="price-row-name">Deluxe Facial</span><span class="price-row-std">£48</span><span class="price-row-mem">TBC</span></div>
-        <div class="price-row"><span class="price-row-name">Facial</span><span class="price-row-std">£30</span><span class="price-row-mem">£25</span></div>
-        <div class="price-row"><span class="price-row-name">Express Facial</span><span class="price-row-std">£12</span><span class="price-row-mem">£10</span></div>
-        <div class="price-row"><span class="price-row-name">Gold Mask</span><span class="price-row-std">£18</span><span class="price-row-mem">£15</span></div>
-        <div class="price-row"><span class="price-row-name">Black Mask</span><span class="price-row-std">£12</span><span class="price-row-mem">£10</span></div>
-        <div class="price-row"><span class="price-row-name">Full Face Waxing</span><span class="price-row-std">£12</span><span class="price-row-mem">£10</span></div>
-        <div class="price-row"><span class="price-row-name">Ear &amp; Nose Waxing</span><span class="price-row-std">£6</span><span class="price-row-mem">£5</span></div>
       </div>
     </div>
   </section>
-  
+
+  <div class="disc-section">
+    <div class="disc-inner">
+      <div class="disc-eyebrow">Discounted Services</div>
+      <div class="disc-sub">Monday – Wednesday Only</div>
+      <div class="disc-cards">
+        <div class="disc-card">
+          <span class="disc-card-label">Under 16</span>
+          <div class="disc-card-price">£19</div>
+          <div class="disc-card-note">No Skinfade</div>
+        </div>
+        <div class="disc-card">
+          <span class="disc-card-label">Under 12</span>
+          <div class="disc-card-price">£14</div>
+          <div class="disc-card-note">No Skinfade</div>
+        </div>
+        <div class="disc-card">
+          <span class="disc-card-label">Pensioners</span>
+          <div class="disc-card-price">£19</div>
+          <div class="disc-card-note">No Skinfade</div>
+        </div>
+      </div>
+      <div class="disc-avail">Available Monday to Wednesday only</div>
+    </div>
+  </div>
+
+  <div class="addl-section">
+    <div class="addl-inner">
+      <div class="addl-eyebrow">Additional Services</div>
+      <div class="addl-cards">
+        <div class="addl-card">
+          <div class="addl-card-head">Beard</div>
+          <div class="addl-row"><span>Beard Trim</span><span class="addl-price">£18</span></div>
+          <div class="addl-row"><span>Shape Up</span><span class="addl-price">£12</span></div>
+        </div>
+        <div class="addl-card">
+          <div class="addl-card-head">Shave</div>
+          <div class="addl-row"><span>Hot Towel Shave</span><span class="addl-price">£22</span></div>
+          <div class="addl-row"><span>Luxury Hot Towel</span><span class="addl-price">£29</span></div>
+        </div>
+        <div class="addl-card">
+          <div class="addl-card-head">Extras</div>
+          <div class="addl-row"><span>Waxing</span><span class="addl-price">£6</span></div>
+          <div class="addl-row"><span>Facial</span><span class="addl-price">£12</span></div>
+          <div class="addl-row"><span>Gold Mask</span><span class="addl-price">£18</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <section class="section-parch"><div class="shell"><div class="members-block"><div class="monogram">AM</div><span class="mem-label">Members</span><h3>AM Members</h3><p>This is not a discount. It is locked pricing.</p><p class="locked">Lock your rate for 12 months — Closed</p></div></div></section>
   <div class="closing-cta"><p>Your Standard Starts Here.</p></div>
-</div>
 
 <!-- ═══ RENOVAIR ═══ -->
 <div class="page" id="page-renovair">
@@ -539,33 +645,56 @@ a{color:inherit;text-decoration:none}
       <span class="page-hero-sub">Rebuild. Recharge. Renovair.</span>
     </div>
   </section>
-  <section class="section-parch">
+    <section class="section-parch">
     <div class="shell">
       <div class="section-head"><span class="section-eyebrow">AM Renovair</span><h2>The <em>Services</em></h2><hr class="gold-rule-center"></div>
-
-      <div class="price-table">
-        <div class="price-table-head">
-          <span>Service</span><span>Standard</span><span>Members</span>
+      <div class="pricing-card-wrap">
+        <div class="pricing-cols">
+          <div class="pricing-col col-std">
+            <div class="pricing-col-head">Standard</div>
+            <span class="pc-cat">Cupping</span>
+            <div class="pc-row"><span>Dry Cupping<span class="pc-note">30 min</span></span><span class="pc-price">£80</span></div>
+            <div class="pc-row"><span>Hijama (Wet)<span class="pc-note">30 min</span></span><span class="pc-price">£90</span></div>
+            <div class="pc-row"><span>Compression Therapy<span class="pc-note">35 min</span></span><span class="pc-price">£35</span></div>
+            <span class="pc-cat">Skin</span>
+            <div class="pc-row"><span>Deluxe Facial</span><span class="pc-price">£48</span></div>
+            <div class="pc-row"><span>Facial</span><span class="pc-price">£30</span></div>
+            <div class="pc-row"><span>Express Facial</span><span class="pc-price">£12</span></div>
+          </div>
+          <div class="pricing-col">
+            <div class="pricing-col-head gold">Members</div>
+            <span class="pc-cat">Cupping</span>
+            <div class="pc-row"><span>Dry Cupping<span class="pc-note">30 min</span></span><span class="pc-price">£65</span></div>
+            <div class="pc-row"><span>Hijama (Wet)<span class="pc-note">30 min</span></span><span class="pc-price">£75</span></div>
+            <div class="pc-row"><span>Compression Therapy<span class="pc-note">35 min</span></span><span class="pc-price">£25</span></div>
+            <span class="pc-cat">Skin</span>
+            <div class="pc-row"><span>Deluxe Facial</span><span class="pc-price">£40</span></div>
+            <div class="pc-row"><span>Facial</span><span class="pc-price">£25</span></div>
+            <div class="pc-row"><span>Express Facial</span><span class="pc-price">£10</span></div>
+          </div>
         </div>
-
-        <span class="price-cat">Cupping</span>
-        <div class="price-row"><span class="price-row-name">Hijama — Precision Wet Cupping Detox <span class="price-row-note">Full Body</span></span><span class="price-row-std">£90</span><span class="price-row-mem">£80</span></div>
-        <div class="price-row"><span class="price-row-name">Hijama — Precision Wet Cupping Detox <span class="price-row-note">Half Body</span></span><span class="price-row-std">£75</span><span class="price-row-mem">£65</span></div>
-        <div class="price-row"><span class="price-row-name">Dry Cupping — Deep Muscle R&amp;C <span class="price-row-note">Full Body</span></span><span class="price-row-std">£80</span><span class="price-row-mem">£70</span></div>
-        <div class="price-row"><span class="price-row-name">Dry Cupping — Deep Muscle R&amp;C <span class="price-row-note">Half Body</span></span><span class="price-row-std">£65</span><span class="price-row-mem">£55</span></div>
-        <div class="price-row"><span class="price-row-name">Compression Therapy <span class="price-row-note">Legs, Hips or Arms — 1 Area</span></span><span class="price-row-std">£36</span><span class="price-row-mem">£30</span></div>
-
-        <span class="price-cat">Skin</span>
-        <div class="price-row"><span class="price-row-name">Deluxe Facial</span><span class="price-row-std">£48</span><span class="price-row-mem">£40</span></div>
-        <div class="price-row"><span class="price-row-name">Facial</span><span class="price-row-std">£30</span><span class="price-row-mem">£25</span></div>
-        <div class="price-row"><span class="price-row-name">Express Facial</span><span class="price-row-std">£12</span><span class="price-row-mem">£10</span></div>
       </div>
     </div>
   </section>
-  
+
+  <section class="section-cream">
+    <div class="shell">
+      <div class="section-head"><span class="section-eyebrow">Treatment Options</span></div>
+      <div class="treat-opts">
+        <div class="treat-opt">
+          <div class="treat-opt-name">Full Body</div>
+          <div class="treat-opt-desc">Complete treatment coverage</div>
+        </div>
+        <div class="treat-opt">
+          <div class="treat-opt-name">Half Body</div>
+          <div class="treat-opt-desc">Targeted treatment areas</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section-parch"><div class="shell"><div class="members-block"><div class="monogram">AM</div><span class="mem-label">Members</span><h3>AM Members</h3><p>This is not a discount. It is locked pricing.</p><p class="locked">Lock your rate for 12 months — Closed</p></div></div></section>
   <div class="closing-cta"><p>Your Standard Starts Here.</p></div>
-</div>
 
 <!-- ═══ ESSENCE ═══ -->
 <div class="page" id="page-essence">
