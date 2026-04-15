@@ -358,6 +358,12 @@ a{color:inherit;text-decoration:none}
 .addl-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid rgba(26,23,20,.07);font-family:var(--ff-display);font-size:1rem;color:var(--ink)}
 .addl-row:last-child{border-bottom:0}
 .addl-price{color:var(--gold);font-weight:600}
+.addl-four{grid-template-columns:repeat(4,1fr)}
+.addl-members .addl-card{background:var(--parchment)}
+.addl-tier-label{font-family:var(--ff-body);font-size:9px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:var(--muted);text-align:center;margin:1.5rem 0 .75rem}
+.addl-tier-gold{color:var(--gold)}
+@media(max-width:900px){.addl-four{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.addl-four{grid-template-columns:1fr}}
 .treat-opts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(184,146,42,.25);border:1px solid rgba(184,146,42,.25);max-width:600px;margin:2rem auto 0}
 .treat-opt{background:var(--cream);padding:2rem;text-align:center}
 .treat-opt-name{font-family:var(--ff-display);font-size:1.5rem;font-weight:600;color:var(--ink);margin-bottom:.35rem}
@@ -574,7 +580,8 @@ a{color:inherit;text-decoration:none}
   <div class="addl-section">
     <div class="addl-inner">
       <div class="addl-eyebrow">Additional Services</div>
-      <div class="addl-cards">
+      <div class="addl-tier-label">Standard</div>
+      <div class="addl-cards addl-four">
         <div class="addl-card">
           <div class="addl-card-head">Shaving</div>
           <div class="addl-row"><span>Luxury Wet Shave</span><span class="addl-price">£29</span></div>
@@ -589,14 +596,46 @@ a{color:inherit;text-decoration:none}
           <div class="addl-row"><span>Beard Line Up</span><span class="addl-price">£8</span></div>
         </div>
         <div class="addl-card">
-          <div class="addl-card-head">Skin &amp; Extras</div>
+          <div class="addl-card-head">Skin</div>
           <div class="addl-row"><span>Deluxe Facial</span><span class="addl-price">£48</span></div>
           <div class="addl-row"><span>Facial</span><span class="addl-price">£30</span></div>
           <div class="addl-row"><span>Express Facial</span><span class="addl-price">£12</span></div>
+        </div>
+        <div class="addl-card">
+          <div class="addl-card-head">Extras</div>
           <div class="addl-row"><span>Gold Mask</span><span class="addl-price">£18</span></div>
           <div class="addl-row"><span>Black Mask</span><span class="addl-price">£12</span></div>
           <div class="addl-row"><span>Full Face Waxing</span><span class="addl-price">£12</span></div>
           <div class="addl-row"><span>Ear &amp; Nose Waxing</span><span class="addl-price">£6</span></div>
+        </div>
+      </div>
+      <div class="addl-tier-label addl-tier-gold">Members</div>
+      <div class="addl-cards addl-four addl-members">
+        <div class="addl-card">
+          <div class="addl-card-head">Shaving</div>
+          <div class="addl-row"><span>Luxury Wet Shave</span><span class="addl-price">£24</span></div>
+          <div class="addl-row"><span>Wet Shave</span><span class="addl-price">£18</span></div>
+          <div class="addl-row"><span>Head Shave — Razor</span><span class="addl-price">£20</span></div>
+          <div class="addl-row"><span>Head Shave — Foils</span><span class="addl-price">£15</span></div>
+        </div>
+        <div class="addl-card">
+          <div class="addl-card-head">Beard</div>
+          <div class="addl-row"><span>Beard Trim &amp; Shape Up</span><span class="addl-price">£15</span></div>
+          <div class="addl-row"><span>Beard Tidy &amp; Line Up</span><span class="addl-price">£10</span></div>
+          <div class="addl-row"><span>Beard Line Up</span><span class="addl-price">£7</span></div>
+        </div>
+        <div class="addl-card">
+          <div class="addl-card-head">Skin</div>
+          <div class="addl-row"><span>Deluxe Facial</span><span class="addl-price">TBC</span></div>
+          <div class="addl-row"><span>Facial</span><span class="addl-price">£25</span></div>
+          <div class="addl-row"><span>Express Facial</span><span class="addl-price">£10</span></div>
+        </div>
+        <div class="addl-card">
+          <div class="addl-card-head">Extras</div>
+          <div class="addl-row"><span>Gold Mask</span><span class="addl-price">£15</span></div>
+          <div class="addl-row"><span>Black Mask</span><span class="addl-price">£10</span></div>
+          <div class="addl-row"><span>Full Face Waxing</span><span class="addl-price">£10</span></div>
+          <div class="addl-row"><span>Ear &amp; Nose Waxing</span><span class="addl-price">£5</span></div>
         </div>
       </div>
     </div>
