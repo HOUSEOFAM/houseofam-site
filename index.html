@@ -370,6 +370,40 @@ a{color:inherit;text-decoration:none}
 .treat-opt{background:var(--cream);padding:2rem;text-align:center}
 .treat-opt-name{font-family:var(--ff-display);font-size:1.5rem;font-weight:600;color:var(--ink);margin-bottom:.35rem}
 .treat-opt-desc{font-family:var(--ff-body);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted-p)}
+.ren-freq-table{max-width:960px;margin:0 auto;width:100%;border:1px solid rgba(184,146,42,.2)}
+.ren-pkg-table{max-width:960px;margin:0 auto;width:100%;border:1px solid rgba(184,146,42,.2);margin-top:.5rem}
+.ren-freq-head,.ren-pkg-head{display:grid;grid-template-columns:2fr 1.2fr 2.2fr 1.2fr;background:var(--ink);padding:.75rem 1.25rem;border-bottom:1px solid rgba(184,146,42,.3)}
+.ren-pkg-head{grid-template-columns:2fr .9fr 1.2fr 1.1fr 1.1fr}
+.ren-freq-head span,.ren-pkg-head span{font-family:var(--ff-body);font-size:8px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--gold)}
+.ren-freq-row{display:grid;grid-template-columns:2fr 1.2fr 2.2fr 1.2fr;padding:.75rem 1.25rem;border-bottom:1px solid rgba(184,146,42,.1);background:var(--cream);align-items:center}
+.ren-pkg-row{display:grid;grid-template-columns:2fr .9fr 1.2fr 1.1fr 1.1fr;padding:.75rem 1.25rem;border-bottom:1px solid rgba(184,146,42,.1);background:var(--parchment);align-items:center}
+.ren-freq-row:last-child,.ren-pkg-row:last-child{border-bottom:0}
+.ren-freq-row span,.ren-pkg-row span{font-family:var(--ff-display);font-size:.95rem;color:var(--ink)}
+.ren-freq-row span:first-child,.ren-pkg-row span:first-child{font-weight:500}
+.ren-pkg-row span:last-child{color:var(--gold);font-weight:600}
+@media(max-width:700px){
+  .ren-freq-head,.ren-freq-row,.ren-pkg-head,.ren-pkg-row{grid-template-columns:1.5fr 1fr}
+  .ren-freq-head span:nth-child(n+3),.ren-freq-row span:nth-child(n+3),
+  .ren-pkg-head span:nth-child(n+3),.ren-pkg-row span:nth-child(n+3){display:none}
+}
+.ren-freq-table,.ren-pkg-table{max-width:960px;margin:0 auto;border:1px solid rgba(184,146,42,.2);border-collapse:collapse;width:100%}
+.ren-freq-head,.ren-pkg-head{display:grid;grid-template-columns:2fr 1.2fr 2fr 1.2fr;gap:0;background:var(--ink);padding:.75rem 1.25rem;border-bottom:1px solid rgba(184,146,42,.3)}
+.ren-pkg-head{grid-template-columns:2fr 1fr 1.4fr 1.2fr 1fr}
+.ren-freq-head span,.ren-pkg-head span{font-family:var(--ff-body);font-size:8px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--gold)}
+.ren-freq-row,.ren-pkg-row{display:grid;grid-template-columns:2fr 1.2fr 2fr 1.2fr;gap:0;padding:.75rem 1.25rem;border-bottom:1px solid rgba(184,146,42,.1);background:var(--cream);align-items:center}
+.ren-pkg-row{grid-template-columns:2fr 1fr 1.4fr 1.2fr 1fr;background:var(--parchment)}
+.ren-freq-row:last-child,.ren-pkg-row:last-child{border-bottom:0}
+.ren-freq-row span,.ren-pkg-row span{font-family:var(--ff-display);font-size:.95rem;color:var(--ink)}
+.ren-freq-row span:first-child,.ren-pkg-row span:first-child{font-weight:500}
+.ren-pkg-row span:last-child{color:var(--gold);font-weight:600}
+@media(max-width:700px){
+  .ren-freq-head,.ren-freq-row{grid-template-columns:1fr 1fr}
+  .ren-pkg-head,.ren-pkg-row{grid-template-columns:1fr 1fr}
+  .ren-freq-head span:nth-child(3),.ren-freq-head span:nth-child(4),
+  .ren-freq-row span:nth-child(3),.ren-freq-row span:nth-child(4),
+  .ren-pkg-head span:nth-child(3),.ren-pkg-head span:nth-child(4),.ren-pkg-head span:nth-child(5),
+  .ren-pkg-row span:nth-child(3),.ren-pkg-row span:nth-child(4),.ren-pkg-row span:nth-child(5){display:none}
+}
 @media(max-width:700px){.pricing-cols,.disc-cards,.addl-cards{grid-template-columns:1fr}.treat-opts{grid-template-columns:1fr}}
 </style>
 </head>
@@ -658,7 +692,7 @@ a{color:inherit;text-decoration:none}
       <span class="page-hero-sub">Rebuild. Recharge. Renovair.</span>
     </div>
   </section>
-    <section class="section-parch">
+      <section class="section-parch">
     <div class="shell">
       <div class="section-head"><span class="section-eyebrow">AM Renovair</span><h2>The <em>Services</em></h2><hr class="gold-rule-center"></div>
       <div class="pricing-card-wrap">
@@ -690,23 +724,53 @@ a{color:inherit;text-decoration:none}
     </div>
   </section>
 
+  <div class="addl-section">
+    <div class="addl-inner">
+      <div class="addl-eyebrow">Treatment Frequency &amp; Validity</div>
+      <div class="ren-freq-table">
+        <div class="ren-freq-head"><span>Service</span><span>Safe Frequency</span><span>Package Validity</span><span>Annual Max</span></div>
+        <div class="ren-freq-row"><span>Hijama (Wet Cupping)</span><span>Every 3 months</span><span>4-Pack = 12 months</span><span>4 sessions / year</span></div>
+        <div class="ren-freq-row"><span>Dry Cupping</span><span>Every 2 weeks</span><span>3-Pack = 8 wks · 10-Pack = 6 months</span><span>26 sessions / year</span></div>
+        <div class="ren-freq-row"><span>Compression Therapy</span><span>1–2 × per week</span><span>3-Pack = 6 wks · 10-Pack = 3 months</span><span>Flexible / Ongoing</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="addl-section" style="background:var(--parchment)">
+    <div class="addl-inner">
+      <div class="addl-eyebrow">Treatment Packages</div>
+      <div class="addl-tier-label">Standard</div>
+      <div class="ren-pkg-table">
+        <div class="ren-pkg-head"><span>Service</span><span>3-Pack</span><span>10-Pack</span><span>Validity</span><span>Saving</span></div>
+        <div class="ren-pkg-row"><span>Dry Cupping – Full Body</span><span>£231</span><span>£750</span><span>8 wks / 6 mo</span><span>£9 / £50</span></div>
+        <div class="ren-pkg-row"><span>Dry Cupping – Half Body</span><span>£186</span><span>£600</span><span>8 wks / 6 mo</span><span>£9 / £50</span></div>
+        <div class="ren-pkg-row"><span>Hijama – Full Body (4-Pack)</span><span>—</span><span>£340 (4)</span><span>12 mo</span><span>£20</span></div>
+        <div class="ren-pkg-row"><span>Hijama – Half Body (4-Pack)</span><span>—</span><span>£280 (4)</span><span>12 mo</span><span>£20</span></div>
+        <div class="ren-pkg-row"><span>Compression Therapy</span><span>£90</span><span>£280</span><span>6 wks / 3 mo</span><span>£15 / £70</span></div>
+      </div>
+      <div class="addl-tier-label addl-tier-gold" style="margin-top:2.5rem">Members</div>
+      <div class="ren-pkg-table">
+        <div class="ren-pkg-head"><span>Service</span><span>3-Pack</span><span>10 / 4-Pack</span><span>Validity</span><span>Member Saving</span></div>
+        <div class="ren-pkg-row"><span>Dry Cupping – Full Body</span><span>£201</span><span>£650 (10)</span><span>8 wks / 6 mo</span><span>£9 / £50</span></div>
+        <div class="ren-pkg-row"><span>Dry Cupping – Half Body</span><span>£156</span><span>£500 (10)</span><span>8 wks / 6 mo</span><span>£9 / £50</span></div>
+        <div class="ren-pkg-row"><span>Hijama – Full Body</span><span>£258 (3)</span><span>£300 (4)</span><span>12 months</span><span>£12 / £20</span></div>
+        <div class="ren-pkg-row"><span>Hijama – Half Body</span><span>£234 (3)</span><span>£260 (4)</span><span>12 months</span><span>£6 / £20</span></div>
+        <div class="ren-pkg-row"><span>Compression Therapy</span><span>£84 (3)</span><span>£250 (10)</span><span>6 wks / 3 mo</span><span>£6 / £50</span></div>
+      </div>
+    </div>
+  </div>
+
   <section class="section-cream">
     <div class="shell">
       <div class="section-head"><span class="section-eyebrow">Treatment Options</span></div>
       <div class="treat-opts">
-        <div class="treat-opt">
-          <div class="treat-opt-name">Full Body</div>
-          <div class="treat-opt-desc">Complete treatment coverage</div>
-        </div>
-        <div class="treat-opt">
-          <div class="treat-opt-name">Half Body</div>
-          <div class="treat-opt-desc">Targeted treatment areas</div>
-        </div>
+        <div class="treat-opt"><div class="treat-opt-name">Full Body</div><div class="treat-opt-desc">Complete treatment coverage</div></div>
+        <div class="treat-opt"><div class="treat-opt-name">Half Body</div><div class="treat-opt-desc">Targeted treatment areas</div></div>
       </div>
     </div>
   </section>
 
-  <section class="section-parch"><div class="shell"><div class="members-block"><div class="monogram">AM</div><span class="mem-label">Members</span><h3>AM Members</h3><p>This is not a discount. It is locked pricing.</p><p class="locked">Lock your rate for 12 months — Closed</p></div></div></section>
+  <section class="section-parch"><div class="shell"><div class="members-block members-block-bold"><h3 class="mem-h3-large">AM MEMBERS</h3><p>This is not a discount. It is locked pricing.</p><p class="locked">Lock your rate for 12 months — Closed</p></div></div></section>
   <div class="closing-cta"><p>Your Standard Starts Here.</p></div>
 
 <!-- ═══ ESSENCE ═══ -->
