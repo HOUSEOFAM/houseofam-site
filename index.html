@@ -1528,215 +1528,7 @@ body { height: auto !important; min-height: 100vh !important; overflow-y: auto !
   })();
 
 
-/* ══════════════════════════════════════════════════
-   HOUSE OF AM — WORLD CLASS ENHANCEMENTS v2
-   ══════════════════════════════════════════════════ */
-(function(){
-  var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-  /* ── 1. HERO ANIMATE IN — staggered word by word ── */
-  var heroH1 = document.getElementById('heroH1');
-  if(heroH1) {
-    // Split into words, wrap each
-    heroH1.style.opacity = '1';
-    heroH1.style.transform = 'none';
-    var rawHTML = heroH1.innerHTML;
-    // Replace spaces with wrapped spans but preserve <br> and <em>
-    var words = rawHTML.split(/(\s+|<br>|<em>.*?<\/em>)/g);
-    var wrapped = words.map(function(w, i) {
-      if(!w || /^\s+$/.test(w) || w === '<br>') return w || '';
-      if(w.indexOf('<em>') === 0) {
-        return '<em style="font-style:italic;color:#d4b158;display:inline-block;opacity:0;transform:translateY(60px) skewX(-4deg);transition:opacity .7s ease ' + (0.5 + i*0.06) + 's,transform .8s cubic-bezier(.23,1,.32,1) ' + (0.5 + i*0.06) + 's">' + w.replace(/<\/?em>/g,'') + '</em>';
-      }
-      return '<span style="display:inline-block;opacity:0;transform:translateY(60px) skewX(-4deg);transition:opacity .7s ease ' + (0.4 + i*0.055) + 's,transform .8s cubic-bezier(.23,1,.32,1) ' + (0.4 + i*0.055) + 's">' + w + '</span>';
-    });
-    heroH1.innerHTML = wrapped.join('');
-    setTimeout(function() {
-      heroH1.querySelectorAll('span,em').forEach(function(el) {
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0) skewX(0)';
-      });
-    }, 700);
-  }
-
-  /* ── 2. SCROLL REVEAL — everything animates in ── */
-  function addReveal(selector, delay, yOffset, skew) {
-    document.querySelectorAll(selector).forEach(function(el, i) {
-      if(el.hasAttribute('data-reveal-set')) return;
-      el.setAttribute('data-reveal-set','1');
-      var d = (delay || 0) + i * 90;
-      var y = yOffset || 40;
-      var sk = skew ? 'skewY(-2deg)' : '';
-      el.style.cssText += ';opacity:0;transform:translateY('+y+'px) '+sk+';transition:opacity .85s cubic-bezier(.23,1,.32,1) '+d+'ms,transform .9s cubic-bezier(.23,1,.32,1) '+d+'ms';
-    });
-  }
-
-  // Target every meaningful text element
-  addReveal('.manifesto h2', 0, 50, true);
-  addReveal('.manifesto-eyebrow', 0, 30, false);
-  addReveal('.manifesto-close h3', 100, 40, true);
-  addReveal('.manifesto-close p', 150, 30, false);
-  addReveal('.pillars-title', 0, 60, true);
-  addReveal('.pillars-label', 50, 20, false);
-  addReveal('.pillar', 0, 45, false);
-  addReveal('.pillar-principle', 0, 35, false);
-  addReveal('.pillar-brand', 60, 25, false);
-  addReveal('.pillar p', 100, 25, false);
-  addReveal('.doors-eyebrow', 0, 25, false);
-  addReveal('.doors h2', 50, 50, true);
-  addReveal('.door', 0, 60, false);
-  addReveal('.ab-hero h1', 0, 60, true);
-  addReveal('.ab-origin p', 0, 35, false);
-  addReveal('.ab-quote blockquote', 0, 40, true);
-  addReveal('.ab-philosophy .head h2', 0, 45, true);
-  addReveal('.principle', 0, 40, false);
-  addReveal('.ab-why h2', 0, 50, true);
-  addReveal('.ab-why p', 0, 30, false);
-  addReveal('.section-head h2', 0, 45, true);
-  addReveal('.page-eyebrow', 0, 20, false);
-  addReveal('.page-hero h1', 0, 55, true);
-  addReveal('.page-hero-sub', 100, 25, false);
-  addReveal('.pricing-card', 0, 50, false);
-  addReveal('.addl-card', 0, 40, false);
-  addReveal('.disc-card', 0, 40, false);
-  addReveal('.members-block', 0, 35, false);
-  addReveal('.cta-section h2', 0, 45, true);
-  addReveal('.footer-brand', 0, 30, false);
-
-  if('IntersectionObserver' in window) {
-    var obs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if(e.isIntersecting) {
-          e.target.style.opacity = '1';
-          e.target.style.transform = 'translateY(0) skewY(0) skewX(0)';
-          obs.unobserve(e.target);
-        }
-      });
-    }, {threshold: 0.08, rootMargin: '0px 0px -40px 0px'});
-
-    document.querySelectorAll('[data-reveal-set]').forEach(function(el) {
-      obs.observe(el);
-    });
-
-    // Re-observe when page changes
-    document.addEventListener('pageChanged', function() {
-      document.querySelectorAll('[data-reveal-set]').forEach(function(el) {
-        obs.observe(el);
-      });
-    });
-  }
-
-  /* ── 3. GOLD SHIMMER — much more aggressive ── */
-  function addShimmer(selector) {
-    document.querySelectorAll(selector).forEach(function(el) {
-      if(el.dataset.shimmer) return;
-      el.dataset.shimmer = '1';
-      el.style.position = 'relative';
-      el.style.overflow = 'hidden';
-      var sh = document.createElement('span');
-      sh.style.cssText = 'position:absolute;inset:0;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,.28) 50%,transparent 80%);transform:translateX(-200%) skewX(-25deg);pointer-events:none;z-index:10;transition:none';
-      el.appendChild(sh);
-      el.addEventListener('mouseenter', function() {
-        sh.style.transition = 'transform .6s ease';
-        sh.style.transform = 'translateX(200%) skewX(-25deg)';
-      });
-      el.addEventListener('mouseleave', function() {
-        sh.style.transition = 'none';
-        sh.style.transform = 'translateX(-200%) skewX(-25deg)';
-      });
-    });
-  }
-  addShimmer('.btn-gold');
-  addShimmer('.door-cta');
-  addShimmer('.btn-solid');
-  addShimmer('.bm-btn');
-
-  /* ── 4. DOOR PARALLAX — much stronger ── */
-  if(!isTouch) {
-    document.querySelectorAll('.door').forEach(function(door) {
-      var logo = door.querySelector('.door-logo');
-      var content = door.querySelector('.door-content');
-      if(!logo) return;
-      door.addEventListener('mousemove', function(e) {
-        var r = door.getBoundingClientRect();
-        var x = (e.clientX - r.left) / r.width  - 0.5;
-        var y = (e.clientY - r.top)  / r.height - 0.5;
-        logo.style.transition = 'transform .05s linear';
-        logo.style.transform = 'translate(' + (x * 22) + 'px,' + (y * 16) + 'px) scale(0.94)';
-        if(content) {
-          content.style.transition = 'transform .08s linear';
-          content.style.transform = 'translate(' + (x * -6) + 'px,' + (y * -4) + 'px)';
-        }
-      });
-      door.addEventListener('mouseleave', function() {
-        logo.style.transition = 'transform .7s cubic-bezier(.23,1,.32,1)';
-        logo.style.transform = 'translate(0,0) scale(1)';
-        if(content) {
-          content.style.transition = 'transform .7s cubic-bezier(.23,1,.32,1)';
-          content.style.transform = 'translate(0,0)';
-        }
-      });
-    });
-  }
-
-  /* ── 5. ROTATING CURSOR ── */
-  if(!isTouch) {
-    var dot = document.getElementById('cursorDot');
-    var oldRing = document.getElementById('cursorRing');
-
-    // Build proper SVG ring
-    var svgNS = 'http://www.w3.org/2000/svg';
-    var ring = document.createElementNS(svgNS, 'svg');
-    ring.setAttribute('viewBox', '-40 -40 80 80');
-    ring.setAttribute('width', '80');
-    ring.setAttribute('height', '80');
-    ring.id = 'cursorRingNew';
-    ring.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);will-change:left,top';
-
-    var defs = document.createElementNS(svgNS, 'defs');
-    var ciPath = document.createElementNS(svgNS, 'path');
-    ciPath.id = 'ciTp';
-    ciPath.setAttribute('d', 'M 0,0 m -22,0 a 22,22 0 1,1 44,0 a 22,22 0 1,1 -44,0');
-    defs.appendChild(ciPath);
-    ring.appendChild(defs);
-
-    var circle = document.createElementNS(svgNS, 'circle');
-    circle.setAttribute('r', '22');
-    circle.setAttribute('fill', 'none');
-    circle.setAttribute('stroke', 'rgba(198,156,109,0)');
-    circle.setAttribute('stroke-width', '1');
-    circle.id = 'ciCircle';
-    ring.appendChild(circle);
-
-    var txt = document.createElementNS(svgNS, 'text');
-    txt.id = 'ciText';
-    txt.style.cssText = 'font-size:5px;letter-spacing:2.8px;text-transform:uppercase;font-weight:700;fill:rgba(198,156,109,0);font-family:sans-serif;transition:fill .3s';
-    var tpath = document.createElementNS(svgNS, 'textPath');
-    tpath.setAttribute('href', '#ciTp');
-    tpath.setAttribute('startOffset', '0%');
-    tpath.textContent = 'EXPLORE · HOUSE OF AM · ';
-    txt.appendChild(tpath);
-    ring.appendChild(txt);
-
-    document.body.appendChild(ring);
-    if(oldRing) oldRing.remove();
-
-    // Position tracking
-    var mx = 0, my = 0, rx = 0, ry = 0;
-    var dotX = 0, dotY = 0;
-    document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
-
-    var angle = 0, hov = false;
-    (function tick() {
-      rx += (mx - rx) * .11;
-      ry += (my - ry) * .11;
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-      if(dot) { dot.style.left = mx + 'px'; dot.style.top = my + 'px'; }
-      if(hov) angle += 0.7;
-      ring.style.transform = 'translate(-50%,-50%) rotate(' + angle + 'deg)';
-      requestAnimationFrame(tick);
-    })();
 
     document.addEventListener('mouseover', function(e) {
       var t = e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more');
@@ -1881,35 +1673,233 @@ body { height: auto !important; min-height: 100vh !important; overflow-y: auto !
 </script>
 
 
-<div id="bookingModal" role="dialog" aria-modal="true">
-  <div class="bm-card">
-    <button class="bm-close" id="bmClose" aria-label="Close">&#x2715;</button>
-    <span class="bm-eyebrow">AM Barber Lounge · Harrow</span>
-    <h2 class="bm-title">Request an Appointment</h2>
-    <p class="bm-sub">Every seat is earned. We'll confirm within 24 hours.</p>
-    <hr class="bm-rule">
-    <input class="bm-field" type="text" placeholder="Full Name" id="bmName">
-    <input class="bm-field" type="tel" placeholder="Phone Number" id="bmPhone">
-    <input class="bm-field" type="email" placeholder="Email Address" id="bmEmail">
-    <select class="bm-field bm-select" id="bmService">
-      <option value="" disabled selected>Select a Service</option>
-      <option>Skinfade / Taperfade &amp; Beard — £46</option>
-      <option>Hair &amp; Beard — £43</option>
-      <option>Skinfade / Taperfade — £29</option>
-      <option>Haircut — £26</option>
-      <option>Luxury Wet Shave — £29</option>
-      <option>Deluxe Facial — £48</option>
-    </select>
-    <select class="bm-field bm-select" id="bmTime">
-      <option value="" disabled selected>Preferred Time</option>
-      <option>Morning (9am – 12pm)</option>
-      <option>Afternoon (12pm – 4pm)</option>
-      <option>Evening (4pm – 7pm)</option>
-    </select>
-    <button class="bm-btn" id="bmSubmit"><span>Send Request</span></button>
-    <p class="bm-note">329 High Road · Harrow · HA3 5EQ</p>
-  </div>
 </div>
 
+<script>
+/* AM EMPIRE — WORLD CLASS ENHANCEMENTS */
+window.addEventListener('load', function() {
+  try { AMEnhancements(); } catch(e) { console.warn('AM enhance err:', e); }
+});
+
+function AMEnhancements() {
+  var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  /* ══ FIX: Force overlays to NEVER block clicks ══ */
+  ['pageTransition','bookingModal'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if(el) {
+      el.style.setProperty('pointer-events','none','important');
+      // Watch for changes
+      var orig = el.style.pointerEvents;
+      setInterval(function() {
+        if(!el.classList.contains('open') && !el.classList.contains('pt-in') && !el.classList.contains('pt-hold')) {
+          el.style.setProperty('pointer-events','none','important');
+        }
+      }, 200);
+    }
+  });
+
+  /* ══ 1. HERO — word by word stagger ══ */
+  var h1 = document.getElementById('heroH1');
+  if(h1) {
+    h1.style.opacity = '1';
+    h1.style.transform = 'none';
+    var parts = h1.innerHTML.split(/(<br>|<em>[\s\S]*?<\/em>|\s+)/);
+    var out = '', delay = 0.5;
+    parts.forEach(function(p) {
+      if(!p) return;
+      if(p === '<br>' || /^\s+$/.test(p)) { out += p; return; }
+      if(p.indexOf('<em>') === 0) {
+        out += '<em style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-6deg);transition:opacity .7s ease ' + delay + 's,transform .9s cubic-bezier(.23,1,.32,1) ' + delay + 's;color:#d4b158;font-style:italic">' + p.replace(/<\/?em>/g,'') + '</em>';
+      } else {
+        out += '<span style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-6deg);transition:opacity .7s ease ' + delay + 's,transform .9s cubic-bezier(.23,1,.32,1) ' + delay + 's">' + p + '</span>';
+      }
+      delay += 0.07;
+    });
+    h1.innerHTML = out;
+    setTimeout(function() {
+      h1.querySelectorAll('span, em').forEach(function(el) {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0) skewX(0)';
+      });
+    }, 300);
+  }
+
+  /* ══ 2. SCROLL REVEAL — every section ══ */
+  var revealSelectors = [
+    '.manifesto-eyebrow','.manifesto h2','.manifesto-close h3','.manifesto-close p',
+    '.pillars-title','.pillars-label','.pillar',
+    '.doors-eyebrow','.doors-section h2','.door',
+    '.ab-hero h1','.ab-eyebrow','.ab-origin p',
+    '.ab-quote blockquote','.ab-philosophy .head h2','.principle',
+    '.ab-why h2','.ab-why p','.ab-house .head h2',
+    '.section-head','h2.reveal','.page-eyebrow',
+    '.page-hero h1','.page-hero-sub',
+    '.pricing-card','.addl-card','.disc-card','.members-block',
+    '.cta-section h2','.footer-brand-wrap'
+  ];
+
+  var revealEls = [];
+  revealSelectors.forEach(function(sel) {
+    document.querySelectorAll(sel).forEach(function(el, i) {
+      if(el.hasAttribute('data-am-reveal')) return;
+      el.setAttribute('data-am-reveal', '1');
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(38px) skewY(-1.5deg)';
+      el.style.transition = 'opacity .85s cubic-bezier(.23,1,.32,1),transform .9s cubic-bezier(.23,1,.32,1)';
+      revealEls.push(el);
+    });
+  });
+
+  function doReveal(el) {
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0) skewY(0)';
+  }
+
+  if('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if(e.isIntersecting) { doReveal(e.target); io.unobserve(e.target); }
+      });
+    }, {threshold: 0.06, rootMargin: '0px 0px -30px 0px'});
+    revealEls.forEach(function(el) { io.observe(el); });
+
+    // Re-trigger on page switch
+    document.addEventListener('click', function() {
+      setTimeout(function() {
+        var active = document.querySelector('.page.active');
+        if(!active) return;
+        active.querySelectorAll('[data-am-reveal]').forEach(function(el) {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(38px) skewY(-1.5deg)';
+          io.observe(el);
+        });
+      }, 700);
+    });
+  } else {
+    revealEls.forEach(doReveal);
+  }
+
+  /* ══ 3. SHIMMER on buttons ══ */
+  document.querySelectorAll('.btn-gold, .door-cta, .btn-solid').forEach(function(btn) {
+    if(btn.dataset.shimmer) return;
+    btn.dataset.shimmer = '1';
+    btn.style.overflow = 'hidden';
+    btn.style.position = 'relative';
+    var sh = document.createElement('span');
+    sh.style.cssText = 'position:absolute;inset:0;background:linear-gradient(110deg,transparent 25%,rgba(255,255,255,.3) 50%,transparent 75%);transform:translateX(-200%) skewX(-20deg);pointer-events:none;z-index:5';
+    btn.appendChild(sh);
+    btn.addEventListener('mouseenter', function() {
+      sh.style.transition = 'transform .55s ease';
+      sh.style.transform = 'translateX(200%) skewX(-20deg)';
+    });
+    btn.addEventListener('mouseleave', function() {
+      sh.style.transition = 'none';
+      sh.style.transform = 'translateX(-200%) skewX(-20deg)';
+    });
+  });
+
+  /* ══ 4. DOOR PARALLAX — strong, visible ══ */
+  if(!isTouch) {
+    document.querySelectorAll('.door').forEach(function(door) {
+      var logo = door.querySelector('.door-logo');
+      var content = door.querySelector('.door-content');
+      if(!logo) return;
+      var leaveTm;
+      door.addEventListener('mousemove', function(e) {
+        clearTimeout(leaveTm);
+        var r = door.getBoundingClientRect();
+        var x = ((e.clientX - r.left) / r.width  - 0.5);
+        var y = ((e.clientY - r.top)  / r.height - 0.5);
+        logo.style.transition = 'transform .04s linear';
+        logo.style.transform = 'translate(' + (x * 28) + 'px,' + (y * 20) + 'px)';
+        if(content) {
+          content.style.transition = 'transform .06s linear';
+          content.style.transform = 'translate(' + (x * -8) + 'px,' + (y * -6) + 'px)';
+        }
+      });
+      door.addEventListener('mouseleave', function() {
+        logo.style.transition = 'transform .8s cubic-bezier(.23,1,.32,1)';
+        logo.style.transform = 'translate(0,0)';
+        if(content) {
+          content.style.transition = 'transform .8s cubic-bezier(.23,1,.32,1)';
+          content.style.transform = 'translate(0,0)';
+        }
+      });
+    });
+  }
+
+  /* ══ 5. ROTATING CURSOR — "EXPLORE · HOUSE OF AM ·" ══ */
+  if(!isTouch) {
+    var dot = document.getElementById('cursorDot');
+    // Remove any existing ring
+    var old = document.getElementById('cursorRing');
+    var oldNew = document.getElementById('cursorRingNew');
+    if(old) old.remove();
+    if(oldNew) oldNew.remove();
+
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.id = 'amCursorRing';
+    svg.setAttribute('viewBox', '-44 -44 88 88');
+    svg.setAttribute('width', '88');
+    svg.setAttribute('height', '88');
+    svg.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none!important;z-index:100001;will-change:left,top,transform;transform:translate(-50%,-50%)';
+
+    var sdefs = document.createElementNS(NS, 'defs');
+    var sPath = document.createElementNS(NS, 'path');
+    sPath.id = 'amTp';
+    sPath.setAttribute('d', 'M 0 0 m -24 0 a 24 24 0 1 1 48 0 a 24 24 0 1 1 -48 0');
+    sdefs.appendChild(sPath);
+    svg.appendChild(sdefs);
+
+    var sCircle = document.createElementNS(NS, 'circle');
+    sCircle.setAttribute('r', '24');
+    sCircle.setAttribute('fill', 'none');
+    sCircle.setAttribute('stroke-width', '1.2');
+    sCircle.style.cssText = 'stroke:rgba(198,156,109,0);transition:stroke .4s,r .4s';
+    svg.appendChild(sCircle);
+
+    var sTxt = document.createElementNS(NS, 'text');
+    sTxt.style.cssText = 'font-family:Arial,sans-serif;font-size:5px;letter-spacing:3px;font-weight:700;fill:rgba(198,156,109,0);transition:fill .4s;text-transform:uppercase';
+    var sTP = document.createElementNS(NS, 'textPath');
+    sTP.setAttribute('href', '#amTp');
+    sTP.setAttribute('startOffset', '0%');
+    sTP.textContent = 'EXPLORE · HOUSE OF AM · ';
+    sTxt.appendChild(sTP);
+    svg.appendChild(sTxt);
+
+    document.body.appendChild(svg);
+
+    var mx=0,my=0,rx=0,ry=0,ang=0,hovering=false;
+    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+    (function frame(){
+      rx += (mx-rx)*.1; ry += (my-ry)*.1;
+      if(dot){dot.style.left=mx+'px';dot.style.top=my+'px';}
+      svg.style.left=rx+'px'; svg.style.top=ry+'px';
+      if(hovering) ang += 0.8;
+      svg.style.transform='translate(-50%,-50%) rotate('+ang+'deg)';
+      requestAnimationFrame(frame);
+    })();
+
+    document.addEventListener('mouseover',function(e){
+      var t=e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more,.nav-links a,.logo-lockup');
+      if(t){
+        hovering=true;
+        sCircle.style.stroke='rgba(198,156,109,.7)';
+        sCircle.setAttribute('r','30');
+        sTxt.style.fill='rgba(198,156,109,1)';
+        if(dot){dot.style.width='5px';dot.style.height='5px';dot.style.background='#1a1508';}
+      } else {
+        hovering=false;
+        sCircle.style.stroke='rgba(198,156,109,0)';
+        sCircle.setAttribute('r','24');
+        sTxt.style.fill='rgba(198,156,109,0)';
+        if(dot){dot.style.width='8px';dot.style.height='8px';dot.style.background='#c69c6d';}
+      }
+    });
+  }
+}
+</script>
 </body>
 </html>
