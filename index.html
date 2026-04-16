@@ -1596,35 +1596,41 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
       '<span style="font-family:var(--ff-body,sans-serif);font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:#8a8178;font-weight:600">House of AM</span>';
   })();
 
-  function showPage(id, scrollTarget){
+  function showPage(id, scrollTarget, skipTransition){
     if((id === currentPage && !scrollTarget) || transitioning){ return; }
+
+    // Direct swap — no transition (used on initial load)
+    if(skipTransition || !ptEl){
+      PAGES.forEach(function(p){ var el=document.getElementById('page-'+p); if(el) el.classList.remove('active'); });
+      var t=document.getElementById('page-'+id);
+      if(t){ t.classList.add('active'); currentPage=id; window.scrollTo(0,0); }
+      document.querySelectorAll('[data-nav]').forEach(function(a){
+        a.classList.toggle('active', a.getAttribute('data-nav')===id && !a.getAttribute('data-scroll'));
+      });
+      return;
+    }
+
     transitioning = true;
-    if(!ptEl){ transitioning=false; return; }
 
     var bar = document.getElementById('ptBar');
     var svg = document.getElementById('ptSvg');
 
-    // Reset
     if(bar){ bar.style.transition='none'; bar.style.width='0'; }
     if(svg){ svg.style.animation='none'; }
 
-    // Phase 1: FADE IN (550ms)
+    // Phase 1: FADE IN
     ptEl.style.transition = 'opacity 0s';
     ptEl.style.opacity = '0';
-    ptEl.style.pointerEvents = 'all';
+    ptEl.style.setProperty('pointer-events','all','important');
     void ptEl.offsetWidth;
     ptEl.style.transition = 'opacity .55s ease';
     ptEl.style.opacity = '1';
 
     setTimeout(function(){
-      // Phase 2: HOLD — pulse mark, run bar, swap page
       if(svg){ svg.style.animation = 'pulseGold 2.4s ease-in-out infinite'; }
       if(bar){ void bar.offsetWidth; bar.style.transition='width 1.4s ease-in-out'; bar.style.width='100%'; }
 
-      PAGES.forEach(function(p){
-        var el=document.getElementById('page-'+p);
-        if(el){ el.classList.remove('active'); }
-      });
+      PAGES.forEach(function(p){ var el=document.getElementById('page-'+p); if(el) el.classList.remove('active'); });
       var target=document.getElementById('page-'+id);
       if(target){ target.classList.add('active'); currentPage=id; window.scrollTo(0,0); }
       document.querySelectorAll('[data-nav]').forEach(function(a){
@@ -1637,19 +1643,16 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
       document.documentElement.style.height='auto';
       document.body.style.height='auto';
 
-      // Phase 3: FADE OUT after bar (1.55s)
+      // Phase 3: FADE OUT
       setTimeout(function(){
         if(svg){ svg.style.animation='none'; }
         ptEl.style.transition = 'opacity .6s ease';
         ptEl.style.opacity = '0';
         setTimeout(function(){
-          ptEl.style.pointerEvents='none';
+          ptEl.style.setProperty('pointer-events','none','important');
           if(bar){ bar.style.transition='none'; bar.style.width='0'; }
           transitioning=false;
-          if(scrollTarget){
-            var el=document.getElementById(scrollTarget);
-            if(el){ el.scrollIntoView({behavior:'smooth'}); }
-          }
+          if(scrollTarget){ var el=document.getElementById(scrollTarget); if(el) el.scrollIntoView({behavior:'smooth'}); }
         }, 640);
       }, 1550);
 
@@ -1663,7 +1666,7 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
     showPage(el.getAttribute('data-nav'),el.getAttribute('data-scroll'));
   });
 
-  showPage('home');
+  showPage('home', null, true);
 
   /* ══════════════════════════════════════════
      HOUSE OF AM — WORLD CLASS ENHANCEMENTS
