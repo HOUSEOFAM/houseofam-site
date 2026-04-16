@@ -1576,6 +1576,248 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
   });
 
   showPage('home');
+
+  /* ══════════════════════════════════════════
+     HOUSE OF AM — WORLD CLASS ENHANCEMENTS
+     Injected inside main IIFE — WordPress-proof
+     ══════════════════════════════════════════ */
+  (function initEnhancements(){
+    var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    /* ── OVERLAYS: never block clicks ── */
+    function lockOverlays(){
+      ['pageTransition','bookingModal'].forEach(function(id){
+        var el=document.getElementById(id);
+        if(el&&!el.classList.contains('open')&&!el.classList.contains('pt-in')&&!el.classList.contains('pt-hold')){
+          el.style.setProperty('pointer-events','none','important');
+        }
+      });
+    }
+    lockOverlays();
+    setInterval(lockOverlays,800);
+
+    /* ── HERO H1: word-by-word stagger ── */
+    var h1=document.getElementById('heroH1');
+    if(h1){
+      h1.style.opacity='1'; h1.style.transform='none';
+      var raw=h1.innerHTML;
+      var parts=raw.split(/(<br>|<em>[\s\S]*?<\/em>|\s+)/);
+      var out='',dl=0.45;
+      parts.forEach(function(p){
+        if(!p)return;
+        if(p==='<br>'||/^\s+$/.test(p)){out+=p;return;}
+        if(p.indexOf('<em>')===0){
+          out+='<em style="display:inline-block;opacity:0;transform:translateY(52px) skewX(-5deg);transition:opacity .7s ease '+dl+'s,transform .9s cubic-bezier(.23,1,.32,1) '+dl+'s;color:#d4b158;font-style:italic">'+p.replace(/<\/?em>/g,'')+'</em>';
+        } else {
+          out+='<span style="display:inline-block;opacity:0;transform:translateY(52px) skewX(-5deg);transition:opacity .7s ease '+dl+'s,transform .9s cubic-bezier(.23,1,.32,1) '+dl+'s">'+p+'</span>';
+        }
+        dl+=0.068;
+      });
+      h1.innerHTML=out;
+      setTimeout(function(){
+        h1.querySelectorAll('span,em').forEach(function(el){el.style.opacity='1';el.style.transform='translateY(0) skewX(0)';});
+      },500);
+    }
+
+    /* ── UNIVERSAL SCROLL REVEAL — every element every page ── */
+    var SELS=[
+      'h1','h2','h3','h4','h5',
+      'p','.manifesto-eyebrow','.manifesto-close p',
+      '.pillars-label','.pillars-title','.pillar',
+      '.pillar-principle','.pillar-brand','.pillar p','.pillar-lead','.pillar-num',
+      '.doors-eyebrow','.door',
+      '.page-eyebrow','.page-hero-sub','.page-hero h1',
+      '.ab-eyebrow','.ab-origin p','.ab-quote blockquote','.ab-quote cite',
+      '.principle','.ab-why p','.ab-house p',
+      '.section-eyebrow','.section-head',
+      '.pricing-card','.pricing-col','.pricing-col-label',
+      '.addl-card','.disc-card','.treat-opt',
+      '.members-block','.mem-h3-large',
+      '.disc-more','.footer-brand-wrap','.footer-nav li',
+      '.pc-row','.pc-cat','.locked',
+      'blockquote','cite','em','strong'
+    ];
+
+    var revealIO;
+
+    function doReveal(el){
+      el.style.opacity='1';
+      el.style.transform='translateY(0) skewY(0) skewX(0)';
+    }
+
+    function setupReveal(root){
+      SELS.forEach(function(sel){
+        (root||document).querySelectorAll(sel).forEach(function(el){
+          if(el.dataset.amR)return;
+          el.dataset.amR='1';
+          el.style.opacity='0';
+          el.style.transform='translateY(34px) skewY(-1deg)';
+          el.style.transition='opacity .8s cubic-bezier(.23,1,.32,1),transform .85s cubic-bezier(.23,1,.32,1)';
+          if(revealIO)revealIO.observe(el);
+        });
+      });
+    }
+
+    if('IntersectionObserver' in window){
+      revealIO=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){doReveal(e.target);revealIO.unobserve(e.target);}
+        });
+      },{threshold:0.05,rootMargin:'0px 0px -20px 0px'});
+
+      // Setup all pages now
+      document.querySelectorAll('.page').forEach(function(page){setupReveal(page);});
+
+      // Re-trigger on every page switch
+      var lastPg='';
+      setInterval(function(){
+        var active=document.querySelector('.page.active');
+        if(!active||active.id===lastPg)return;
+        lastPg=active.id;
+        active.querySelectorAll('[data-am-r]').forEach(function(el){
+          el.style.opacity='0';
+          el.style.transform='translateY(34px) skewY(-1deg)';
+          revealIO.observe(el);
+        });
+      },350);
+    } else {
+      document.querySelectorAll('[data-am-r]').forEach(doReveal);
+    }
+
+    /* ── SHIMMER on every button ── */
+    function applyShimmer(){
+      document.querySelectorAll('.btn-gold,.door-cta,.btn-solid,.disc-more').forEach(function(btn){
+        if(btn.dataset.shimmer)return;
+        btn.dataset.shimmer='1';
+        btn.style.overflow='hidden'; btn.style.position='relative';
+        var sh=document.createElement('span');
+        sh.style.cssText='position:absolute;top:0;left:0;width:50px;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.38),transparent);transform:translateX(-80px) skewX(-12deg);pointer-events:none;z-index:10';
+        btn.appendChild(sh);
+        btn.addEventListener('mouseenter',function(){
+          sh.style.transition='transform .5s ease';
+          sh.style.transform='translateX('+(btn.offsetWidth+80)+'px) skewX(-12deg)';
+          setTimeout(function(){sh.style.transition='none';sh.style.transform='translateX(-80px) skewX(-12deg)';},520);
+        });
+      });
+    }
+    applyShimmer();
+    setInterval(applyShimmer,1500);
+
+    /* ── DOOR PARALLAX ── */
+    if(!isTouch){
+      function initParallax(){
+        document.querySelectorAll('.door').forEach(function(door){
+          if(door.dataset.px)return;
+          door.dataset.px='1';
+          var logo=door.querySelector('.door-logo');
+          var cont=door.querySelector('.door-content');
+          door.addEventListener('mousemove',function(e){
+            var r=door.getBoundingClientRect();
+            var x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+            if(logo)logo.style.transform='translate('+(x*26)+'px,'+(y*18)+'px)';
+            if(cont)cont.style.transform='translate('+(x*-7)+'px,'+(y*-5)+'px)';
+          });
+          door.addEventListener('mouseleave',function(){
+            [logo,cont].forEach(function(el){
+              if(!el)return;
+              el.style.transition='transform .9s cubic-bezier(.23,1,.32,1)';
+              el.style.transform='none';
+              setTimeout(function(){el.style.transition='';},950);
+            });
+          });
+        });
+      }
+      initParallax();
+      setInterval(initParallax,2000);
+    }
+
+    /* ── ROTATING CURSOR — always visible, always spinning ── */
+    if(!isTouch){
+      // Remove any old cursor elements
+      ['cursorRing','cursorRingNew','amCursorRing'].forEach(function(id){
+        var e=document.getElementById(id);if(e)e.remove();
+      });
+      // Remove old dot
+      var oldDot=document.getElementById('cursorDot');
+      if(oldDot)oldDot.remove();
+
+      // Build dot
+      var dot=document.createElement('div');
+      dot.id='cursorDot';
+      dot.style.cssText='position:fixed;top:-100px;left:-100px;width:8px;height:8px;background:#c69c6d;border-radius:50%;pointer-events:none!important;z-index:100002;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;will-change:left,top';
+      document.body.appendChild(dot);
+
+      // Build SVG ring
+      var NS='http://www.w3.org/2000/svg';
+      var svg=document.createElementNS(NS,'svg');
+      svg.id='amCursorRing';
+      svg.setAttribute('viewBox','-44 -44 88 88');
+      svg.setAttribute('width','88');svg.setAttribute('height','88');
+      svg.style.cssText='position:fixed;top:-300px;left:-300px;pointer-events:none!important;z-index:100001;will-change:transform';
+      var sd=document.createElementNS(NS,'defs');
+      var sp=document.createElementNS(NS,'path');
+      sp.id='amTp';
+      sp.setAttribute('d','M 0 0 m -26 0 a 26 26 0 1 1 52 0 a 26 26 0 1 1 -52 0');
+      sd.appendChild(sp);svg.appendChild(sd);
+      var sc=document.createElementNS(NS,'circle');
+      sc.setAttribute('r','26');sc.setAttribute('fill','none');
+      sc.setAttribute('stroke','rgba(198,156,109,.42)');sc.setAttribute('stroke-width','1.2');
+      svg.appendChild(sc);
+      var st=document.createElementNS(NS,'text');
+      st.style.cssText='font-family:Arial,sans-serif;font-size:4.8px;letter-spacing:2.5px;font-weight:700;fill:rgba(198,156,109,.6);text-transform:uppercase';
+      var stp=document.createElementNS(NS,'textPath');
+      stp.setAttribute('href','#amTp');stp.setAttribute('startOffset','0%');
+      stp.textContent='EXPERIENCE · HOUSE OF AM · ';
+      st.appendChild(stp);svg.appendChild(st);
+      document.body.appendChild(svg);
+
+      var mx=0,my=0,rx=0,ry=0,ang=0,hov=false,entered=false;
+      document.addEventListener('mousemove',function(e){
+        mx=e.clientX;my=e.clientY;
+        if(!entered){
+          entered=true;
+          svg.style.top='0';svg.style.left='0';
+          dot.style.top='0';dot.style.left='0';
+        }
+      });
+
+      (function frame(){
+        rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+        dot.style.left=mx+'px';dot.style.top=my+'px';
+        svg.style.transform='translate(calc('+rx+'px - 50%),calc('+ry+'px - 50%)) rotate('+ang+'deg)';
+        ang+=hov?1.2:0.38;
+        requestAnimationFrame(frame);
+      })();
+
+      document.addEventListener('mouseover',function(e){
+        var t=e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more,.nav-links a,.logo-lockup,.pricing-card,.addl-card,.pillar,.principle');
+        if(t){
+          hov=true;
+          sc.setAttribute('stroke','rgba(198,156,109,.95)');sc.setAttribute('r','32');
+          st.style.fill='rgba(198,156,109,1)';st.style.fontSize='5.4px';
+          dot.style.width='4px';dot.style.height='4px';dot.style.background='#c8a96e';
+        } else {
+          hov=false;
+          sc.setAttribute('stroke','rgba(198,156,109,.42)');sc.setAttribute('r','26');
+          st.style.fill='rgba(198,156,109,.6)';st.style.fontSize='4.8px';
+          dot.style.width='8px';dot.style.height='8px';dot.style.background='#c69c6d';
+        }
+      });
+    }
+
+    /* ── DOORS: always clickable ── */
+    function fixClicks(){
+      document.querySelectorAll('.door-cta,.door,.btn-gold').forEach(function(el){
+        el.style.setProperty('position','relative','important');
+        el.style.setProperty('z-index','10','important');
+      });
+      lockOverlays();
+    }
+    fixClicks();
+    setInterval(fixClicks,1000);
+
+  })(); /* end initEnhancements */
+
 })();
 </script>
 
@@ -1798,467 +2040,6 @@ body { height: auto !important; min-height: 100vh !important; overflow-y: auto !
 
 </div>
 
-<script>
-/* AM EMPIRE — WORLD CLASS ENHANCEMENTS */
-function runAM() {
-  try { AMEnhancements(); } catch(e) { console.warn('AM err:', e.message); }
-}
-if(document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', runAM);
-} else {
-  runAM();
-}
 
-function AMEnhancements() {
-  var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-  /* ══ FIX: Force overlays NEVER block clicks ══ */
-  function lockOverlays() {
-    ['pageTransition','bookingModal'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if(el && !el.classList.contains('open') && !el.classList.contains('pt-in') && !el.classList.contains('pt-hold')) {
-        el.style.setProperty('pointer-events','none','important');
-      }
-    });
-  }
-  lockOverlays();
-  setInterval(lockOverlays, 800);
-
-  /* ══ 1. HERO — every word flies in ══ */
-  var h1 = document.getElementById('heroH1');
-  if(h1) {
-    h1.style.opacity = '1'; h1.style.transform = 'none';
-    var parts = h1.innerHTML.split(/(<br>|<em>[\s\S]*?<\/em>|[ \t\n]+)/);
-    var out = '', delay = 0.5;
-    parts.forEach(function(p) {
-      if(!p) return;
-      if(p === '<br>' || /^[ \t\n]+$/.test(p)) { out += p; return; }
-      if(p.indexOf('<em>') === 0) {
-        out += '<em style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-5deg);transition:opacity .7s ease '+delay+'s,transform .9s cubic-bezier(.23,1,.32,1) '+delay+'s;color:#d4b158;font-style:italic">'+p.replace(/<\/?em>/g,'')+'</em>';
-      } else {
-        out += '<span style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-5deg);transition:opacity .7s ease '+delay+'s,transform .9s cubic-bezier(.23,1,.32,1) '+delay+'s">'+p+'</span>';
-      }
-      delay += 0.07;
-    });
-    h1.innerHTML = out;
-    setTimeout(function() {
-      h1.querySelectorAll('span,em').forEach(function(el){ el.style.opacity='1'; el.style.transform='translateY(0) skewX(0)'; });
-    }, 400);
-  }
-
-  /* ══ 2. UNIVERSAL REVEAL — every text on every page ══ */
-  var SELECTORS = [
-    'h1','h2','h3','h4',
-    '.manifesto-eyebrow','.manifesto-close p',
-    '.pillars-label','.pillars-title','.pillar','.pillar-principle','.pillar-brand','.pillar p','.pillar-lead',
-    '.doors-eyebrow','.door',
-    '.page-eyebrow','.page-hero-sub',
-    '.ab-eyebrow','.ab-origin p','.ab-quote blockquote','.ab-quote cite','.principle','.ab-why p',
-    '.section-eyebrow','.section-head',
-    '.pricing-card','.pricing-col','.pricing-col-label',
-    '.addl-card','.disc-card','.treat-opt',
-    '.members-block','.mem-h3-large',
-    '.pillar-num','.disc-more',
-    '.footer-brand-wrap','.footer-nav',
-    '.cta-section','[class*="closing"]',
-    '.page-hero-content span','.page-hero-content p',
-    '.pc-row','.pc-cat',
-    'blockquote','cite'
-  ];
-
-  var io;
-
-  function revealEl(el) { el.style.opacity='1'; el.style.transform='translateY(0) skewY(0)'; }
-
-  function setupReveal(root) {
-    SELECTORS.forEach(function(sel) {
-      (root || document).querySelectorAll(sel).forEach(function(el) {
-        if(el.dataset.amR) return;
-        el.dataset.amR = '1';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(36px) skewY(-1deg)';
-        el.style.transition = 'opacity .8s cubic-bezier(.23,1,.32,1), transform .85s cubic-bezier(.23,1,.32,1)';
-        if(io) io.observe(el);
-      });
-    });
-  }
-
-  if('IntersectionObserver' in window) {
-    io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if(e.isIntersecting) { revealEl(e.target); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
-
-    // Setup on all pages immediately
-    document.querySelectorAll('.page').forEach(function(page) { setupReveal(page); });
-    setupReveal(document.getElementById('page-home'));
-
-    // Re-trigger every time a page becomes active
-    var lastPage = '';
-    setInterval(function() {
-      var active = document.querySelector('.page.active');
-      if(!active || active.id === lastPage) return;
-      lastPage = active.id;
-      // Reset + re-observe all elements on newly active page
-      active.querySelectorAll('[data-am-r]').forEach(function(el) {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(36px) skewY(-1deg)';
-        io.observe(el);
-      });
-    }, 400);
-  } else {
-    document.querySelectorAll('[data-am-r]').forEach(revealEl);
-  }
-
-  /* ══ 3. SHIMMER — every button every page ══ */
-  function applyShimmer() {
-    document.querySelectorAll('.btn-gold,.door-cta,.btn-solid,.disc-more').forEach(function(btn) {
-      if(btn.dataset.shimmer) return;
-      btn.dataset.shimmer = '1';
-      btn.style.overflow = 'hidden'; btn.style.position = 'relative';
-      var sh = document.createElement('span');
-      sh.style.cssText = 'position:absolute;top:0;left:0;width:50px;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.4),transparent);transform:translateX(-80px) skewX(-12deg);pointer-events:none;z-index:10';
-      btn.appendChild(sh);
-      btn.addEventListener('mouseenter', function() {
-        sh.style.transition = 'transform .5s ease';
-        sh.style.transform = 'translateX('+(btn.offsetWidth+80)+'px) skewX(-12deg)';
-        setTimeout(function(){ sh.style.transition='none'; sh.style.transform='translateX(-80px) skewX(-12deg)'; }, 520);
-      });
-    });
-  }
-  applyShimmer();
-  setInterval(applyShimmer, 2000);
-
-  /* ══ 4. DOOR PARALLAX ══ */
-  if(!isTouch) {
-    function initParallax() {
-      document.querySelectorAll('.door').forEach(function(door) {
-        if(door.dataset.parallax) return;
-        door.dataset.parallax = '1';
-        var logo = door.querySelector('.door-logo');
-        var content = door.querySelector('.door-content');
-        door.addEventListener('mousemove', function(e) {
-          var r = door.getBoundingClientRect();
-          var x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5;
-          if(logo) logo.style.transform='translate('+(x*26)+'px,'+(y*18)+'px)';
-          if(content) content.style.transform='translate('+(x*-7)+'px,'+(y*-5)+'px)';
-        });
-        door.addEventListener('mouseleave', function() {
-          [logo,content].forEach(function(el) {
-            if(!el) return;
-            el.style.transition='transform .9s cubic-bezier(.23,1,.32,1)';
-            el.style.transform='none';
-            setTimeout(function(){ el.style.transition=''; },950);
-          });
-        });
-      });
-    }
-    initParallax();
-    setInterval(initParallax, 2000);
-  }
-
-  /* ══ 5. CURSOR — always visible, always spinning ══ */
-  if(!isTouch) {
-    var dot = document.getElementById('cursorDot');
-    ['cursorRing','cursorRingNew','amCursorRing'].forEach(function(id){ var e=document.getElementById(id); if(e) e.remove(); });
-    var NS='http://www.w3.org/2000/svg';
-    var svg=document.createElementNS(NS,'svg');
-    svg.id='amCursorRing';
-    svg.setAttribute('viewBox','-44 -44 88 88');
-    svg.setAttribute('width','88'); svg.setAttribute('height','88');
-    svg.style.cssText='position:fixed;top:-300px;left:-300px;pointer-events:none!important;z-index:100001;will-change:transform';
-    var sd=document.createElementNS(NS,'defs');
-    var sp=document.createElementNS(NS,'path');
-    sp.id='amTp'; sp.setAttribute('d','M 0 0 m -26 0 a 26 26 0 1 1 52 0 a 26 26 0 1 1 -52 0');
-    sd.appendChild(sp); svg.appendChild(sd);
-    var sc=document.createElementNS(NS,'circle');
-    sc.setAttribute('r','26'); sc.setAttribute('fill','none');
-    sc.setAttribute('stroke','rgba(198,156,109,.4)'); sc.setAttribute('stroke-width','1');
-    svg.appendChild(sc);
-    var st=document.createElementNS(NS,'text');
-    st.style.cssText='font-family:Arial,sans-serif;font-size:4.8px;letter-spacing:2.5px;font-weight:700;fill:rgba(198,156,109,.55);text-transform:uppercase';
-    var stp=document.createElementNS(NS,'textPath');
-    stp.setAttribute('href','#amTp'); stp.setAttribute('startOffset','0%');
-    stp.textContent='EXPERIENCE · HOUSE OF AM · ';
-    st.appendChild(stp); svg.appendChild(st);
-    document.body.appendChild(svg);
-    var mx=0,my=0,rx=0,ry=0,ang=0,hov=false,entered=false;
-    document.addEventListener('mousemove',function(e){
-      mx=e.clientX; my=e.clientY;
-      if(!entered){ entered=true; svg.style.top='0'; svg.style.left='0'; }
-    });
-    (function frame(){
-      rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
-      if(dot){ dot.style.left=mx+'px'; dot.style.top=my+'px'; }
-      svg.style.transform='translate(calc('+rx+'px - 50%),calc('+ry+'px - 50%)) rotate('+ang+'deg)';
-      ang += hov ? 1.2 : 0.38;
-      requestAnimationFrame(frame);
-    })();
-    document.addEventListener('mouseover',function(e){
-      var t=e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more,.nav-links a,.logo-lockup,.pricing-card,.addl-card,.pillar');
-      if(t){
-        hov=true;
-        sc.setAttribute('stroke','rgba(198,156,109,.95)'); sc.setAttribute('r','32');
-        st.style.fill='rgba(198,156,109,1)'; st.style.fontSize='5.4px';
-        if(dot){dot.style.width='4px';dot.style.height='4px';dot.style.background='#c8a96e';}
-      } else {
-        hov=false;
-        sc.setAttribute('stroke','rgba(198,156,109,.4)'); sc.setAttribute('r','26');
-        st.style.fill='rgba(198,156,109,.55)'; st.style.fontSize='4.8px';
-        if(dot){dot.style.width='8px';dot.style.height='8px';dot.style.background='#c69c6d';}
-      }
-    });
-  }
-
-  /* ══ 6. DOORS z-index — always clickable ══ */
-  function fixClicks() {
-    document.querySelectorAll('.door-cta,.door,.btn-gold').forEach(function(el){
-      el.style.setProperty('position','relative','important');
-      el.style.setProperty('z-index','10','important');
-    });
-    lockOverlays();
-  }
-  fixClicks(); setInterval(fixClicks, 1000);
-}
-  var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-  /* ══ FIX: Force overlays to NEVER block clicks ══ */
-  ['pageTransition','bookingModal'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if(el) {
-      el.style.setProperty('pointer-events','none','important');
-      // Watch for changes
-      var orig = el.style.pointerEvents;
-      setInterval(function() {
-        if(!el.classList.contains('open') && !el.classList.contains('pt-in') && !el.classList.contains('pt-hold')) {
-          el.style.setProperty('pointer-events','none','important');
-        }
-      }, 200);
-    }
-  });
-
-  /* ══ 1. HERO — word by word stagger ══ */
-  var h1 = document.getElementById('heroH1');
-  if(h1) {
-    h1.style.opacity = '1';
-    h1.style.transform = 'none';
-    var parts = h1.innerHTML.split(/(<br>|<em>[\s\S]*?<\/em>|[ \t\n]+)/);
-    var out = '', delay = 0.5;
-    parts.forEach(function(p) {
-      if(!p) return;
-      if(p === '<br>' || /^[ \t\n]+$/.test(p)) { out += p; return; }
-      if(p.indexOf('<em>') === 0) {
-        out += '<em style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-6deg);transition:opacity .7s ease ' + delay + 's,transform .9s cubic-bezier(.23,1,.32,1) ' + delay + 's;color:#d4b158;font-style:italic">' + p.replace(/<\/?em>/g,'') + '</em>';
-      } else {
-        out += '<span style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-6deg);transition:opacity .7s ease ' + delay + 's,transform .9s cubic-bezier(.23,1,.32,1) ' + delay + 's">' + p + '</span>';
-      }
-      delay += 0.07;
-    });
-    h1.innerHTML = out;
-    setTimeout(function() {
-      h1.querySelectorAll('span, em').forEach(function(el) {
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0) skewX(0)';
-      });
-    }, 300);
-  }
-
-  /* ══ 2. SCROLL REVEAL — every section ══ */
-  var revealSelectors = [
-    '.manifesto-eyebrow','.manifesto h2','.manifesto-close h3','.manifesto-close p',
-    '.pillars-title','.pillars-label','.pillar',
-    '.doors-eyebrow','.doors-section h2','.door',
-    '.ab-hero h1','.ab-eyebrow','.ab-origin p',
-    '.ab-quote blockquote','.ab-philosophy .head h2','.principle',
-    '.ab-why h2','.ab-why p','.ab-house .head h2',
-    '.section-head','h2.reveal','.page-eyebrow',
-    '.page-hero h1','.page-hero-sub',
-    '.pricing-card','.addl-card','.disc-card','.members-block',
-    '.cta-section h2','.footer-brand-wrap'
-  ];
-
-  var revealEls = [];
-  revealSelectors.forEach(function(sel) {
-    document.querySelectorAll(sel).forEach(function(el, i) {
-      if(el.hasAttribute('data-am-reveal')) return;
-      el.setAttribute('data-am-reveal', '1');
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(38px) skewY(-1.5deg)';
-      el.style.transition = 'opacity .85s cubic-bezier(.23,1,.32,1),transform .9s cubic-bezier(.23,1,.32,1)';
-      revealEls.push(el);
-    });
-  });
-
-  function doReveal(el) {
-    el.style.opacity = '1';
-    el.style.transform = 'translateY(0) skewY(0)';
-  }
-
-  if('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if(e.isIntersecting) { doReveal(e.target); io.unobserve(e.target); }
-      });
-    }, {threshold: 0.06, rootMargin: '0px 0px -30px 0px'});
-    revealEls.forEach(function(el) { io.observe(el); });
-
-    // Re-trigger on page switch
-    document.addEventListener('click', function() {
-      setTimeout(function() {
-        var active = document.querySelector('.page.active');
-        if(!active) return;
-        active.querySelectorAll('[data-am-reveal]').forEach(function(el) {
-          el.style.opacity = '0';
-          el.style.transform = 'translateY(38px) skewY(-1.5deg)';
-          io.observe(el);
-        });
-      }, 700);
-    });
-  } else {
-    revealEls.forEach(doReveal);
-  }
-
-  /* ══ 3. SHIMMER — visible sweep on every button ══ */
-  function applyShimmer() {
-    document.querySelectorAll('.btn-gold, .door-cta, .btn-solid').forEach(function(btn) {
-      if(btn.dataset.shimmer) return;
-      btn.dataset.shimmer = '1';
-      btn.style.cssText += ';overflow:hidden;position:relative';
-      var sh = document.createElement('span');
-      sh.style.cssText = 'position:absolute;top:0;left:0;width:60px;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-100px) skewX(-15deg);pointer-events:none;z-index:10;transition:none';
-      btn.appendChild(sh);
-      btn.addEventListener('mouseenter', function() {
-        sh.style.transition = 'transform .5s ease';
-        sh.style.transform = 'translateX(' + (btn.offsetWidth + 60) + 'px) skewX(-15deg)';
-        setTimeout(function() { sh.style.transition = 'none'; sh.style.transform = 'translateX(-100px) skewX(-15deg)'; }, 520);
-      });
-    });
-  }
-  applyShimmer();
-  // Re-apply after page transitions
-  document.addEventListener('click', function() { setTimeout(applyShimmer, 800); });
-
-  /* ══ 4. DOOR PARALLAX — directly on mousemove, no transition lag ══ */
-  if(!isTouch) {
-    function initParallax() {
-      document.querySelectorAll('.door').forEach(function(door) {
-        if(door.dataset.parallax) return;
-        door.dataset.parallax = '1';
-        var logo = door.querySelector('.door-logo');
-        var content = door.querySelector('.door-content');
-        door.addEventListener('mousemove', function(e) {
-          var r = door.getBoundingClientRect();
-          var x = (e.clientX - r.left) / r.width - 0.5;
-          var y = (e.clientY - r.top) / r.height - 0.5;
-          if(logo) logo.style.transform = 'translate(' + (x*26) + 'px,' + (y*18) + 'px)';
-          if(content) content.style.transform = 'translate(' + (x*-7) + 'px,' + (y*-5) + 'px)';
-        });
-        door.addEventListener('mouseleave', function() {
-          if(logo) { logo.style.transition = 'transform .9s cubic-bezier(.23,1,.32,1)'; logo.style.transform = 'none'; setTimeout(function(){ logo.style.transition=''; },950); }
-          if(content) { content.style.transition = 'transform .9s cubic-bezier(.23,1,.32,1)'; content.style.transform = 'none'; setTimeout(function(){ content.style.transition=''; },950); }
-        });
-      });
-    }
-    initParallax();
-    document.addEventListener('click', function() { setTimeout(initParallax, 800); });
-  }
-
-  /* ══ 5. CURSOR — ring ALWAYS visible, spins ALWAYS, text on hover ══ */
-  if(!isTouch) {
-    var dot = document.getElementById('cursorDot');
-    ['cursorRing','cursorRingNew','amCursorRing'].forEach(function(id){ var e=document.getElementById(id); if(e) e.remove(); });
-
-    var NS = 'http://www.w3.org/2000/svg';
-    var svg = document.createElementNS(NS, 'svg');
-    svg.id = 'amCursorRing';
-    svg.setAttribute('viewBox', '-44 -44 88 88');
-    svg.setAttribute('width', '88');
-    svg.setAttribute('height', '88');
-    svg.style.cssText = 'position:fixed;top:-200px;left:-200px;pointer-events:none!important;z-index:100001;will-change:transform';
-
-    var sdefs = document.createElementNS(NS, 'defs');
-    var sPath = document.createElementNS(NS, 'path');
-    sPath.id = 'amTp';
-    sPath.setAttribute('d', 'M 0 0 m -26 0 a 26 26 0 1 1 52 0 a 26 26 0 1 1 -52 0');
-    sdefs.appendChild(sPath);
-    svg.appendChild(sdefs);
-
-    // Ring — ALWAYS visible at low opacity
-    var sCircle = document.createElementNS(NS, 'circle');
-    sCircle.setAttribute('r', '26');
-    sCircle.setAttribute('fill', 'none');
-    sCircle.setAttribute('stroke', 'rgba(198,156,109,.35)');
-    sCircle.setAttribute('stroke-width', '1');
-    svg.appendChild(sCircle);
-
-    // Text — ALWAYS rotating, visible at rest and on hover
-    var sTxt = document.createElementNS(NS, 'text');
-    sTxt.style.cssText = 'font-family:Arial,sans-serif;font-size:4.8px;letter-spacing:2.6px;font-weight:700;fill:rgba(198,156,109,.5);text-transform:uppercase';
-    var sTP = document.createElementNS(NS, 'textPath');
-    sTP.setAttribute('href', '#amTp');
-    sTP.setAttribute('startOffset', '0%');
-    sTP.textContent = 'EXPERIENCE · HOUSE OF AM · ';
-    sTxt.appendChild(sTP);
-    svg.appendChild(sTxt);
-
-    document.body.appendChild(svg);
-
-    var mx=0, my=0, rx=0, ry=0, ang=0, hovering=false, entered=false;
-
-    document.addEventListener('mousemove', function(e) {
-      mx = e.clientX; my = e.clientY;
-      if(!entered) { entered=true; svg.style.top='0'; svg.style.left='0'; }
-    });
-
-    (function frame() {
-      rx += (mx - rx) * .12;
-      ry += (my - ry) * .12;
-      if(dot) { dot.style.left = mx+'px'; dot.style.top = my+'px'; }
-      // Always spin — faster on hover
-      ang += hovering ? 1.1 : 0.4;
-      svg.style.transform = 'translate(calc('+rx+'px - 50%),calc('+ry+'px - 50%)) rotate('+ang+'deg)';
-      requestAnimationFrame(frame);
-    })();
-
-    document.addEventListener('mouseover', function(e) {
-      var t = e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more,.nav-links a,.logo-lockup,.door-heading,.pricing-card,.addl-card');
-      if(t) {
-        hovering = true;
-        sCircle.setAttribute('stroke', 'rgba(198,156,109,.9)');
-        sCircle.setAttribute('r', '32');
-        sTxt.style.fill = 'rgba(198,156,109,1)';
-        sTxt.style.fontSize = '5.4px';
-        if(dot) { dot.style.width='4px'; dot.style.height='4px'; dot.style.background='#c8a96e'; }
-      } else {
-        hovering = false;
-        sCircle.setAttribute('stroke', 'rgba(198,156,109,.35)');
-        sCircle.setAttribute('r', '26');
-        sTxt.style.fill = 'rgba(198,156,109,.5)';
-        sTxt.style.fontSize = '4.8px';
-        if(dot) { dot.style.width='8px'; dot.style.height='8px'; dot.style.background='#c69c6d'; }
-      }
-    });
-  }
-
-  /* ══ 6. DOORS — guarantee clickable on every page ══ */
-  function fixDoorClicks() {
-    document.querySelectorAll('.door-cta, .door, .btn-gold').forEach(function(el) {
-      el.style.setProperty('position','relative','important');
-      el.style.setProperty('z-index','10','important');
-    });
-    // Make sure nothing covers them
-    ['pageTransition','bookingModal'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if(el && !el.classList.contains('open') && !el.classList.contains('pt-in') && !el.classList.contains('pt-hold')) {
-        el.style.setProperty('pointer-events','none','important');
-      }
-    });
-  }
-  fixDoorClicks();
-  setInterval(fixDoorClicks, 1000);
-  document.addEventListener('click', function() { setTimeout(fixDoorClicks, 900); });
-}
-</script>
 </body>
 </html>
