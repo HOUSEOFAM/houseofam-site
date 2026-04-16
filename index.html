@@ -38,37 +38,34 @@ a{color:inherit;text-decoration:none}
 /* PAGE TRANSITION */
 .page-transition{
   position:fixed;inset:0;z-index:99998;pointer-events:none;
-  background:linear-gradient(160deg,#1a1508 0%,#0f0d07 60%,#1a1305 100%);
-  transform:translateY(100%);
-  transition:transform 0s;
-  will-change:transform;
+  background:#0f0d07;
+  opacity:0;
+  transition:opacity 0s;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
 }
-.page-transition.curtain-in{
+.page-transition.pt-fade-in{
   pointer-events:all;
-  transform:translateY(0);
-  transition:transform .42s cubic-bezier(.77,0,.18,1);
+  opacity:1;
+  transition:opacity .35s ease;
 }
-.page-transition.curtain-hold{
+.page-transition.pt-visible{
   pointer-events:all;
-  transform:translateY(0);
+  opacity:1;
   transition:none;
 }
-.page-transition.curtain-out{
+.page-transition.pt-fade-out{
   pointer-events:none;
-  transform:translateY(-100%);
-  transition:transform .42s cubic-bezier(.77,0,.18,1);
+  opacity:0;
+  transition:opacity .35s ease;
 }
 .curtain-mark{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  opacity:0;
-  transition:opacity .2s ease;
   display:flex;flex-direction:column;align-items:center;gap:14px;
+  opacity:0;transition:opacity .2s ease .15s;
 }
-.page-transition.curtain-hold .curtain-mark{opacity:1;}
-.curtain-mark-svg{width:min(90px,18vw);height:auto;animation:pulseGold 2s ease-in-out infinite;}
-.curtain-line{width:min(120px,24vw);height:1px;background:linear-gradient(90deg,transparent,#b8922a,#d4b158,#b8922a,transparent);opacity:.6;}
-.curtain-word{font-family:var(--ff-body);font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:#8a8178;font-weight:600;}
+.page-transition.pt-visible .curtain-mark{opacity:1;}
+.curtain-mark-svg{width:min(100px,22vw);height:auto;animation:pulseGold 2s ease-in-out infinite;}
+.curtain-line{width:min(140px,30vw);height:1px;background:linear-gradient(90deg,transparent,#b8922a,#d4b158,#b8922a,transparent);opacity:.6;}
+.curtain-word{font-family:var(--ff-body);font-size:10px;letter-spacing:.38em;text-transform:uppercase;color:#8a8178;font-weight:600;}
 .transition-mark{width:70px;height:auto}
 .transition-bar-track{width:100px;height:1px;background:rgba(184,146,42,.18);border-radius:1px;overflow:hidden}
 .transition-bar{height:100%;width:0;background:linear-gradient(90deg,#8a6d1c,#b8922a,#d4b158);border-radius:1px;transition:width .6s ease}
@@ -1305,12 +1302,12 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
     if((id===currentPage&&!scrollTarget)||transitioning){return;}
     transitioning = true;
 
-    // Phase 1: curtain slides UP from bottom (covers screen)
-    transition.className = 'page-transition curtain-in';
+    // Phase 1: fade to black
+    transition.className = 'page-transition pt-fade-in';
 
     setTimeout(function(){
-      // Phase 2: hold — swap the page underneath
-      transition.className = 'page-transition curtain-hold';
+      // Phase 2: hold — AM mark visible, swap page underneath
+      transition.className = 'page-transition pt-visible';
 
       PAGES.forEach(function(p){
         var el=document.getElementById('page-'+p);
@@ -1332,23 +1329,20 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
       document.documentElement.style.height='auto';
       document.body.style.height='auto';
 
-      // Phase 3: after brief hold, curtain slides UP off screen
+      // Phase 3: brief hold then fade back out
       setTimeout(function(){
-        transition.className = 'page-transition curtain-out';
-
+        transition.className = 'page-transition pt-fade-out';
         setTimeout(function(){
-          // Reset — back to offscreen below
           transition.className = 'page-transition';
           transitioning = false;
-
           if(scrollTarget){
             var el=document.getElementById(scrollTarget);
             if(el){el.scrollIntoView({behavior:'smooth'});}
           }
-        }, 460);
-      }, 220);
+        }, 380);
+      }, 300);
 
-    }, 440);
+    }, 380);
   }
 
   document.addEventListener('click',function(e){
