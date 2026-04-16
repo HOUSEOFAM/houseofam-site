@@ -566,92 +566,55 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
 .bm-btn span{position:relative;z-index:1}
 .bm-note{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,235,228,.25);text-align:center;margin-top:16px;font-family:var(--ff-body,sans-serif)}
 
-/* ══ DEMO PAGE ══ */
-#demo{background:var(--ink);color:var(--parch,#f0ebe4)}
-#am-curtain{position:fixed;inset:0;z-index:8999;pointer-events:none}
-#am-slash{position:absolute;top:-5%;left:-5%;width:6px;height:110%;
-  background:linear-gradient(180deg,transparent,#b8922a 20%,#d4b158 50%,#b8922a 80%,transparent);
-  transform:rotate(8deg) translateX(-200px);opacity:0;
-  box-shadow:0 0 20px rgba(184,146,42,.5);z-index:3}
-.am-panel{position:absolute;top:0;bottom:0;background:#0d0b09;transform:translateX(-105%);will-change:transform}
-.am-panel:nth-child(2){left:0;width:34%;z-index:2}
-.am-panel:nth-child(3){left:33.5%;width:34%;z-index:2}
-.am-panel:nth-child(4){left:67%;width:34%;z-index:2}
-.am-panel::after{content:"";position:absolute;top:0;right:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,#b8922a,transparent);opacity:.4}
-#am-cmark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);opacity:0;z-index:4}
-#am-cmark svg{width:clamp(70px,8vw,110px);height:auto}
-.rh{font-family:var(--ff-display,"Cormorant Garamond",Georgia,serif);font-weight:500;line-height:1.08;letter-spacing:-.01em}
-.rh .lw{display:block;overflow:hidden;padding-bottom:.06em}
-.rh .wd{display:inline-block;transform:translateY(108%) rotateX(-18deg);opacity:0;
-  transition:transform .72s cubic-bezier(.16,1,.3,1),opacity .5s ease;transform-origin:50% 0}
-.rh .wd.em{color:var(--gold-warm,#d4b158);font-style:italic}
-.rh.go .wd{transform:translateY(0) rotateX(0);opacity:1}
-#am-cur{position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);will-change:transform;display:none}
-#am-cur svg{width:58px;height:58px;overflow:visible;transition:width .38s cubic-bezier(.16,1,.3,1),height .38s cubic-bezier(.16,1,.3,1)}
-#cur-dot{transition:r .25s ease,fill .25s ease}
-#cur-ring{transition:r .38s cubic-bezier(.16,1,.3,1),stroke .38s ease}
-#cur-txt{font-size:6px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;fill:rgba(184,146,42,0);transition:fill .4s ease}
-#cur-spin{animation:amSpin 8s linear infinite;transform-origin:0 0}
+/* ─── EFFECT 2: WORD STAGGER ─── */
+.am-lw{display:block;overflow:hidden;padding-bottom:.05em}
+.am-wd{display:inline-block;transform:translateY(105%) rotateX(-16deg);opacity:0;
+  transition:transform .7s cubic-bezier(.16,1,.3,1),opacity .5s ease;transform-origin:50% 0}
+.am-wd.am-em{color:var(--gold-warm,#d4b158);font-style:italic}
+.am-rh.go .am-wd{transform:translateY(0) rotateX(0);opacity:1}
+
+/* ─── EFFECT 3: MAGNETIC CURSOR ─── */
+#am-cur{position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);will-change:transform}
+#am-cur svg{width:56px;height:56px;overflow:visible;transition:width .38s cubic-bezier(.16,1,.3,1),height .38s cubic-bezier(.16,1,.3,1)}
+#am-cur-dot{transition:r .25s ease,fill .25s ease}
+#am-cur-ring{transition:r .38s cubic-bezier(.16,1,.3,1),stroke .38s ease,stroke-width .3s ease}
+#am-cur-txt{font-size:6px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;fill:rgba(184,146,42,0);transition:fill .4s ease}
+#am-cur-spin{animation:amSpin 8s linear infinite;transform-origin:0 0}
 @keyframes amSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-body.am-hov #am-cur svg{width:84px;height:84px}
-body.am-hov #cur-dot{r:2.5}
-body.am-hov #cur-ring{r:28;stroke:rgba(184,146,42,.5);stroke-width:1.5}
-body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
-.am-mq-wrap{overflow:hidden;background:#b8922a}
-.am-mq-row{display:flex;white-space:nowrap;padding:.42rem 0;border-top:1px solid rgba(26,23,20,.15)}
+body.am-hov #am-cur svg{width:80px;height:80px}
+body.am-hov #am-cur-dot{r:2.5}
+body.am-hov #am-cur-ring{r:27;stroke:rgba(184,146,42,.5);stroke-width:1.5}
+body.am-hov #am-cur-txt{fill:rgba(184,146,42,.9)}
+.am-mag{display:inline-block;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+@media(pointer:coarse){#am-cur{display:none}}
+
+/* ─── EFFECT 4: DOUBLE MARQUEE ─── */
+.am-mq{overflow:hidden;background:var(--gold,#b8922a);border-top:1px solid rgba(26,23,20,.15);border-bottom:1px solid rgba(26,23,20,.15)}
+.am-mq-row{display:flex;white-space:nowrap;padding:.42rem 0;border-top:1px solid rgba(26,23,20,.12)}
 .am-mq-row:first-child{border-top:0}
-.am-fwd{display:inline-flex;animation:amFwd 20s linear infinite}
-.am-rev{display:inline-flex;animation:amRev 25s linear infinite}
-@keyframes amFwd{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-@keyframes amRev{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
-.am-mq-wrap:hover .am-fwd,.am-mq-wrap:hover .am-rev{animation-play-state:paused}
-.mqi{display:inline-block;font-family:var(--ff-body,"Inter",sans-serif);letter-spacing:.3em;text-transform:uppercase;font-weight:700;color:#1a1714;padding:0 1.75rem}
-.mqi-lg{font-size:10px}.mqi-sm{font-size:8px}
-.mq-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:rgba(26,23,20,.28);vertical-align:middle;margin:0 .2rem}
-.demo-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 2rem;background:radial-gradient(ellipse at 50% 30%,#2e2820,#1a1714 50%,#0d0b09);position:relative;overflow:hidden}
-.demo-eye{font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;font-weight:500;color:#b8922a;margin-bottom:2rem;position:relative;z-index:1;opacity:0;animation:dmFade .8s 2.5s ease forwards}
-.demo-sub-txt{margin:1.5rem 0 2.5rem;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(240,235,228,.45);position:relative;z-index:1;opacity:0;animation:dmFade .8s 3.2s ease forwards}
-.demo-sub-txt b{color:#b8922a;font-weight:400;margin:0 .4rem}
-@keyframes dmFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.1);max-width:900px;margin:2rem auto 0;padding:0 2rem;width:100%}
-.demo-card{padding:1.75rem 1.5rem;background:#1a1714;display:block;text-align:left;position:relative;overflow:hidden;text-decoration:none;cursor:none}
-.demo-card::before{content:"";position:absolute;inset:0;background:#b8922a;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.4,0,.2,1);z-index:0}
-.demo-card:hover::before{transform:scaleX(1)}
-.dc-num{font-family:var(--ff-display,"Cormorant Garamond",serif);font-size:2rem;color:#b8922a;font-style:italic;font-weight:500;position:relative;z-index:1;transition:color .4s ease}
-.demo-card:hover .dc-num{color:#1a1714}
-.dc-title{font-family:var(--ff-display,"Cormorant Garamond",serif);font-size:1.3rem;font-weight:500;margin:.25rem 0;position:relative;z-index:1;transition:color .4s ease;color:var(--parch,#f0ebe4)}
-.demo-card:hover .dc-title{color:#1a1714}
-.dc-sub{font-size:.68rem;color:rgba(240,235,228,.4);position:relative;z-index:1;transition:color .4s ease}
-.demo-card:hover .dc-sub{color:rgba(26,23,20,.7)}
-.demo-inner{min-height:62vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:5rem 2rem 3rem;background:radial-gradient(ellipse at 50% 40%,#2a2520,#1a1714 55%,#0d0b09);position:relative;overflow:hidden}
-.di-eye{font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:#b8922a;margin-bottom:1.5rem;position:relative;z-index:1}
-.demo-body{max-width:760px;margin:0 auto;padding:3rem 2rem}
-.demo-body p{color:rgba(240,235,228,.72);line-height:1.82;margin-bottom:1.5rem;font-family:var(--ff-display,"Cormorant Garamond",serif);font-size:1.08rem}
-.demo-info{border:1px solid rgba(184,146,42,.15);padding:1.5rem;margin:1.5rem 0;background:rgba(184,146,42,.03)}
-.demo-info p{font-family:var(--ff-body,"Inter",sans-serif)!important;font-size:.8rem!important;color:rgba(240,235,228,.45)!important;line-height:1.65!important;margin:0!important}
-.demo-slabel{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:#b8922a;margin-bottom:1rem;display:flex;align-items:center;gap:.7rem}
-.demo-slabel::before{content:"";flex:0 0 26px;height:1px;background:#b8922a}
-.demo-nav-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.5rem}
-.demo-back-a{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.25rem;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(240,235,228,.38);transition:color .3s;text-decoration:none;cursor:none}
-.demo-back-a::before{content:"←"}
-.demo-back-a:hover{color:#b8922a}
-.demo-btn2{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;border:1px solid #b8922a;color:#b8922a;position:relative;overflow:hidden;transition:color .45s ease;text-decoration:none;cursor:none}
-.demo-btn2::before{content:"";position:absolute;inset:0;background:#b8922a;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.4,0,.2,1);z-index:-1}
-.demo-btn2:hover::before{transform:scaleX(1)}
-.demo-btn2:hover{color:#1a1714}
-.demo-btn2-g{border-color:rgba(240,235,228,.25);color:rgba(240,235,228,.55)}
-.demo-btn2-g:hover{color:#f0ebe4}
-.demo-sep{border:0;height:1px;background:rgba(184,146,42,.12);margin:2rem 0}
-.mag-tgt{display:inline-block;transition:transform .4s cubic-bezier(.16,1,.3,1);cursor:none}
-.demo-stagger-ex{display:grid;gap:1rem;margin:1.5rem 0}
-.demo-mag-tgts{display:flex;gap:1rem;flex-wrap:wrap;margin:1.5rem 0}
-.demo-door-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.1);margin:1.5rem 0}
-.demo-door{padding:2rem 1.5rem;background:#1a1714;text-align:center;display:block;transition:transform .4s cubic-bezier(.16,1,.3,1);text-decoration:none;cursor:none}
-.demo-sp{display:none}
-.demo-sp.dsa{display:block}
+.am-mq-fwd{display:inline-flex;animation:mqFwd 22s linear infinite}
+.am-mq-rev{display:inline-flex;animation:mqRev 28s linear infinite}
+@keyframes mqFwd{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes mqRev{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+.am-mq:hover .am-mq-fwd,.am-mq:hover .am-mq-rev{animation-play-state:paused}
+.am-mi{display:inline-block;font-family:var(--ff-body,"Inter",sans-serif);letter-spacing:.3em;text-transform:uppercase;font-weight:700;color:#1a1714;padding:0 1.75rem}
+.am-mi-lg{font-size:10px}.am-mi-sm{font-size:8px}
+.am-md{display:inline-block;width:4px;height:4px;border-radius:50%;background:rgba(26,23,20,.25);vertical-align:middle;margin:0 .2rem}
 </style>
 </head>
 <body style="cursor:none">
+
+<!-- MAGNETIC CURSOR -->
+<div id="am-cur">
+  <svg viewBox="-32 -32 64 64" xmlns="http://www.w3.org/2000/svg">
+    <circle id="am-cur-dot" cx="0" cy="0" r="4" fill="#b8922a"/>
+    <circle id="am-cur-ring" cx="0" cy="0" r="0" fill="none" stroke="rgba(184,146,42,0)" stroke-width="0"/>
+    <g id="am-cur-spin">
+      <path id="am-ctp" d="M 0,0 m -22,0 a 22,22 0 1,1 44,0 a 22,22 0 1,1 -44,0" fill="none"/>
+      <text id="am-cur-txt"><textPath href="#am-ctp" startOffset="0%">EXPERIENCE · HOUSE OF AM · </textPath></text>
+    </g>
+  </svg>
+</div>
 
 <!-- LOADER -->
 <div class="loader" id="loader">
@@ -747,6 +710,12 @@ body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
     </div>
     <div class="hero-scroll">Scroll<span class="scroll-line"></span></div>
   </section>
+
+  <!-- DOUBLE MARQUEE -->
+    <div class="am-mq" aria-hidden="true">
+      <div class="am-mq-row"><div class="am-mq-fwd"><span class="am-mi am-mi-lg">Precision Grooming</span><span class="am-md"></span><span class="am-mi am-mi-lg">Recovery</span><span class="am-md"></span><span class="am-mi am-mi-lg">Premium Products</span><span class="am-md"></span><span class="am-mi am-mi-lg">Identity</span><span class="am-md"></span><span class="am-mi am-mi-lg">Defined By Standards</span><span class="am-md"></span><span class="am-mi am-mi-lg">Not Routine</span><span class="am-md"></span><span class="am-mi am-mi-lg">AM Barber Lounge</span><span class="am-md"></span><span class="am-mi am-mi-lg">AM Rénovaïr</span><span class="am-md"></span><span class="am-mi am-mi-lg">AM Essence</span><span class="am-md"></span><span class="am-mi am-mi-lg">AM Attire</span><span class="am-md"></span><span class="am-mi am-mi-lg">Precision Grooming</span><span class="am-md"></span><span class="am-mi am-mi-lg">Recovery</span><span class="am-md"></span><span class="am-mi am-mi-lg">Premium Products</span><span class="am-md"></span><span class="am-mi am-mi-lg">Identity</span><span class="am-md"></span><span class="am-mi am-mi-lg">Defined By Standards</span><span class="am-md"></span><span class="am-mi am-mi-lg">Not Routine</span><span class="am-md"></span><span class="am-mi am-mi-lg">AM Barber Lounge</span><span class="am-md"></span><span class="am-mi am-mi-lg">AM Rénovaïr</span><span class="am-md"></span><span class="am-mi am-mi-lg">AM Essence</span><span class="am-md"></span><span class="am-mi am-mi-lg">AM Attire</span><span class="am-md"></span></div></div>
+      <div class="am-mq-row"><div class="am-mq-rev"><span class="am-mi am-mi-sm">329 High Road · Harrow</span><span class="am-md"></span><span class="am-mi am-mi-sm">Premium Grooming</span><span class="am-md"></span><span class="am-mi am-mi-sm">Hijama Wet Cupping</span><span class="am-md"></span><span class="am-mi am-mi-sm">Dry Cupping</span><span class="am-md"></span><span class="am-mi am-mi-sm">Compression Therapy</span><span class="am-md"></span><span class="am-mi am-mi-sm">Luxury Streetwear</span><span class="am-md"></span><span class="am-mi am-mi-sm">Members Only</span><span class="am-md"></span><span class="am-mi am-mi-sm">Locked Pricing</span><span class="am-md"></span><span class="am-mi am-mi-sm">House of AM</span><span class="am-md"></span><span class="am-mi am-mi-sm">Harrow London</span><span class="am-md"></span><span class="am-mi am-mi-sm">329 High Road · Harrow</span><span class="am-md"></span><span class="am-mi am-mi-sm">Premium Grooming</span><span class="am-md"></span><span class="am-mi am-mi-sm">Hijama Wet Cupping</span><span class="am-md"></span><span class="am-mi am-mi-sm">Dry Cupping</span><span class="am-md"></span><span class="am-mi am-mi-sm">Compression Therapy</span><span class="am-md"></span><span class="am-mi am-mi-sm">Luxury Streetwear</span><span class="am-md"></span><span class="am-mi am-mi-sm">Members Only</span><span class="am-md"></span><span class="am-mi am-mi-sm">Locked Pricing</span><span class="am-md"></span><span class="am-mi am-mi-sm">House of AM</span><span class="am-md"></span><span class="am-mi am-mi-sm">Harrow London</span><span class="am-md"></span></div></div>
+    </div>
 
   <section class="manifesto" id="about">
     <div class="manifesto-eyebrow reveal">The House</div>
@@ -1632,205 +1601,6 @@ body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
 </div><!-- end page-about -->
 
 <!-- FOOTER -->
-
-
-<!-- ══ DEMO PAGE (hidden — footer Demo link) ══ -->
-<div class="page" id="page-demo" data-page="demo" data-theme="dark" data-title="House of AM — Effects Demo">
-
-  <!-- spinning cursor (only active on demo page) -->
-  <div id="am-cur">
-    <svg viewBox="-32 -32 64 64" xmlns="http://www.w3.org/2000/svg">
-      <circle id="cur-dot" cx="0" cy="0" r="4" fill="#b8922a"/>
-      <circle id="cur-ring" cx="0" cy="0" r="0" fill="none" stroke="rgba(184,146,42,0)" stroke-width="0"/>
-      <g id="cur-spin">
-        <path id="cur-tp" d="M 0,0 m -22,0 a 22,22 0 1,1 44,0 a 22,22 0 1,1 -44,0" fill="none"/>
-        <text id="cur-txt"><textPath href="#cur-tp" startOffset="0%">EXPERIENCE · HOUSE OF AM · </textPath></text>
-      </g>
-    </svg>
-  </div>
-
-  <!-- curtain -->
-  <div id="am-curtain">
-    <div id="am-slash"></div>
-    <div class="am-panel"></div>
-    <div class="am-panel"></div>
-    <div class="am-panel"></div>
-    <div id="am-cmark">
-      <svg viewBox="200 130 1520 680" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="dcA" x1="963" y1="167" x2="956" y2="737" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#C8C8C8"/><stop offset="1" stop-color="#909090"/></linearGradient>
-          <linearGradient id="dcB" x1="694" y1="632" x2="1225" y2="632" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#DDC18E"/><stop offset="1" stop-color="#B1915D"/></linearGradient>
-        </defs>
-        <polygon fill="url(#dcA)" points="960,260 1033,463 1109,463 1083,390 998,156 960,156 921,156 836,390 810,463 886,463"/>
-        <polygon fill="url(#dcB)" points="1118,485 1041,484 1041,485 960,675 878,485 802,484 801,485 694,780 771,780 843,580 929,780 960,780 990,780 1076,580 1148,780 1225,780"/>
-      </svg>
-    </div>
-  </div>
-
-  <!-- HOME sub-page -->
-  <div class="demo-sp dsa" id="dsp-home">
-    <section class="demo-hero">
-      <p class="demo-eye">House of AM · Effects Demo V2</p>
-      <h1 class="rh" id="dh-h1" style="font-size:clamp(3rem,7vw,5.5rem);max-width:12ch;position:relative;z-index:1">
-        <span class="lw"><span class="wd">Four</span> <span class="wd">Effects.</span></span>
-        <span class="lw"><span class="wd em">One</span> <span class="wd em">Standard.</span></span>
-      </h1>
-      <p class="demo-sub-txt">Curtain <b>·</b> Stagger <b>·</b> Magnetic <b>·</b> Marquee</p>
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:1">
-        <a href="#" class="demo-btn2 mag-tgt" data-ds="curtain">Explore All Four</a>
-        <a href="#" class="demo-btn2 demo-btn2-g mag-tgt" data-ds="marquee">See Marquee</a>
-      </div>
-      <div class="demo-grid">
-        <a href="#" data-ds="curtain" class="demo-card mag-tgt"><div class="dc-num">01</div><div class="dc-title">Ink Curtain</div><div class="dc-sub">Click any card</div></a>
-        <a href="#" data-ds="stagger" class="demo-card mag-tgt"><div class="dc-num">02</div><div class="dc-title">Word Stagger</div><div class="dc-sub">Every heading animates</div></a>
-        <a href="#" data-ds="magnetic" class="demo-card mag-tgt"><div class="dc-num">03</div><div class="dc-title">Magnetic Cursor</div><div class="dc-sub">Hover anywhere now</div></a>
-        <a href="#" data-ds="marquee" class="demo-card mag-tgt"><div class="dc-num">04</div><div class="dc-title">Gold Marquee</div><div class="dc-sub">Below — hover to pause</div></a>
-      </div>
-    </section>
-    <div class="am-mq-wrap">
-      <div class="am-mq-row"><div class="am-fwd">
-        <span class="mqi mqi-lg">Precision Grooming</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Recovery</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Premium Products</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Identity</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Defined By Standards</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Not Routine</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">AM Barber Lounge</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">AM Rénovaïr</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">AM Essence</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">AM Attire</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Precision Grooming</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Recovery</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Premium Products</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Identity</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Defined By Standards</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">Not Routine</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">AM Barber Lounge</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">AM Rénovaïr</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">AM Essence</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">AM Attire</span><span class="mq-dot"></span></div></div>
-      <div class="am-mq-row"><div class="am-rev">
-        <span class="mqi mqi-sm">329 High Road · Harrow</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Premium Grooming</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Hijama Wet Cupping</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Dry Cupping</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Luxury Streetwear</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Members Only</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Locked Pricing</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">House of AM</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">329 High Road · Harrow</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Premium Grooming</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Hijama Wet Cupping</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Dry Cupping</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Luxury Streetwear</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Members Only</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Locked Pricing</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">House of AM</span><span class="mq-dot"></span></div></div>
-    </div>
-  </div>
-
-  <!-- CURTAIN sub-page -->
-  <div class="demo-sp" id="dsp-curtain">
-    <section class="demo-inner"><p class="di-eye">Effect 01</p>
-      <h1 class="rh" id="dh-c1" style="font-size:clamp(2.8rem,6vw,5rem);position:relative;z-index:1">
-        <span class="lw"><span class="wd">The</span> <span class="wd">Ink</span></span>
-        <span class="lw"><span class="wd em">Curtain.</span></span>
-      </h1>
-    </section>
-    <div class="demo-body">
-      <div class="demo-slabel">How It Works</div>
-      <p>A gold light slash cuts diagonally across the screen first. Then three dark ink panels sweep in from the left — staggered 60ms each. The AM mark pulses gold at centre. All three panels then sweep out to the right, exposing the new page beneath.</p>
-      <p>Every page switch becomes a deliberate editorial moment — like turning a page in a luxury magazine. The same technique used by Celine, Bottega Veneta and Louis Vuitton online.</p>
-      <div class="demo-info"><p>Gold slash leads at 0ms · Panel 1 at 80ms · Panel 2 at 140ms · Panel 3 at 200ms · Total: ~1.8s</p></div>
-      <div class="demo-nav-row"><a href="#" class="demo-btn2 mag-tgt" data-ds="stagger">Next: Word Stagger →</a></div>
-      <a href="#" class="demo-back-a" data-ds="home">Back to overview</a>
-    </div>
-  </div>
-
-  <!-- STAGGER sub-page -->
-  <div class="demo-sp" id="dsp-stagger">
-    <section class="demo-inner"><p class="di-eye">Effect 02</p>
-      <h1 class="rh" id="dh-s1" style="font-size:clamp(2.8rem,6vw,5rem);position:relative;z-index:1">
-        <span class="lw"><span class="wd">Word</span> <span class="wd">By</span></span>
-        <span class="lw"><span class="wd em">Word.</span></span>
-      </h1>
-    </section>
-    <div class="demo-body">
-      <div class="demo-slabel">How It Works</div>
-      <p>Every heading is split word by word. Each word sits behind an overflow:hidden clip — invisible until it rises. On page entry each word breaks through with a 3D tilt that straightens as it arrives. Staggered at 78ms per word.</p>
-      <p>The heading is <em style="color:#d4b158;font-style:italic">performed</em> rather than loaded. Your eye follows left to right before the full message lands. Navigate away and come back — it fires again every time.</p>
-      <hr class="demo-sep">
-      <div class="demo-slabel">Live examples — animated on entry</div>
-      <div class="demo-stagger-ex">
-        <h2 class="rh" id="dh-se1" style="font-size:clamp(1.8rem,3.5vw,2.7rem)"><span class="lw"><span class="wd">Standard</span> <span class="wd">Over</span> <span class="wd em">Volume.</span></span></h2>
-        <h2 class="rh" id="dh-se2" style="font-size:clamp(1.8rem,3.5vw,2.7rem)"><span class="lw"><span class="wd">Premium</span> <span class="wd">Without</span> <span class="wd em">Apology.</span></span></h2>
-        <h2 class="rh" id="dh-se3" style="font-size:clamp(1.8rem,3.5vw,2.7rem)"><span class="lw"><span class="wd">Built</span> <span class="wd">To</span> <span class="wd em">Last.</span></span></h2>
-        <h2 class="rh" id="dh-se4" style="font-size:clamp(1.8rem,3.5vw,2.7rem)"><span class="lw"><span class="wd">Identity</span> <span class="wd">Over</span> <span class="wd em">Image.</span></span></h2>
-      </div>
-      <div class="demo-info"><p>↑ The actual four pillar headings from houseofam.co.uk — already split and ready to go live</p></div>
-      <div class="demo-nav-row"><a href="#" class="demo-btn2 mag-tgt" data-ds="magnetic">Next: Magnetic Cursor →</a></div>
-      <a href="#" class="demo-back-a" data-ds="home">Back to overview</a>
-    </div>
-  </div>
-
-  <!-- MAGNETIC sub-page -->
-  <div class="demo-sp" id="dsp-magnetic">
-    <section class="demo-inner"><p class="di-eye">Effect 03</p>
-      <h1 class="rh" id="dh-m1" style="font-size:clamp(2.8rem,6vw,5rem);position:relative;z-index:1">
-        <span class="lw"><span class="wd">Magnetic</span></span>
-        <span class="lw"><span class="wd em">Pull.</span></span>
-      </h1>
-    </section>
-    <div class="demo-body">
-      <div class="demo-slabel">How It Works</div>
-      <p>The cursor becomes a gold dot with an SVG ring spinning <em style="color:#d4b158">"EXPERIENCE · HOUSE OF AM ·"</em> around it. On hover the ring expands and the text burns bright — a brand stamp pressing into the page.</p>
-      <p>Elements have a magnetic field: within 80px they pull toward your cursor at 38% strength. Move slowly and deliberately — it rewards attention.</p>
-      <hr class="demo-sep">
-      <div class="demo-slabel">Move slowly over these — feel the pull</div>
-      <div class="demo-mag-tgts">
-        <a href="#" class="demo-btn2 mag-tgt" data-ds="home">Enter The House</a>
-        <a href="#" class="demo-btn2 demo-btn2-g mag-tgt" data-ds="home">Lock Your Rate</a>
-        <a href="#" class="demo-btn2 mag-tgt" data-ds="home">Book Appointment</a>
-      </div>
-      <div class="demo-door-row">
-        <a href="#" class="demo-door mag-tgt" data-ds="home"><div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#b8922a;font-style:italic;font-weight:500">01</div><div style="font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;margin-top:.35rem;color:rgba(240,235,228,.55)">Barber Lounge</div></a>
-        <a href="#" class="demo-door mag-tgt" data-ds="home"><div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#b8922a;font-style:italic;font-weight:500">02</div><div style="font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;margin-top:.35rem;color:rgba(240,235,228,.55)">Rénovaïr</div></a>
-        <a href="#" class="demo-door mag-tgt" data-ds="home"><div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#b8922a;font-style:italic;font-weight:500">03</div><div style="font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;margin-top:.35rem;color:rgba(240,235,228,.55)">Essence</div></a>
-      </div>
-      <div class="demo-nav-row"><a href="#" class="demo-btn2 mag-tgt" data-ds="marquee">Next: Gold Marquee →</a></div>
-      <a href="#" class="demo-back-a" data-ds="home">Back to overview</a>
-    </div>
-  </div>
-
-  <!-- MARQUEE sub-page -->
-  <div class="demo-sp" id="dsp-marquee">
-    <section class="demo-inner"><p class="di-eye">Effect 04</p>
-      <h1 class="rh" id="dh-mq1" style="font-size:clamp(2.8rem,6vw,5rem);position:relative;z-index:1">
-        <span class="lw"><span class="wd">The</span> <span class="wd">Gold</span></span>
-        <span class="lw"><span class="wd em">Marquee.</span></span>
-      </h1>
-    </section>
-    <div class="am-mq-wrap">
-      <div class="am-mq-row"><div class="am-fwd">
-        <span class="mqi mqi-lg">AM Barber Lounge</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Rénovaïr</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Essence</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Attire</span><span class="mq-dot"></span><span class="mqi mqi-lg">329 High Road · Harrow</span><span class="mq-dot"></span><span class="mqi mqi-lg">Defined By Standards</span><span class="mq-dot"></span><span class="mqi mqi-lg">Not Routine</span><span class="mq-dot"></span>
-        <span class="mqi mqi-lg">AM Barber Lounge</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Rénovaïr</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Essence</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Attire</span><span class="mq-dot"></span><span class="mqi mqi-lg">329 High Road · Harrow</span><span class="mq-dot"></span><span class="mqi mqi-lg">Defined By Standards</span><span class="mq-dot"></span><span class="mqi mqi-lg">Not Routine</span><span class="mq-dot"></span>
-      </div></div>
-      <div class="am-mq-row"><div class="am-rev">
-        <span class="mqi mqi-sm">Precision Grooming</span><span class="mq-dot"></span><span class="mqi mqi-sm">Hijama Wet Cupping</span><span class="mq-dot"></span><span class="mqi mqi-sm">Dry Cupping</span><span class="mq-dot"></span><span class="mqi mqi-sm">Compression Therapy</span><span class="mq-dot"></span><span class="mqi mqi-sm">Luxury Streetwear</span><span class="mq-dot"></span><span class="mqi mqi-sm">Members Only</span><span class="mq-dot"></span><span class="mqi mqi-sm">Locked Pricing</span><span class="mq-dot"></span>
-        <span class="mqi mqi-sm">Precision Grooming</span><span class="mq-dot"></span><span class="mqi mqi-sm">Hijama Wet Cupping</span><span class="mq-dot"></span><span class="mqi mqi-sm">Dry Cupping</span><span class="mq-dot"></span><span class="mqi mqi-sm">Compression Therapy</span><span class="mq-dot"></span><span class="mqi mqi-sm">Luxury Streetwear</span><span class="mq-dot"></span><span class="mqi mqi-sm">Members Only</span><span class="mq-dot"></span><span class="mqi mqi-sm">Locked Pricing</span><span class="mq-dot"></span>
-      </div></div>
-    </div>
-    <div class="demo-body">
-      <div class="demo-slabel">How It Works</div>
-      <p>Two gold rows running simultaneously — top left to right, bottom right to left at a different speed. Two font sizes create visual hierarchy. The opposite directions create a dynamic tension that draws the eye. Hover the strip to freeze both rows.</p>
-      <div class="demo-info"><p>Row 1: 20s cycle · Row 2: 25s cycle (different speeds = never align = always dynamic)<br>Plain text — fully indexed by Google and read by screen readers</p></div>
-      <div class="demo-nav-row"><a href="#" class="demo-btn2 mag-tgt" data-ds="home">← Back to overview</a></div>
-    </div>
-  </div>
-
-</div>
-<!-- ══ END DEMO PAGE ══ -->
-
 <footer class="site-footer">
   <div class="footer-brand"><div class="footer-brand-wrap"><span class="footer-brand-line"></span><span class="footer-brand-name">House of AM</span><span class="footer-brand-line"></span></div></div>
   <nav><ul class="footer-nav">
@@ -1867,7 +1637,7 @@ body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
     if(e.key==='Escape'){toggle.setAttribute('aria-expanded','false');navList.classList.remove('open');document.body.style.overflow='';}
   });
 
-  var PAGES=['home','barber-lounge','renovair','essence','attire','about','demo'];
+  var PAGES=['home','barber-lounge','renovair','essence','attire','about'];
   var currentPage='home';
   var transition=document.getElementById('pageTransition');
   var transBar=document.getElementById('transitionBar');
@@ -1894,67 +1664,112 @@ body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
       '<span style="font-family:var(--ff-body,sans-serif);font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:#8a8178;font-weight:600">House of AM</span>';
   })();
 
-  function showPage(id, scrollTarget, skipTransition){
-    if((id === currentPage && !scrollTarget) || transitioning){ return; }
 
-    // Direct swap — no transition (used on initial load)
-    if(skipTransition || !ptEl){
-      PAGES.forEach(function(p){ var el=document.getElementById('page-'+p); if(el) el.classList.remove('active'); });
+  /* ─── EFFECT 1: INK CURTAIN ─── */
+  var _ct=null;
+  function buildCurtain(){
+    if(_ct) return _ct;
+    _ct=document.createElement('div');
+    _ct.style.cssText='position:fixed;inset:0;z-index:8998;pointer-events:none';
+    var sl=document.createElement('div');
+    sl.id='am-sl';
+    sl.style.cssText='position:absolute;top:-5%;left:-5%;width:5px;height:110%;background:linear-gradient(180deg,transparent,#b8922a 20%,#d4b158 50%,#b8922a 80%,transparent);transform:rotate(8deg) translateX(-200px);opacity:0;z-index:3;box-shadow:0 0 18px rgba(184,146,42,.55)';
+    _ct.appendChild(sl);
+    [['left:0;width:34%'],['left:33.5%;width:34%'],['left:67%;width:34%']].forEach(function(s){
+      var p=document.createElement('div');
+      p.className='am-cp';
+      p.style.cssText='position:absolute;top:0;bottom:0;background:#0d0b09;transform:translateX(-105%);z-index:2;'+s[0];
+      _ct.appendChild(p);
+    });
+    var mk=document.createElement('div');
+    mk.id='am-mk';
+    mk.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);opacity:0;z-index:4';
+    mk.innerHTML='<svg style="width:clamp(60px,7vw,100px);height:auto" viewBox="200 130 1520 680" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cA" x1="963" y1="167" x2="956" y2="737" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#C8C8C8"/><stop offset="1" stop-color="#909090"/></linearGradient><linearGradient id="cB" x1="694" y1="632" x2="1225" y2="632" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#DDC18E"/><stop offset="1" stop-color="#B1915D"/></linearGradient></defs><polygon fill="url(#cA)" points="960,260 1033,463 1109,463 1083,390 998,156 960,156 921,156 836,390 810,463 886,463"/><polygon fill="url(#cB)" points="1118,485 1041,484 1041,485 960,675 878,485 802,484 801,485 694,780 771,780 843,580 929,780 960,780 990,780 1076,580 1148,780 1225,780"/></svg>';
+    _ct.appendChild(mk);
+    document.body.appendChild(_ct);
+    return _ct;
+  }
+  var _CEZ='cubic-bezier(.76,0,.24,1)';
+  function curtainIn(cb){
+    var ct=buildCurtain(),sl=document.getElementById('am-sl'),ps=ct.querySelectorAll('.am-cp'),mk=document.getElementById('am-mk');
+    ct.style.pointerEvents='all';
+    sl.style.cssText+=';transition:none';sl.style.transform='rotate(8deg) translateX(-200px)';sl.style.opacity='0';
+    void sl.offsetHeight;
+    sl.style.transition='transform .5s '+_CEZ+',opacity .18s ease';sl.style.opacity='1';sl.style.transform='rotate(8deg) translateX(120vw)';
+    ps.forEach(function(p,i){
+      p.style.transition='none';p.style.transform='translateX(-105%)';
+      void p.offsetHeight;
+      setTimeout(function(){p.style.transition='transform .56s '+_CEZ;p.style.transform='translateX(0)';},80+i*60);
+    });
+    mk.style.transition='none';mk.style.opacity='0';mk.style.transform='translate(-50%,-50%) scale(.72)';
+    setTimeout(function(){mk.style.transition='opacity .3s ease,transform .45s '+_CEZ;mk.style.opacity='1';mk.style.transform='translate(-50%,-50%) scale(1)';},260);
+    setTimeout(cb,680);
+  }
+  function curtainOut(cb){
+    var ct=buildCurtain(),ps=ct.querySelectorAll('.am-cp'),mk=document.getElementById('am-mk');
+    mk.style.transition='opacity .2s ease';mk.style.opacity='0';
+    ps.forEach(function(p,i){p.style.transition='transform .52s '+_CEZ;p.style.transitionDelay=(i*50)+'ms';p.style.transform='translateX(105%)';});
+    setTimeout(function(){
+      ct.style.pointerEvents='none';
+      ps.forEach(function(p){p.style.transitionDelay='0ms';p.style.transition='none';p.style.transform='translateX(-105%)';});
+      if(cb)cb();
+    },650);
+  }
+
+  function showPage(id, scrollTarget, skipTransition){
+    if((id===currentPage&&!scrollTarget)||transitioning){return;}
+    if(skipTransition){
+      PAGES.forEach(function(p){var el=document.getElementById('page-'+p);if(el)el.classList.remove('active');});
       var t=document.getElementById('page-'+id);
-      if(t){ t.classList.add('active'); currentPage=id; window.scrollTo(0,0); }
-      document.querySelectorAll('[data-nav]').forEach(function(a){
-        a.classList.toggle('active', a.getAttribute('data-nav')===id && !a.getAttribute('data-scroll'));
-      });
+      if(t){t.classList.add('active');currentPage=id;window.scrollTo(0,0);}
+      document.querySelectorAll('[data-nav]').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-nav')===id&&!a.getAttribute('data-scroll'));});
       return;
     }
-
-    transitioning = true;
-
-    var bar = document.getElementById('ptBar');
-    var svg = document.getElementById('ptSvg');
-
-    if(bar){ bar.style.transition='none'; bar.style.width='0'; }
-    if(svg){ svg.style.animation='none'; }
-
-    // Phase 1: FADE IN
-    ptEl.style.transition = 'opacity 0s';
-    ptEl.style.opacity = '0';
-    ptEl.style.setProperty('pointer-events','all','important');
-    void ptEl.offsetWidth;
-    ptEl.style.transition = 'opacity .55s ease';
-    ptEl.style.opacity = '1';
-
-    setTimeout(function(){
-      if(svg){ svg.style.animation = 'pulseGold 2.4s ease-in-out infinite'; }
-      if(bar){ void bar.offsetWidth; bar.style.transition='width 1.4s ease-in-out'; bar.style.width='100%'; }
-
-      PAGES.forEach(function(p){ var el=document.getElementById('page-'+p); if(el) el.classList.remove('active'); });
+    transitioning=true;
+    curtainIn(function(){
+      PAGES.forEach(function(p){var el=document.getElementById('page-'+p);if(el)el.classList.remove('active');});
       var target=document.getElementById('page-'+id);
-      if(target){ target.classList.add('active'); currentPage=id; window.scrollTo(0,0); }
-      document.querySelectorAll('[data-nav]').forEach(function(a){
-        a.classList.toggle('active', a.getAttribute('data-nav')===id && !a.getAttribute('data-scroll'));
-      });
+      if(target){target.classList.add('active');currentPage=id;window.scrollTo(0,0);}
+      document.querySelectorAll('[data-nav]').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-nav')===id&&!a.getAttribute('data-scroll'));});
       navList.classList.remove('open');
-      if(typeof toggle!=='undefined'){ toggle.setAttribute('aria-expanded','false'); }
-      document.body.style.overflow='';
-      document.documentElement.style.overflow='';
-      document.documentElement.style.height='auto';
-      document.body.style.height='auto';
+      if(typeof toggle!=='undefined'){toggle.setAttribute('aria-expanded','false');}
+      document.body.style.overflow='';document.documentElement.style.height='auto';document.body.style.height='auto';
+      curtainOut(function(){
+        transitioning=false;
+        if(scrollTarget){var el=document.getElementById(scrollTarget);if(el)el.scrollIntoView({behavior:'smooth'});}
+      });
+    });
+  }
 
-      // Phase 3: FADE OUT
-      setTimeout(function(){
-        if(svg){ svg.style.animation='none'; }
-        ptEl.style.transition = 'opacity .6s ease';
-        ptEl.style.opacity = '0';
-        setTimeout(function(){
-          ptEl.style.setProperty('pointer-events','none','important');
-          if(bar){ bar.style.transition='none'; bar.style.width='0'; }
-          transitioning=false;
-          if(scrollTarget){ var el=document.getElementById(scrollTarget); if(el) el.scrollIntoView({behavior:'smooth'}); }
-        }, 640);
-      }, 1550);
 
-    }, 580);
+
+  /* ─── EFFECT 2: WORD STAGGER ─── */
+  function fireStagger(el, delay){
+    if(!el||el.dataset.staggerDone) return;
+    el.dataset.staggerDone='1';
+    el.classList.add('am-rh');
+    // Split into word spans if not already done
+    if(!el.dataset.staggerSplit){
+      el.dataset.staggerSplit='1';
+      var raw=el.innerHTML;
+      // Wrap words preserving em/italic tags
+      var result='';
+      var parts=raw.split(/(<[^>]+>|[^<]+)/);
+      var wordI=0;
+      parts.forEach(function(part){
+        if(!part) return;
+        if(part.startsWith('<')){ result+=part; return; }
+        var words=part.split(/(\s+)/);
+        words.forEach(function(w){
+          if(/^\s+$/.test(w)||!w){ result+=w; return; }
+          result+='<span class="am-lw" style="display:inline-block"><span class="am-wd" style="transition-delay:'+(delay+(wordI*78))+'ms">' + w + '</span></span>';
+          wordI++;
+        });
+      });
+      el.innerHTML=result;
+    }
+    void el.offsetHeight;
+    requestAnimationFrame(function(){ el.classList.add('go'); });
   }
 
   document.addEventListener('click',function(e){
@@ -1965,6 +1780,10 @@ body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
   });
 
   showPage('home', null, true);
+  setTimeout(function(){
+    var h=document.querySelector('#page-home h1');
+    if(h) fireStagger(h,300);
+  },600);
 
   /* ══════════════════════════════════════════
      HOUSE OF AM — WORLD CLASS ENHANCEMENTS
@@ -2153,211 +1972,6 @@ body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
 
   })(); /* end initEnhancements */
 
-
-  /* ══ DEMO PAGE ENGINE ══ */
-  (function(){
-    var demoActive = false;
-    var dmCurPage = 'home';
-    var dmBusy = false;
-
-    /* Cursor */
-    var dmCur = document.getElementById('am-cur');
-    var dmDot = document.getElementById('cur-dot');
-    var dmRing = document.getElementById('cur-ring');
-    var dmTxt = document.getElementById('cur-txt');
-    var dmMx=0,dmMy=0,dmCx=0,dmCy=0;
-    var dmCurActive = false;
-
-    function startDemoCursor(){
-      if(dmCurActive) return;
-      dmCurActive = true;
-      dmCur.style.display = 'block';
-      document.addEventListener('mousemove', onDmMove);
-      (function tick(){
-        if(!dmCurActive) return;
-        dmCx += (dmMx - dmCx) * .13;
-        dmCy += (dmMy - dmCy) * .13;
-        dmCur.style.left = dmCx + 'px';
-        dmCur.style.top  = dmCy + 'px';
-        requestAnimationFrame(tick);
-      })();
-      document.addEventListener('mouseover', onDmHover);
-    }
-    function stopDemoCursor(){
-      dmCurActive = false;
-      dmCur.style.display = 'none';
-      document.removeEventListener('mousemove', onDmMove);
-      document.removeEventListener('mouseover', onDmHover);
-    }
-    function onDmMove(e){ dmMx = e.clientX; dmMy = e.clientY; }
-    function onDmHover(e){
-      var t = e.target.closest('a,button,.demo-btn,.mag-tgt,.demo-card,.demo-door');
-      document.body.classList.toggle('am-hov', !!t);
-    }
-
-    /* Magnetic */
-    function initMagnetic(root){
-      (root||document).querySelectorAll('.mag-tgt').forEach(function(el){
-        if(el.dataset.magDone) return;
-        el.dataset.magDone = '1';
-        el.addEventListener('mousemove', function(e){
-          var r = el.getBoundingClientRect();
-          var cx = r.left + r.width/2, cy = r.top + r.height/2;
-          var dx = e.clientX - cx, dy = e.clientY - cy;
-          var dist = Math.sqrt(dx*dx + dy*dy);
-          var rad = Math.max(r.width, r.height) * 2.4;
-          if(dist < rad){
-            var s = (1 - dist/rad) * .38;
-            el.style.transform = 'translate(' + (dx*s) + 'px,' + (dy*s) + 'px)';
-          }
-        });
-        el.addEventListener('mouseleave', function(){ el.style.transform = ''; });
-      });
-    }
-
-    /* Word stagger */
-    function goRH(el, delay){
-      if(!el) return;
-      el.querySelectorAll('.wd').forEach(function(w, i){
-        w.style.transitionDelay = ((delay||0) + i*78) + 'ms';
-      });
-      void el.offsetHeight;
-      requestAnimationFrame(function(){ el.classList.add('go'); });
-    }
-    function resetRH(el){
-      if(!el) return;
-      el.classList.remove('go');
-      el.querySelectorAll('.wd').forEach(function(w){ w.style.transitionDelay='0ms'; });
-    }
-
-    /* Curtain */
-    var curtain = document.getElementById('am-curtain');
-    var slash = document.getElementById('am-slash');
-    var panels = curtain ? curtain.querySelectorAll('.am-panel') : [];
-    var cmark = document.getElementById('am-cmark');
-    var EASE = 'cubic-bezier(.76,0,.24,1)';
-
-    function curtainIn(cb){
-      if(!curtain) { if(cb) cb(); return; }
-      curtain.style.pointerEvents = 'all';
-      /* slash */
-      slash.style.transition = 'none';
-      slash.style.transform = 'rotate(8deg) translateX(-200px)';
-      slash.style.opacity = '0';
-      void slash.offsetHeight;
-      slash.style.transition = 'transform .52s '+EASE+', opacity .18s ease';
-      slash.style.opacity = '1';
-      slash.style.transform = 'rotate(8deg) translateX(120vw)';
-      /* panels */
-      panels.forEach(function(p,i){
-        p.style.transition = 'none';
-        p.style.transform = 'translateX(-105%)';
-        void p.offsetHeight;
-        setTimeout(function(){
-          p.style.transition = 'transform .56s '+EASE;
-          p.style.transform = 'translateX(0)';
-        }, 80 + i*60);
-      });
-      /* mark */
-      cmark.style.transition = 'none';
-      cmark.style.opacity = '0';
-      cmark.style.transform = 'translate(-50%,-50%) scale(.72)';
-      setTimeout(function(){
-        cmark.style.transition = 'opacity .32s ease, transform .48s '+EASE;
-        cmark.style.opacity = '1';
-        cmark.style.transform = 'translate(-50%,-50%) scale(1)';
-      }, 270);
-      setTimeout(function(){ if(cb) cb(); }, 680);
-    }
-    function curtainOut(cb){
-      if(!curtain) { if(cb) cb(); return; }
-      cmark.style.transition = 'opacity .22s ease';
-      cmark.style.opacity = '0';
-      panels.forEach(function(p,i){
-        p.style.transition = 'transform .52s '+EASE;
-        p.style.transitionDelay = (i*50)+'ms';
-        p.style.transform = 'translateX(105%)';
-      });
-      slash.style.transition = 'none';
-      slash.style.opacity = '0';
-      setTimeout(function(){
-        curtain.style.pointerEvents = 'none';
-        panels.forEach(function(p){
-          p.style.transitionDelay = '0ms';
-          p.style.transform = 'translateX(-105%)';
-          p.style.transition = 'none';
-        });
-        if(cb) cb();
-      }, 660);
-    }
-
-    /* Sub-page router inside demo */
-    function goDs(id){
-      if(id === dmCurPage || dmBusy) return;
-      dmBusy = true;
-      curtainIn(function(){
-        /* hide all sub-pages */
-        document.querySelectorAll('.demo-sub-page').forEach(function(sp){
-          sp.classList.remove('dsactive');
-        });
-        /* reset all heads */
-        document.querySelectorAll('#demo .rh').forEach(resetRH);
-        /* show target */
-        var next = document.getElementById('dsp-' + id);
-        if(next){
-          next.classList.add('dsactive');
-          next.scrollTop = 0;
-          dmCurPage = id;
-          /* animate heads */
-          next.querySelectorAll('.rh').forEach(function(h, i){
-            setTimeout(function(){ goRH(h, 200); }, 380 + i*80);
-          });
-          /* init magnetic on new content */
-          initMagnetic(next);
-        }
-        curtainOut(function(){ dmBusy = false; });
-      });
-    }
-
-    /* Hook clicks inside demo page */
-    document.getElementById('demo').addEventListener('click', function(e){
-      var a = e.target.closest('[data-ds]');
-      if(!a) return;
-      e.preventDefault();
-      e.stopPropagation();
-      goDs(a.getAttribute('data-ds'));
-    });
-
-    /* Activate demo mode when demo page opens */
-    var origShowPage = showPage;
-    document.addEventListener('click', function(e){
-      // Watch for demo nav activation
-      var a = e.target.closest('[data-nav="demo"]');
-      if(a){
-        setTimeout(function(){
-          startDemoCursor();
-          goRH(document.getElementById('dh-h1'), 300);
-          initMagnetic(document.getElementById('dsp-home'));
-          dmCurPage = 'home';
-        }, 400);
-      }
-    });
-
-    /* Deactivate cursor when leaving demo */
-    var origPages = ['home','barber-lounge','renovair','essence','attire','about'];
-    document.addEventListener('click', function(e){
-      var a = e.target.closest('[data-nav]');
-      if(a && origPages.indexOf(a.getAttribute('data-nav')) > -1){
-        stopDemoCursor();
-        document.body.classList.remove('am-hov');
-      }
-    });
-
-    /* Init magnetic on first load of demo home */
-    initMagnetic(document.getElementById('dsp-home'));
-
-  })();
-
 })();
 </script>
 
@@ -2365,10 +1979,6 @@ body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
 html { height: auto !important; overflow-y: scroll !important; }
 body { height: auto !important; min-height: 100vh !important; overflow-y: auto !important; }
 .page.active { display: block !important; min-height: 100vh !important; }
-
-/* Sub-pages inside demo */
-.demo-sub-page{display:none}
-.demo-sub-page.dsactive{display:block}
 </style>
 <script>
 // Override WordPress body height collapse
@@ -2385,6 +1995,47 @@ body { height: auto !important; min-height: 100vh !important; overflow-y: auto !
   window.addEventListener('load', fixBody);
   var t=0;
   var iv=setInterval(function(){ fixBody(); t++; if(t>6) clearInterval(iv); },500);
+
+  /* ─── EFFECT 3: MAGNETIC CURSOR ─── */
+  (function(){
+    var isTouch='ontouchstart' in window||navigator.maxTouchPoints>0;
+    if(isTouch) return;
+    var cur=document.getElementById('am-cur');
+    if(!cur) return;
+    var mx=0,my=0,cx=0,cy=0;
+    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+    (function tick(){
+      cx+=(mx-cx)*.13; cy+=(my-cy)*.13;
+      cur.style.left=cx+'px'; cur.style.top=cy+'px';
+      requestAnimationFrame(tick);
+    })();
+    document.addEventListener('mouseover',function(e){
+      var t=e.target.closest('a,button,.door,.door-cta,.btn,.am-mag,[data-nav],.demo-btn2,.demo-card');
+      document.body.classList.toggle('am-hov',!!t);
+    });
+    // Magnetic pull on interactive elements
+    function applyMag(root){
+      (root||document).querySelectorAll('a[data-nav], .btn, .door, .door-cta').forEach(function(el){
+        if(el.dataset.magOk) return;
+        el.dataset.magOk='1';
+        el.classList.add('am-mag');
+        el.addEventListener('mousemove',function(e){
+          var r=el.getBoundingClientRect();
+          var dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
+          var dist=Math.sqrt(dx*dx+dy*dy);
+          var rad=Math.max(r.width,r.height)*2.2;
+          if(dist<rad){ var s=(1-dist/rad)*.35; el.style.transform='translate('+(dx*s)+'px,'+(dy*s)+'px)'; }
+        });
+        el.addEventListener('mouseleave',function(){el.style.transform='';});
+      });
+    }
+    applyMag();
+    // Re-apply on page switch
+    var _origShow=showPage;
+    setTimeout(function(){
+      document.addEventListener('click',function(){ setTimeout(function(){ applyMag(); },700); });
+    },100);
+  })();
 })();
 </script>
 
