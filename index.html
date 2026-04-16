@@ -1732,8 +1732,15 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
     var revealIO;
 
     function doReveal(el){
+      el.style.transition='opacity .75s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)';
       el.style.opacity='1';
-      el.style.transform='translateY(0) skewY(0) skewX(0)';
+      el.style.transform='translateY(0)';
+      el.dataset.amRevealed='1';
+    }
+    function doRevealInstant(el){
+      el.style.transition='none';
+      el.style.opacity='1';
+      el.style.transform='translateY(0)';
       el.dataset.amRevealed='1';
     }
 
@@ -1742,9 +1749,10 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
         (root||document).querySelectorAll(sel).forEach(function(el){
           if(el.dataset.amR)return;
           el.dataset.amR='1';
+          // Use opacity fade but start with a short delay so page is never blank
           el.style.opacity='0';
-          el.style.transform='translateY(34px) skewY(-1deg)';
-          el.style.transition='opacity .8s cubic-bezier(.23,1,.32,1),transform .85s cubic-bezier(.23,1,.32,1)';
+          el.style.transform='translateY(28px)';
+          el.style.transition='opacity .75s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)';
           if(revealIO)revealIO.observe(el);
         });
       });
@@ -1760,29 +1768,16 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
       // Setup all pages now
       document.querySelectorAll('.page').forEach(function(page){setupReveal(page);});
 
-      // Re-trigger on every page switch — NEVER reset opacity, just re-observe unseen elements
+      // On every page switch: instantly reveal ALL elements, then scroll handles below-fold
       var lastPg='';
       setInterval(function(){
         var active=document.querySelector('.page.active');
         if(!active||active.id===lastPg)return;
         lastPg=active.id;
-        // Only observe elements that haven't been revealed yet
+        // Instantly reveal everything on the new page (no delay, no blank screen)
         active.querySelectorAll('[data-am-r]').forEach(function(el){
-          if(el.dataset.amRevealed) return; // skip already revealed
-          revealIO.observe(el);
+          doRevealInstant(el);
         });
-        // Force-reveal everything in viewport immediately
-        setTimeout(function(){
-          active.querySelectorAll('[data-am-r]').forEach(function(el){
-            if(el.dataset.amRevealed) return;
-            var r=el.getBoundingClientRect();
-            if(r.top < window.innerHeight + 200){
-              doReveal(el);
-              el.dataset.amRevealed='1';
-              revealIO.unobserve(el);
-            }
-          });
-        },100);
       },350);
     } else {
       document.querySelectorAll('[data-am-r]').forEach(doReveal);
