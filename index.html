@@ -1800,9 +1800,14 @@ body { height: auto !important; min-height: 100vh !important; overflow-y: auto !
 
 <script>
 /* AM EMPIRE — WORLD CLASS ENHANCEMENTS */
-window.addEventListener('load', function() {
-  try { AMEnhancements(); } catch(e) { console.warn('AM enhance err:', e); }
-});
+function runAM() {
+  try { AMEnhancements(); } catch(e) { console.warn('AM err:', e.message); }
+}
+if(document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', runAM);
+} else {
+  runAM();
+}
 
 function AMEnhancements() {
   var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -1823,11 +1828,11 @@ function AMEnhancements() {
   var h1 = document.getElementById('heroH1');
   if(h1) {
     h1.style.opacity = '1'; h1.style.transform = 'none';
-    var parts = h1.innerHTML.split(/(<br>|<em>[\s\S]*?<\/em>|\s+)/);
+    var parts = h1.innerHTML.split(/(<br>|<em>[\s\S]*?<\/em>|[ \t\n]+)/);
     var out = '', delay = 0.5;
     parts.forEach(function(p) {
       if(!p) return;
-      if(p === '<br>' || /^\s+$/.test(p)) { out += p; return; }
+      if(p === '<br>' || /^[ \t\n]+$/.test(p)) { out += p; return; }
       if(p.indexOf('<em>') === 0) {
         out += '<em style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-5deg);transition:opacity .7s ease '+delay+'s,transform .9s cubic-bezier(.23,1,.32,1) '+delay+'s;color:#d4b158;font-style:italic">'+p.replace(/<\/?em>/g,'')+'</em>';
       } else {
@@ -2038,11 +2043,11 @@ function AMEnhancements() {
   if(h1) {
     h1.style.opacity = '1';
     h1.style.transform = 'none';
-    var parts = h1.innerHTML.split(/(<br>|<em>[\s\S]*?<\/em>|\s+)/);
+    var parts = h1.innerHTML.split(/(<br>|<em>[\s\S]*?<\/em>|[ \t\n]+)/);
     var out = '', delay = 0.5;
     parts.forEach(function(p) {
       if(!p) return;
-      if(p === '<br>' || /^\s+$/.test(p)) { out += p; return; }
+      if(p === '<br>' || /^[ \t\n]+$/.test(p)) { out += p; return; }
       if(p.indexOf('<em>') === 0) {
         out += '<em style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-6deg);transition:opacity .7s ease ' + delay + 's,transform .9s cubic-bezier(.23,1,.32,1) ' + delay + 's;color:#d4b158;font-style:italic">' + p.replace(/<\/?em>/g,'') + '</em>';
       } else {
