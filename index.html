@@ -1731,6 +1731,7 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
     function doReveal(el){
       el.style.opacity='1';
       el.style.transform='translateY(0) skewY(0) skewX(0)';
+      el.dataset.amRevealed='1';
     }
 
     function setupReveal(root){
@@ -1756,27 +1757,29 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
       // Setup all pages now
       document.querySelectorAll('.page').forEach(function(page){setupReveal(page);});
 
-      // Re-trigger on every page switch
+      // Re-trigger on every page switch — NEVER reset opacity, just re-observe unseen elements
       var lastPg='';
       setInterval(function(){
         var active=document.querySelector('.page.active');
         if(!active||active.id===lastPg)return;
         lastPg=active.id;
+        // Only observe elements that haven't been revealed yet
         active.querySelectorAll('[data-am-r]').forEach(function(el){
-          el.style.opacity='0';
-          el.style.transform='translateY(34px) skewY(-1deg)';
+          if(el.dataset.amRevealed) return; // skip already revealed
           revealIO.observe(el);
         });
-        // Immediately reveal anything already in the viewport
+        // Force-reveal everything in viewport immediately
         setTimeout(function(){
           active.querySelectorAll('[data-am-r]').forEach(function(el){
+            if(el.dataset.amRevealed) return;
             var r=el.getBoundingClientRect();
-            if(r.top < window.innerHeight + 100 && r.bottom > -100){
+            if(r.top < window.innerHeight + 200){
               doReveal(el);
+              el.dataset.amRevealed='1';
               revealIO.unobserve(el);
             }
           });
-        },150);
+        },100);
       },350);
     } else {
       document.querySelectorAll('[data-am-r]').forEach(doReveal);
