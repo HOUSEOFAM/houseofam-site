@@ -565,6 +565,90 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
 .bm-btn:hover{color:#1a1508}.bm-btn:hover::before{transform:scaleX(1)}
 .bm-btn span{position:relative;z-index:1}
 .bm-note{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,235,228,.25);text-align:center;margin-top:16px;font-family:var(--ff-body,sans-serif)}
+
+/* ══ DEMO PAGE ══ */
+#demo{background:var(--ink);color:var(--parch,#f0ebe4)}
+#am-curtain{position:fixed;inset:0;z-index:8999;pointer-events:none}
+#am-slash{position:absolute;top:-5%;left:-5%;width:6px;height:110%;
+  background:linear-gradient(180deg,transparent,#b8922a 20%,#d4b158 50%,#b8922a 80%,transparent);
+  transform:rotate(8deg) translateX(-200px);opacity:0;
+  box-shadow:0 0 20px rgba(184,146,42,.5);z-index:3}
+.am-panel{position:absolute;top:0;bottom:0;background:#0d0b09;transform:translateX(-105%);will-change:transform}
+.am-panel:nth-child(2){left:0;width:34%;z-index:2}
+.am-panel:nth-child(3){left:33.5%;width:34%;z-index:2}
+.am-panel:nth-child(4){left:67%;width:34%;z-index:2}
+.am-panel::after{content:"";position:absolute;top:0;right:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,#b8922a,transparent);opacity:.4}
+#am-cmark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);opacity:0;z-index:4}
+#am-cmark svg{width:clamp(70px,8vw,110px);height:auto}
+.rh{font-family:var(--ff-display,"Cormorant Garamond",Georgia,serif);font-weight:500;line-height:1.08;letter-spacing:-.01em}
+.rh .lw{display:block;overflow:hidden;padding-bottom:.06em}
+.rh .wd{display:inline-block;transform:translateY(108%) rotateX(-18deg);opacity:0;
+  transition:transform .72s cubic-bezier(.16,1,.3,1),opacity .5s ease;transform-origin:50% 0}
+.rh .wd.em{color:var(--gold-warm,#d4b158);font-style:italic}
+.rh.go .wd{transform:translateY(0) rotateX(0);opacity:1}
+#am-cur{position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);will-change:transform;display:none}
+#am-cur svg{width:58px;height:58px;overflow:visible;transition:width .38s cubic-bezier(.16,1,.3,1),height .38s cubic-bezier(.16,1,.3,1)}
+#cur-dot{transition:r .25s ease,fill .25s ease}
+#cur-ring{transition:r .38s cubic-bezier(.16,1,.3,1),stroke .38s ease}
+#cur-txt{font-size:6px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;fill:rgba(184,146,42,0);transition:fill .4s ease}
+#cur-spin{animation:amSpin 8s linear infinite;transform-origin:0 0}
+@keyframes amSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+body.am-hov #am-cur svg{width:84px;height:84px}
+body.am-hov #cur-dot{r:2.5}
+body.am-hov #cur-ring{r:28;stroke:rgba(184,146,42,.5);stroke-width:1.5}
+body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
+.am-mq-wrap{overflow:hidden;background:#b8922a}
+.am-mq-row{display:flex;white-space:nowrap;padding:.42rem 0;border-top:1px solid rgba(26,23,20,.15)}
+.am-mq-row:first-child{border-top:0}
+.am-fwd{display:inline-flex;animation:amFwd 20s linear infinite}
+.am-rev{display:inline-flex;animation:amRev 25s linear infinite}
+@keyframes amFwd{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes amRev{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+.am-mq-wrap:hover .am-fwd,.am-mq-wrap:hover .am-rev{animation-play-state:paused}
+.mqi{display:inline-block;font-family:var(--ff-body,"Inter",sans-serif);letter-spacing:.3em;text-transform:uppercase;font-weight:700;color:#1a1714;padding:0 1.75rem}
+.mqi-lg{font-size:10px}.mqi-sm{font-size:8px}
+.mq-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:rgba(26,23,20,.28);vertical-align:middle;margin:0 .2rem}
+.demo-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 2rem;background:radial-gradient(ellipse at 50% 30%,#2e2820,#1a1714 50%,#0d0b09);position:relative;overflow:hidden}
+.demo-eye{font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;font-weight:500;color:#b8922a;margin-bottom:2rem;position:relative;z-index:1;opacity:0;animation:dmFade .8s 2.5s ease forwards}
+.demo-sub-txt{margin:1.5rem 0 2.5rem;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(240,235,228,.45);position:relative;z-index:1;opacity:0;animation:dmFade .8s 3.2s ease forwards}
+.demo-sub-txt b{color:#b8922a;font-weight:400;margin:0 .4rem}
+@keyframes dmFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.1);max-width:900px;margin:2rem auto 0;padding:0 2rem;width:100%}
+.demo-card{padding:1.75rem 1.5rem;background:#1a1714;display:block;text-align:left;position:relative;overflow:hidden;text-decoration:none;cursor:none}
+.demo-card::before{content:"";position:absolute;inset:0;background:#b8922a;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.4,0,.2,1);z-index:0}
+.demo-card:hover::before{transform:scaleX(1)}
+.dc-num{font-family:var(--ff-display,"Cormorant Garamond",serif);font-size:2rem;color:#b8922a;font-style:italic;font-weight:500;position:relative;z-index:1;transition:color .4s ease}
+.demo-card:hover .dc-num{color:#1a1714}
+.dc-title{font-family:var(--ff-display,"Cormorant Garamond",serif);font-size:1.3rem;font-weight:500;margin:.25rem 0;position:relative;z-index:1;transition:color .4s ease;color:var(--parch,#f0ebe4)}
+.demo-card:hover .dc-title{color:#1a1714}
+.dc-sub{font-size:.68rem;color:rgba(240,235,228,.4);position:relative;z-index:1;transition:color .4s ease}
+.demo-card:hover .dc-sub{color:rgba(26,23,20,.7)}
+.demo-inner{min-height:62vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:5rem 2rem 3rem;background:radial-gradient(ellipse at 50% 40%,#2a2520,#1a1714 55%,#0d0b09);position:relative;overflow:hidden}
+.di-eye{font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:#b8922a;margin-bottom:1.5rem;position:relative;z-index:1}
+.demo-body{max-width:760px;margin:0 auto;padding:3rem 2rem}
+.demo-body p{color:rgba(240,235,228,.72);line-height:1.82;margin-bottom:1.5rem;font-family:var(--ff-display,"Cormorant Garamond",serif);font-size:1.08rem}
+.demo-info{border:1px solid rgba(184,146,42,.15);padding:1.5rem;margin:1.5rem 0;background:rgba(184,146,42,.03)}
+.demo-info p{font-family:var(--ff-body,"Inter",sans-serif)!important;font-size:.8rem!important;color:rgba(240,235,228,.45)!important;line-height:1.65!important;margin:0!important}
+.demo-slabel{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:#b8922a;margin-bottom:1rem;display:flex;align-items:center;gap:.7rem}
+.demo-slabel::before{content:"";flex:0 0 26px;height:1px;background:#b8922a}
+.demo-nav-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.5rem}
+.demo-back-a{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.25rem;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(240,235,228,.38);transition:color .3s;text-decoration:none;cursor:none}
+.demo-back-a::before{content:"←"}
+.demo-back-a:hover{color:#b8922a}
+.demo-btn2{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;border:1px solid #b8922a;color:#b8922a;position:relative;overflow:hidden;transition:color .45s ease;text-decoration:none;cursor:none}
+.demo-btn2::before{content:"";position:absolute;inset:0;background:#b8922a;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.4,0,.2,1);z-index:-1}
+.demo-btn2:hover::before{transform:scaleX(1)}
+.demo-btn2:hover{color:#1a1714}
+.demo-btn2-g{border-color:rgba(240,235,228,.25);color:rgba(240,235,228,.55)}
+.demo-btn2-g:hover{color:#f0ebe4}
+.demo-sep{border:0;height:1px;background:rgba(184,146,42,.12);margin:2rem 0}
+.mag-tgt{display:inline-block;transition:transform .4s cubic-bezier(.16,1,.3,1);cursor:none}
+.demo-stagger-ex{display:grid;gap:1rem;margin:1.5rem 0}
+.demo-mag-tgts{display:flex;gap:1rem;flex-wrap:wrap;margin:1.5rem 0}
+.demo-door-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.1);margin:1.5rem 0}
+.demo-door{padding:2rem 1.5rem;background:#1a1714;text-align:center;display:block;transition:transform .4s cubic-bezier(.16,1,.3,1);text-decoration:none;cursor:none}
+.demo-sp{display:none}
+.demo-sp.dsa{display:block}
 </style>
 </head>
 <body style="cursor:none">
@@ -1548,6 +1632,205 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
 </div><!-- end page-about -->
 
 <!-- FOOTER -->
+
+
+<!-- ══ DEMO PAGE (hidden — footer Demo link) ══ -->
+<div class="page" id="page-demo" data-page="demo" data-theme="dark" data-title="House of AM — Effects Demo">
+
+  <!-- spinning cursor (only active on demo page) -->
+  <div id="am-cur">
+    <svg viewBox="-32 -32 64 64" xmlns="http://www.w3.org/2000/svg">
+      <circle id="cur-dot" cx="0" cy="0" r="4" fill="#b8922a"/>
+      <circle id="cur-ring" cx="0" cy="0" r="0" fill="none" stroke="rgba(184,146,42,0)" stroke-width="0"/>
+      <g id="cur-spin">
+        <path id="cur-tp" d="M 0,0 m -22,0 a 22,22 0 1,1 44,0 a 22,22 0 1,1 -44,0" fill="none"/>
+        <text id="cur-txt"><textPath href="#cur-tp" startOffset="0%">EXPERIENCE · HOUSE OF AM · </textPath></text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- curtain -->
+  <div id="am-curtain">
+    <div id="am-slash"></div>
+    <div class="am-panel"></div>
+    <div class="am-panel"></div>
+    <div class="am-panel"></div>
+    <div id="am-cmark">
+      <svg viewBox="200 130 1520 680" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="dcA" x1="963" y1="167" x2="956" y2="737" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#C8C8C8"/><stop offset="1" stop-color="#909090"/></linearGradient>
+          <linearGradient id="dcB" x1="694" y1="632" x2="1225" y2="632" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#DDC18E"/><stop offset="1" stop-color="#B1915D"/></linearGradient>
+        </defs>
+        <polygon fill="url(#dcA)" points="960,260 1033,463 1109,463 1083,390 998,156 960,156 921,156 836,390 810,463 886,463"/>
+        <polygon fill="url(#dcB)" points="1118,485 1041,484 1041,485 960,675 878,485 802,484 801,485 694,780 771,780 843,580 929,780 960,780 990,780 1076,580 1148,780 1225,780"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- HOME sub-page -->
+  <div class="demo-sp dsa" id="dsp-home">
+    <section class="demo-hero">
+      <p class="demo-eye">House of AM · Effects Demo V2</p>
+      <h1 class="rh" id="dh-h1" style="font-size:clamp(3rem,7vw,5.5rem);max-width:12ch;position:relative;z-index:1">
+        <span class="lw"><span class="wd">Four</span> <span class="wd">Effects.</span></span>
+        <span class="lw"><span class="wd em">One</span> <span class="wd em">Standard.</span></span>
+      </h1>
+      <p class="demo-sub-txt">Curtain <b>·</b> Stagger <b>·</b> Magnetic <b>·</b> Marquee</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:1">
+        <a href="#" class="demo-btn2 mag-tgt" data-ds="curtain">Explore All Four</a>
+        <a href="#" class="demo-btn2 demo-btn2-g mag-tgt" data-ds="marquee">See Marquee</a>
+      </div>
+      <div class="demo-grid">
+        <a href="#" data-ds="curtain" class="demo-card mag-tgt"><div class="dc-num">01</div><div class="dc-title">Ink Curtain</div><div class="dc-sub">Click any card</div></a>
+        <a href="#" data-ds="stagger" class="demo-card mag-tgt"><div class="dc-num">02</div><div class="dc-title">Word Stagger</div><div class="dc-sub">Every heading animates</div></a>
+        <a href="#" data-ds="magnetic" class="demo-card mag-tgt"><div class="dc-num">03</div><div class="dc-title">Magnetic Cursor</div><div class="dc-sub">Hover anywhere now</div></a>
+        <a href="#" data-ds="marquee" class="demo-card mag-tgt"><div class="dc-num">04</div><div class="dc-title">Gold Marquee</div><div class="dc-sub">Below — hover to pause</div></a>
+      </div>
+    </section>
+    <div class="am-mq-wrap">
+      <div class="am-mq-row"><div class="am-fwd">
+        <span class="mqi mqi-lg">Precision Grooming</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Recovery</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Premium Products</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Identity</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Defined By Standards</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Not Routine</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">AM Barber Lounge</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">AM Rénovaïr</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">AM Essence</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">AM Attire</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Precision Grooming</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Recovery</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Premium Products</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Identity</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Defined By Standards</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">Not Routine</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">AM Barber Lounge</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">AM Rénovaïr</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">AM Essence</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">AM Attire</span><span class="mq-dot"></span></div></div>
+      <div class="am-mq-row"><div class="am-rev">
+        <span class="mqi mqi-sm">329 High Road · Harrow</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Premium Grooming</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Hijama Wet Cupping</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Dry Cupping</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Luxury Streetwear</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Members Only</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Locked Pricing</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">House of AM</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">329 High Road · Harrow</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Premium Grooming</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Hijama Wet Cupping</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Dry Cupping</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Luxury Streetwear</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Members Only</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Locked Pricing</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">House of AM</span><span class="mq-dot"></span></div></div>
+    </div>
+  </div>
+
+  <!-- CURTAIN sub-page -->
+  <div class="demo-sp" id="dsp-curtain">
+    <section class="demo-inner"><p class="di-eye">Effect 01</p>
+      <h1 class="rh" id="dh-c1" style="font-size:clamp(2.8rem,6vw,5rem);position:relative;z-index:1">
+        <span class="lw"><span class="wd">The</span> <span class="wd">Ink</span></span>
+        <span class="lw"><span class="wd em">Curtain.</span></span>
+      </h1>
+    </section>
+    <div class="demo-body">
+      <div class="demo-slabel">How It Works</div>
+      <p>A gold light slash cuts diagonally across the screen first. Then three dark ink panels sweep in from the left — staggered 60ms each. The AM mark pulses gold at centre. All three panels then sweep out to the right, exposing the new page beneath.</p>
+      <p>Every page switch becomes a deliberate editorial moment — like turning a page in a luxury magazine. The same technique used by Celine, Bottega Veneta and Louis Vuitton online.</p>
+      <div class="demo-info"><p>Gold slash leads at 0ms · Panel 1 at 80ms · Panel 2 at 140ms · Panel 3 at 200ms · Total: ~1.8s</p></div>
+      <div class="demo-nav-row"><a href="#" class="demo-btn2 mag-tgt" data-ds="stagger">Next: Word Stagger →</a></div>
+      <a href="#" class="demo-back-a" data-ds="home">Back to overview</a>
+    </div>
+  </div>
+
+  <!-- STAGGER sub-page -->
+  <div class="demo-sp" id="dsp-stagger">
+    <section class="demo-inner"><p class="di-eye">Effect 02</p>
+      <h1 class="rh" id="dh-s1" style="font-size:clamp(2.8rem,6vw,5rem);position:relative;z-index:1">
+        <span class="lw"><span class="wd">Word</span> <span class="wd">By</span></span>
+        <span class="lw"><span class="wd em">Word.</span></span>
+      </h1>
+    </section>
+    <div class="demo-body">
+      <div class="demo-slabel">How It Works</div>
+      <p>Every heading is split word by word. Each word sits behind an overflow:hidden clip — invisible until it rises. On page entry each word breaks through with a 3D tilt that straightens as it arrives. Staggered at 78ms per word.</p>
+      <p>The heading is <em style="color:#d4b158;font-style:italic">performed</em> rather than loaded. Your eye follows left to right before the full message lands. Navigate away and come back — it fires again every time.</p>
+      <hr class="demo-sep">
+      <div class="demo-slabel">Live examples — animated on entry</div>
+      <div class="demo-stagger-ex">
+        <h2 class="rh" id="dh-se1" style="font-size:clamp(1.8rem,3.5vw,2.7rem)"><span class="lw"><span class="wd">Standard</span> <span class="wd">Over</span> <span class="wd em">Volume.</span></span></h2>
+        <h2 class="rh" id="dh-se2" style="font-size:clamp(1.8rem,3.5vw,2.7rem)"><span class="lw"><span class="wd">Premium</span> <span class="wd">Without</span> <span class="wd em">Apology.</span></span></h2>
+        <h2 class="rh" id="dh-se3" style="font-size:clamp(1.8rem,3.5vw,2.7rem)"><span class="lw"><span class="wd">Built</span> <span class="wd">To</span> <span class="wd em">Last.</span></span></h2>
+        <h2 class="rh" id="dh-se4" style="font-size:clamp(1.8rem,3.5vw,2.7rem)"><span class="lw"><span class="wd">Identity</span> <span class="wd">Over</span> <span class="wd em">Image.</span></span></h2>
+      </div>
+      <div class="demo-info"><p>↑ The actual four pillar headings from houseofam.co.uk — already split and ready to go live</p></div>
+      <div class="demo-nav-row"><a href="#" class="demo-btn2 mag-tgt" data-ds="magnetic">Next: Magnetic Cursor →</a></div>
+      <a href="#" class="demo-back-a" data-ds="home">Back to overview</a>
+    </div>
+  </div>
+
+  <!-- MAGNETIC sub-page -->
+  <div class="demo-sp" id="dsp-magnetic">
+    <section class="demo-inner"><p class="di-eye">Effect 03</p>
+      <h1 class="rh" id="dh-m1" style="font-size:clamp(2.8rem,6vw,5rem);position:relative;z-index:1">
+        <span class="lw"><span class="wd">Magnetic</span></span>
+        <span class="lw"><span class="wd em">Pull.</span></span>
+      </h1>
+    </section>
+    <div class="demo-body">
+      <div class="demo-slabel">How It Works</div>
+      <p>The cursor becomes a gold dot with an SVG ring spinning <em style="color:#d4b158">"EXPERIENCE · HOUSE OF AM ·"</em> around it. On hover the ring expands and the text burns bright — a brand stamp pressing into the page.</p>
+      <p>Elements have a magnetic field: within 80px they pull toward your cursor at 38% strength. Move slowly and deliberately — it rewards attention.</p>
+      <hr class="demo-sep">
+      <div class="demo-slabel">Move slowly over these — feel the pull</div>
+      <div class="demo-mag-tgts">
+        <a href="#" class="demo-btn2 mag-tgt" data-ds="home">Enter The House</a>
+        <a href="#" class="demo-btn2 demo-btn2-g mag-tgt" data-ds="home">Lock Your Rate</a>
+        <a href="#" class="demo-btn2 mag-tgt" data-ds="home">Book Appointment</a>
+      </div>
+      <div class="demo-door-row">
+        <a href="#" class="demo-door mag-tgt" data-ds="home"><div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#b8922a;font-style:italic;font-weight:500">01</div><div style="font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;margin-top:.35rem;color:rgba(240,235,228,.55)">Barber Lounge</div></a>
+        <a href="#" class="demo-door mag-tgt" data-ds="home"><div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#b8922a;font-style:italic;font-weight:500">02</div><div style="font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;margin-top:.35rem;color:rgba(240,235,228,.55)">Rénovaïr</div></a>
+        <a href="#" class="demo-door mag-tgt" data-ds="home"><div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#b8922a;font-style:italic;font-weight:500">03</div><div style="font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;margin-top:.35rem;color:rgba(240,235,228,.55)">Essence</div></a>
+      </div>
+      <div class="demo-nav-row"><a href="#" class="demo-btn2 mag-tgt" data-ds="marquee">Next: Gold Marquee →</a></div>
+      <a href="#" class="demo-back-a" data-ds="home">Back to overview</a>
+    </div>
+  </div>
+
+  <!-- MARQUEE sub-page -->
+  <div class="demo-sp" id="dsp-marquee">
+    <section class="demo-inner"><p class="di-eye">Effect 04</p>
+      <h1 class="rh" id="dh-mq1" style="font-size:clamp(2.8rem,6vw,5rem);position:relative;z-index:1">
+        <span class="lw"><span class="wd">The</span> <span class="wd">Gold</span></span>
+        <span class="lw"><span class="wd em">Marquee.</span></span>
+      </h1>
+    </section>
+    <div class="am-mq-wrap">
+      <div class="am-mq-row"><div class="am-fwd">
+        <span class="mqi mqi-lg">AM Barber Lounge</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Rénovaïr</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Essence</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Attire</span><span class="mq-dot"></span><span class="mqi mqi-lg">329 High Road · Harrow</span><span class="mq-dot"></span><span class="mqi mqi-lg">Defined By Standards</span><span class="mq-dot"></span><span class="mqi mqi-lg">Not Routine</span><span class="mq-dot"></span>
+        <span class="mqi mqi-lg">AM Barber Lounge</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Rénovaïr</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Essence</span><span class="mq-dot"></span><span class="mqi mqi-lg">AM Attire</span><span class="mq-dot"></span><span class="mqi mqi-lg">329 High Road · Harrow</span><span class="mq-dot"></span><span class="mqi mqi-lg">Defined By Standards</span><span class="mq-dot"></span><span class="mqi mqi-lg">Not Routine</span><span class="mq-dot"></span>
+      </div></div>
+      <div class="am-mq-row"><div class="am-rev">
+        <span class="mqi mqi-sm">Precision Grooming</span><span class="mq-dot"></span><span class="mqi mqi-sm">Hijama Wet Cupping</span><span class="mq-dot"></span><span class="mqi mqi-sm">Dry Cupping</span><span class="mq-dot"></span><span class="mqi mqi-sm">Compression Therapy</span><span class="mq-dot"></span><span class="mqi mqi-sm">Luxury Streetwear</span><span class="mq-dot"></span><span class="mqi mqi-sm">Members Only</span><span class="mq-dot"></span><span class="mqi mqi-sm">Locked Pricing</span><span class="mq-dot"></span>
+        <span class="mqi mqi-sm">Precision Grooming</span><span class="mq-dot"></span><span class="mqi mqi-sm">Hijama Wet Cupping</span><span class="mq-dot"></span><span class="mqi mqi-sm">Dry Cupping</span><span class="mq-dot"></span><span class="mqi mqi-sm">Compression Therapy</span><span class="mq-dot"></span><span class="mqi mqi-sm">Luxury Streetwear</span><span class="mq-dot"></span><span class="mqi mqi-sm">Members Only</span><span class="mq-dot"></span><span class="mqi mqi-sm">Locked Pricing</span><span class="mq-dot"></span>
+      </div></div>
+    </div>
+    <div class="demo-body">
+      <div class="demo-slabel">How It Works</div>
+      <p>Two gold rows running simultaneously — top left to right, bottom right to left at a different speed. Two font sizes create visual hierarchy. The opposite directions create a dynamic tension that draws the eye. Hover the strip to freeze both rows.</p>
+      <div class="demo-info"><p>Row 1: 20s cycle · Row 2: 25s cycle (different speeds = never align = always dynamic)<br>Plain text — fully indexed by Google and read by screen readers</p></div>
+      <div class="demo-nav-row"><a href="#" class="demo-btn2 mag-tgt" data-ds="home">← Back to overview</a></div>
+    </div>
+  </div>
+
+</div>
+<!-- ══ END DEMO PAGE ══ -->
+
 <footer class="site-footer">
   <div class="footer-brand"><div class="footer-brand-wrap"><span class="footer-brand-line"></span><span class="footer-brand-name">House of AM</span><span class="footer-brand-line"></span></div></div>
   <nav><ul class="footer-nav">
@@ -2082,148 +2365,6 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
 html { height: auto !important; overflow-y: scroll !important; }
 body { height: auto !important; min-height: 100vh !important; overflow-y: auto !important; }
 .page.active { display: block !important; min-height: 100vh !important; }
-
-/* ══ DEMO PAGE ══ */
-#demo { background:var(--ink); color:var(--parch,#f0ebe4); }
-
-/* Effect 1: Curtain */
-#am-curtain{position:fixed;inset:0;z-index:8999;pointer-events:none}
-#am-slash{position:absolute;top:-5%;left:-5%;width:6px;height:110%;
-  background:linear-gradient(180deg,transparent,#b8922a 20%,#d4b158 50%,#b8922a 80%,transparent);
-  transform:rotate(8deg) translateX(-200px);opacity:0;
-  box-shadow:0 0 20px rgba(184,146,42,.5);z-index:3;filter:blur(.3px)}
-.am-panel{position:absolute;top:0;bottom:0;background:#0d0b09;transform:translateX(-105%);will-change:transform}
-.am-panel:nth-child(2){left:0;width:34%;z-index:2}
-.am-panel:nth-child(3){left:33.5%;width:34%;z-index:2}
-.am-panel:nth-child(4){left:67%;width:34%;z-index:2}
-.am-panel::after{content:"";position:absolute;top:0;right:0;bottom:0;width:2px;
-  background:linear-gradient(180deg,transparent,#b8922a,transparent);opacity:.4}
-#am-cmark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);
-  opacity:0;z-index:4;transition:none}
-#am-cmark svg{width:clamp(70px,8vw,110px);height:auto}
-
-/* Effect 2: Word stagger */
-.rh{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;line-height:1.08;letter-spacing:-.01em}
-.rh .lw{display:block;overflow:hidden;padding-bottom:.06em}
-.rh .wd{display:inline-block;transform:translateY(108%) rotateX(-18deg);opacity:0;
-  transition:transform .72s cubic-bezier(.16,1,.3,1),opacity .5s ease;transform-origin:50% 0}
-.rh .wd.em{color:#d4b158;font-style:italic}
-.rh.go .wd{transform:translateY(0) rotateX(0);opacity:1}
-
-/* Effect 3: Magnetic cursor */
-#am-cur{position:fixed;top:0;left:0;pointer-events:none;z-index:99999;
-  transform:translate(-50%,-50%);will-change:transform}
-#am-cur svg{width:58px;height:58px;overflow:visible;
-  transition:width .38s cubic-bezier(.16,1,.3,1),height .38s cubic-bezier(.16,1,.3,1)}
-#cur-dot{transition:r .25s ease,fill .25s ease}
-#cur-ring{transition:r .38s cubic-bezier(.16,1,.3,1),stroke .38s ease,stroke-width .3s ease}
-#cur-txt{font-size:6px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;
-  fill:rgba(184,146,42,0);transition:fill .4s ease}
-#cur-spin{animation:amSpin 8s linear infinite;transform-origin:0 0}
-@keyframes amSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-body.am-hov #am-cur svg{width:84px;height:84px}
-body.am-hov #cur-dot{r:2.5}
-body.am-hov #cur-ring{r:28;stroke:rgba(184,146,42,.5);stroke-width:1.5}
-body.am-hov #cur-txt{fill:rgba(184,146,42,.9)}
-
-/* Effect 4: Double marquee */
-.am-mq-wrap{overflow:hidden;background:#b8922a}
-.am-mq-row{display:flex;white-space:nowrap;padding:.42rem 0;
-  border-top:1px solid rgba(26,23,20,.15)}
-.am-mq-row:first-child{border-top:0}
-.am-fwd{display:inline-flex;animation:amFwd 20s linear infinite}
-.am-rev{display:inline-flex;animation:amRev 25s linear infinite}
-@keyframes amFwd{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-@keyframes amRev{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
-.am-mq-wrap:hover .am-fwd,.am-mq-wrap:hover .am-rev{animation-play-state:paused}
-.mqi{display:inline-block;font-family:"Inter",sans-serif;letter-spacing:.3em;
-  text-transform:uppercase;font-weight:700;color:#1a1714;padding:0 1.75rem}
-.mqi-lg{font-size:10px}.mqi-sm{font-size:8px}
-.mq-dot{display:inline-block;width:4px;height:4px;border-radius:50%;
-  background:rgba(26,23,20,.28);vertical-align:middle;margin:0 .2rem}
-
-/* Demo page layout */
-.demo-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;padding:6rem 2rem 2rem;
-  background:radial-gradient(ellipse at 50% 30%,#2e2820,#1a1714 50%,#0d0b09);
-  position:relative;overflow:hidden}
-.demo-hero::after{content:"";position:absolute;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.09'/%3E%3C/svg%3E");
-  opacity:.35;mix-blend-mode:overlay;pointer-events:none}
-.demo-eye{font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;font-weight:500;
-  color:#b8922a;margin-bottom:2rem;position:relative;z-index:1;
-  opacity:0;animation:dmFade .8s 2.5s ease forwards}
-.demo-sub{margin:1.5rem 0 2.5rem;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;
-  color:rgba(240,235,228,.45);position:relative;z-index:1;
-  opacity:0;animation:dmFade .8s 3.2s ease forwards}
-.demo-sub b{color:#b8922a;font-weight:400;margin:0 .4rem}
-@keyframes dmFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;
-  background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.1);
-  max-width:900px;margin:2rem auto 0;padding:0 2rem;width:100%}
-.demo-card{padding:1.75rem 1.5rem;background:#1a1714;display:block;
-  transition:background .4s ease;position:relative;overflow:hidden;text-align:left}
-.demo-card::before{content:"";position:absolute;inset:0;background:#b8922a;
-  transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.4,0,.2,1);z-index:0}
-.demo-card:hover{background:#1a1714}
-.demo-card:hover::before{transform:scaleX(1)}
-.demo-card .dc-num{font-family:"Cormorant Garamond",serif;font-size:2rem;color:#b8922a;
-  font-style:italic;font-weight:500;position:relative;z-index:1;
-  transition:color .4s ease}
-.demo-card:hover .dc-num{color:#1a1714}
-.demo-card .dc-title{font-family:"Cormorant Garamond",serif;font-size:1.3rem;
-  font-weight:500;margin:.25rem 0;position:relative;z-index:1;
-  transition:color .4s ease}
-.demo-card:hover .dc-title{color:#1a1714}
-.demo-card .dc-sub{font-size:.68rem;color:rgba(240,235,228,.4);position:relative;z-index:1;
-  transition:color .4s ease}
-.demo-card:hover .dc-sub{color:rgba(26,23,20,.7)}
-
-.demo-inner{min-height:60vh;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;padding:5rem 2rem 3rem;
-  background:radial-gradient(ellipse at 50% 40%,#2a2520,#1a1714 55%,#0d0b09);
-  position:relative;overflow:hidden}
-.demo-inner::after{content:"";position:absolute;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.09'/%3E%3C/svg%3E");
-  opacity:.3;mix-blend-mode:overlay;pointer-events:none}
-.di-eye{font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600;
-  color:#b8922a;margin-bottom:1.5rem;position:relative;z-index:1}
-.demo-body{max-width:760px;margin:0 auto;padding:3rem 2rem}
-.demo-body p{color:rgba(240,235,228,.72);line-height:1.82;margin-bottom:1.5rem;
-  font-family:"Cormorant Garamond",serif;font-size:1.08rem}
-.demo-info{border:1px solid rgba(184,146,42,.15);padding:1.5rem;margin:1.5rem 0;
-  background:rgba(184,146,42,.03)}
-.demo-info p{font-family:"Inter",sans-serif!important;font-size:.8rem!important;
-  color:rgba(240,235,228,.45)!important;line-height:1.65!important;margin:0!important}
-.demo-slabel{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600;
-  color:#b8922a;margin-bottom:1rem;display:flex;align-items:center;gap:.7rem}
-.demo-slabel::before{content:"";flex:0 0 26px;height:1px;background:#b8922a}
-.demo-nav-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.5rem}
-.demo-back{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.25rem;
-  font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(240,235,228,.38);transition:color .3s}
-.demo-back:hover{color:#b8922a}
-.demo-back::before{content:"←"}
-.demo-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;
-  font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;
-  border:1px solid #b8922a;color:#b8922a;position:relative;overflow:hidden;
-  transition:color .45s ease}
-.demo-btn::before{content:"";position:absolute;inset:0;background:#b8922a;
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .45s cubic-bezier(.4,0,.2,1);z-index:-1}
-.demo-btn:hover::before{transform:scaleX(1)}
-.demo-btn:hover{color:#1a1714}
-.demo-btn-g{border-color:rgba(240,235,228,.25);color:rgba(240,235,228,.55)}
-.demo-btn-g::before{background:rgba(240,235,228,.08)}
-.demo-btn-g:hover{color:#f0ebe4}
-.demo-sep{border:0;height:1px;background:rgba(184,146,42,.12);margin:2rem 0}
-.mag-tgt{display:inline-block;transition:transform .4s cubic-bezier(.16,1,.3,1)}
-.demo-stagger-examples{display:grid;gap:1rem;margin:1.5rem 0}
-.demo-mag-targets{display:flex;gap:1rem;flex-wrap:wrap;margin:1.5rem 0}
-.demo-door-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
-  background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.1);margin:1.5rem 0}
-.demo-door{padding:2rem 1.5rem;background:#1a1714;text-align:center;
-  transition:transform .4s cubic-bezier(.16,1,.3,1);display:block}
 
 /* Sub-pages inside demo */
 .demo-sub-page{display:none}
