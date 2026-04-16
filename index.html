@@ -1036,6 +1036,17 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
       </div>
     </div>
   </section>
+  <!-- Rénovaïr Power Statement -->
+  <section class="section-ink" style="background:var(--ink);padding:clamp(3rem,6vw,5rem) var(--shell);text-align:center;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(198,156,109,.08),transparent 70%);pointer-events:none"></div>
+    <div style="max-width:720px;margin:0 auto;position:relative">
+      <span style="font-family:var(--ff-body);font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);font-weight:600;display:block;margin-bottom:1.5rem">AM Rénovaïr · Harrow</span>
+      <h2 style="font-family:var(--ff-display);font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:500;color:var(--parchment);line-height:1.15;margin-bottom:1.5rem">Recovery Is Not A Luxury.<br><em style="font-style:italic;color:var(--gold)">It Is The Standard.</em></h2>
+      <div style="width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 1.5rem"></div>
+      <p style="font-family:var(--ff-display);font-size:clamp(1rem,1.8vw,1.25rem);color:rgba(240,235,228,.65);line-height:1.7;font-style:italic">Hijama. Dry Cupping. Compression Therapy. Built for the man who operates at full capacity — and refuses to slow down.</p>
+    </div>
+  </section>
+
   <!-- Treatment Frequency & Validity -->
   <section class="section-cream">
     <div class="shell">
@@ -1794,6 +1805,217 @@ window.addEventListener('load', function() {
 });
 
 function AMEnhancements() {
+  var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  /* ══ FIX: Force overlays NEVER block clicks ══ */
+  function lockOverlays() {
+    ['pageTransition','bookingModal'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if(el && !el.classList.contains('open') && !el.classList.contains('pt-in') && !el.classList.contains('pt-hold')) {
+        el.style.setProperty('pointer-events','none','important');
+      }
+    });
+  }
+  lockOverlays();
+  setInterval(lockOverlays, 800);
+
+  /* ══ 1. HERO — every word flies in ══ */
+  var h1 = document.getElementById('heroH1');
+  if(h1) {
+    h1.style.opacity = '1'; h1.style.transform = 'none';
+    var parts = h1.innerHTML.split(/(<br>|<em>[\s\S]*?<\/em>|\s+)/);
+    var out = '', delay = 0.5;
+    parts.forEach(function(p) {
+      if(!p) return;
+      if(p === '<br>' || /^\s+$/.test(p)) { out += p; return; }
+      if(p.indexOf('<em>') === 0) {
+        out += '<em style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-5deg);transition:opacity .7s ease '+delay+'s,transform .9s cubic-bezier(.23,1,.32,1) '+delay+'s;color:#d4b158;font-style:italic">'+p.replace(/<\/?em>/g,'')+'</em>';
+      } else {
+        out += '<span style="display:inline-block;opacity:0;transform:translateY(55px) skewX(-5deg);transition:opacity .7s ease '+delay+'s,transform .9s cubic-bezier(.23,1,.32,1) '+delay+'s">'+p+'</span>';
+      }
+      delay += 0.07;
+    });
+    h1.innerHTML = out;
+    setTimeout(function() {
+      h1.querySelectorAll('span,em').forEach(function(el){ el.style.opacity='1'; el.style.transform='translateY(0) skewX(0)'; });
+    }, 400);
+  }
+
+  /* ══ 2. UNIVERSAL REVEAL — every text on every page ══ */
+  var SELECTORS = [
+    'h1','h2','h3','h4',
+    '.manifesto-eyebrow','.manifesto-close p',
+    '.pillars-label','.pillars-title','.pillar','.pillar-principle','.pillar-brand','.pillar p','.pillar-lead',
+    '.doors-eyebrow','.door',
+    '.page-eyebrow','.page-hero-sub',
+    '.ab-eyebrow','.ab-origin p','.ab-quote blockquote','.ab-quote cite','.principle','.ab-why p',
+    '.section-eyebrow','.section-head',
+    '.pricing-card','.pricing-col','.pricing-col-label',
+    '.addl-card','.disc-card','.treat-opt',
+    '.members-block','.mem-h3-large',
+    '.pillar-num','.disc-more',
+    '.footer-brand-wrap','.footer-nav',
+    '.cta-section','[class*="closing"]',
+    '.page-hero-content span','.page-hero-content p',
+    '.pc-row','.pc-cat',
+    'blockquote','cite'
+  ];
+
+  var io;
+
+  function revealEl(el) { el.style.opacity='1'; el.style.transform='translateY(0) skewY(0)'; }
+
+  function setupReveal(root) {
+    SELECTORS.forEach(function(sel) {
+      (root || document).querySelectorAll(sel).forEach(function(el) {
+        if(el.dataset.amR) return;
+        el.dataset.amR = '1';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(36px) skewY(-1deg)';
+        el.style.transition = 'opacity .8s cubic-bezier(.23,1,.32,1), transform .85s cubic-bezier(.23,1,.32,1)';
+        if(io) io.observe(el);
+      });
+    });
+  }
+
+  if('IntersectionObserver' in window) {
+    io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if(e.isIntersecting) { revealEl(e.target); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+
+    // Setup on all pages immediately
+    document.querySelectorAll('.page').forEach(function(page) { setupReveal(page); });
+    setupReveal(document.getElementById('page-home'));
+
+    // Re-trigger every time a page becomes active
+    var lastPage = '';
+    setInterval(function() {
+      var active = document.querySelector('.page.active');
+      if(!active || active.id === lastPage) return;
+      lastPage = active.id;
+      // Reset + re-observe all elements on newly active page
+      active.querySelectorAll('[data-am-r]').forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(36px) skewY(-1deg)';
+        io.observe(el);
+      });
+    }, 400);
+  } else {
+    document.querySelectorAll('[data-am-r]').forEach(revealEl);
+  }
+
+  /* ══ 3. SHIMMER — every button every page ══ */
+  function applyShimmer() {
+    document.querySelectorAll('.btn-gold,.door-cta,.btn-solid,.disc-more').forEach(function(btn) {
+      if(btn.dataset.shimmer) return;
+      btn.dataset.shimmer = '1';
+      btn.style.overflow = 'hidden'; btn.style.position = 'relative';
+      var sh = document.createElement('span');
+      sh.style.cssText = 'position:absolute;top:0;left:0;width:50px;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.4),transparent);transform:translateX(-80px) skewX(-12deg);pointer-events:none;z-index:10';
+      btn.appendChild(sh);
+      btn.addEventListener('mouseenter', function() {
+        sh.style.transition = 'transform .5s ease';
+        sh.style.transform = 'translateX('+(btn.offsetWidth+80)+'px) skewX(-12deg)';
+        setTimeout(function(){ sh.style.transition='none'; sh.style.transform='translateX(-80px) skewX(-12deg)'; }, 520);
+      });
+    });
+  }
+  applyShimmer();
+  setInterval(applyShimmer, 2000);
+
+  /* ══ 4. DOOR PARALLAX ══ */
+  if(!isTouch) {
+    function initParallax() {
+      document.querySelectorAll('.door').forEach(function(door) {
+        if(door.dataset.parallax) return;
+        door.dataset.parallax = '1';
+        var logo = door.querySelector('.door-logo');
+        var content = door.querySelector('.door-content');
+        door.addEventListener('mousemove', function(e) {
+          var r = door.getBoundingClientRect();
+          var x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5;
+          if(logo) logo.style.transform='translate('+(x*26)+'px,'+(y*18)+'px)';
+          if(content) content.style.transform='translate('+(x*-7)+'px,'+(y*-5)+'px)';
+        });
+        door.addEventListener('mouseleave', function() {
+          [logo,content].forEach(function(el) {
+            if(!el) return;
+            el.style.transition='transform .9s cubic-bezier(.23,1,.32,1)';
+            el.style.transform='none';
+            setTimeout(function(){ el.style.transition=''; },950);
+          });
+        });
+      });
+    }
+    initParallax();
+    setInterval(initParallax, 2000);
+  }
+
+  /* ══ 5. CURSOR — always visible, always spinning ══ */
+  if(!isTouch) {
+    var dot = document.getElementById('cursorDot');
+    ['cursorRing','cursorRingNew','amCursorRing'].forEach(function(id){ var e=document.getElementById(id); if(e) e.remove(); });
+    var NS='http://www.w3.org/2000/svg';
+    var svg=document.createElementNS(NS,'svg');
+    svg.id='amCursorRing';
+    svg.setAttribute('viewBox','-44 -44 88 88');
+    svg.setAttribute('width','88'); svg.setAttribute('height','88');
+    svg.style.cssText='position:fixed;top:-300px;left:-300px;pointer-events:none!important;z-index:100001;will-change:transform';
+    var sd=document.createElementNS(NS,'defs');
+    var sp=document.createElementNS(NS,'path');
+    sp.id='amTp'; sp.setAttribute('d','M 0 0 m -26 0 a 26 26 0 1 1 52 0 a 26 26 0 1 1 -52 0');
+    sd.appendChild(sp); svg.appendChild(sd);
+    var sc=document.createElementNS(NS,'circle');
+    sc.setAttribute('r','26'); sc.setAttribute('fill','none');
+    sc.setAttribute('stroke','rgba(198,156,109,.4)'); sc.setAttribute('stroke-width','1');
+    svg.appendChild(sc);
+    var st=document.createElementNS(NS,'text');
+    st.style.cssText='font-family:Arial,sans-serif;font-size:4.8px;letter-spacing:2.5px;font-weight:700;fill:rgba(198,156,109,.55);text-transform:uppercase';
+    var stp=document.createElementNS(NS,'textPath');
+    stp.setAttribute('href','#amTp'); stp.setAttribute('startOffset','0%');
+    stp.textContent='EXPERIENCE · HOUSE OF AM · ';
+    st.appendChild(stp); svg.appendChild(st);
+    document.body.appendChild(svg);
+    var mx=0,my=0,rx=0,ry=0,ang=0,hov=false,entered=false;
+    document.addEventListener('mousemove',function(e){
+      mx=e.clientX; my=e.clientY;
+      if(!entered){ entered=true; svg.style.top='0'; svg.style.left='0'; }
+    });
+    (function frame(){
+      rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
+      if(dot){ dot.style.left=mx+'px'; dot.style.top=my+'px'; }
+      svg.style.transform='translate(calc('+rx+'px - 50%),calc('+ry+'px - 50%)) rotate('+ang+'deg)';
+      ang += hov ? 1.2 : 0.38;
+      requestAnimationFrame(frame);
+    })();
+    document.addEventListener('mouseover',function(e){
+      var t=e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more,.nav-links a,.logo-lockup,.pricing-card,.addl-card,.pillar');
+      if(t){
+        hov=true;
+        sc.setAttribute('stroke','rgba(198,156,109,.95)'); sc.setAttribute('r','32');
+        st.style.fill='rgba(198,156,109,1)'; st.style.fontSize='5.4px';
+        if(dot){dot.style.width='4px';dot.style.height='4px';dot.style.background='#c8a96e';}
+      } else {
+        hov=false;
+        sc.setAttribute('stroke','rgba(198,156,109,.4)'); sc.setAttribute('r','26');
+        st.style.fill='rgba(198,156,109,.55)'; st.style.fontSize='4.8px';
+        if(dot){dot.style.width='8px';dot.style.height='8px';dot.style.background='#c69c6d';}
+      }
+    });
+  }
+
+  /* ══ 6. DOORS z-index — always clickable ══ */
+  function fixClicks() {
+    document.querySelectorAll('.door-cta,.door,.btn-gold').forEach(function(el){
+      el.style.setProperty('position','relative','important');
+      el.style.setProperty('z-index','10','important');
+    });
+    lockOverlays();
+  }
+  fixClicks(); setInterval(fixClicks, 1000);
+}
   var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
   /* ══ FIX: Force overlays to NEVER block clicks ══ */
