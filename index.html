@@ -1767,6 +1767,16 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
           el.style.transform='translateY(34px) skewY(-1deg)';
           revealIO.observe(el);
         });
+        // Immediately reveal anything already in the viewport
+        setTimeout(function(){
+          active.querySelectorAll('[data-am-r]').forEach(function(el){
+            var r=el.getBoundingClientRect();
+            if(r.top < window.innerHeight + 100 && r.bottom > -100){
+              doReveal(el);
+              revealIO.unobserve(el);
+            }
+          });
+        },150);
       },350);
     } else {
       document.querySelectorAll('[data-am-r]').forEach(doReveal);
