@@ -156,7 +156,7 @@ a{color:inherit;text-decoration:none}
 .manifesto{padding:clamp(5rem,12vw,9rem) var(--shell);text-align:center;background:var(--parchment);color:var(--ink)}
 .manifesto-eyebrow{font-family:var(--ff-body);font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:3rem;font-weight:600}
 .manifesto-eyebrow::before,.manifesto-eyebrow::after{content:"";width:40px;height:1px;background:var(--gold);opacity:.5}
-.manifesto h2{font-family:var(--ff-display);font-size:clamp(1.8rem,4.4vw,3rem);font-weight:500;line-height:1.3;max-width:50ch;margin:0 auto 2rem}
+.manifesto h2.reveal{font-family:var(--ff-display);font-size:clamp(1.8rem,4.4vw,3rem);font-weight:500;line-height:1.3;max-width:50ch;margin:0 auto 2rem}
 .manifesto h2 em{font-style:italic;color:var(--gold)}
 .manifesto-divider{height:1px;background:var(--line-ink);max-width:200px;margin:2.5rem auto;border:0}
 .manifesto-close{max-width:30ch;margin:2.5rem auto 0;font-family:var(--ff-display)}
@@ -172,7 +172,7 @@ a{color:inherit;text-decoration:none}
 .pillars-title{font-family:var(--ff-display);font-size:clamp(2.4rem,5.5vw,4rem);font-weight:500;line-height:1.1}
 .pillars-title em{font-style:italic;color:var(--gold)}
 .pillar-list{display:grid;gap:0}
-.pillar{display:grid;grid-template-columns:48px 1fr;gap:1rem 1.5rem;align-items:start;padding:2.25rem 0;border-bottom:1px solid var(--line-p)}
+.pillar{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s cubic-bezier(.23,1,.32,1);display:grid;grid-template-columns:48px 1fr;gap:1rem 1.5rem;align-items:start;padding:2.25rem 0;border-bottom:1px solid var(--line-p)}
 .pillar:last-child{border-bottom:0}
 .pillar-num{font-family:var(--ff-display);font-size:2.75rem;font-style:italic;color:var(--gold);line-height:1}
 .pillar-accent{display:block;width:2px;height:24px;background:var(--gold);margin-bottom:.75rem;opacity:.6}
@@ -468,6 +468,57 @@ a{color:inherit;text-decoration:none}
 body.cursor-hover .cursor-dot{width:6px;height:6px;background:var(--ink)}
 body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);background:rgba(184,146,42,.12)}
 @media(pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
+
+/* ── 1. GOLD SHIMMER on buttons ── */
+@keyframes shimmer{0%{transform:translateX(-150%) skewX(-20deg)}100%{transform:translateX(250%) skewX(-20deg)}}
+.btn-gold::after,.door-cta::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transform:translateX(-150%) skewX(-20deg);pointer-events:none}
+.btn-gold:hover::after,.door-cta:hover::after{animation:shimmer .75s ease forwards}
+.btn-gold{overflow:hidden;position:relative}
+.door-cta{overflow:hidden;position:relative}
+
+/* ── 2. SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+.reveal.revealed{opacity:1;transform:translateY(0)}
+.reveal-line{display:inline-block;overflow:hidden}
+.reveal-word{display:inline-block;opacity:0;transform:translateY(110%);transition:opacity .6s ease,transform .6s cubic-bezier(.23,1,.32,1)}
+.reveal-word.revealed{opacity:1;transform:translateY(0)}
+
+/* ── 3. PARALLAX DOOR LOGOS ── */
+.door-logo{will-change:transform}
+
+/* ── 4. ROTATING CURSOR ── */
+#cursorRing{position:fixed;top:0;left:0;pointer-events:none;z-index:99999;width:44px;height:44px;transform:translate(-50%,-50%)}
+#cursorDot{position:fixed;top:0;left:0;pointer-events:none;z-index:100000;width:7px;height:7px;background:var(--gold,#c69c6d);border-radius:50%;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s}
+.cursor-ring-svg{overflow:visible}
+.cursor-ring-track{fill:none;stroke:rgba(198,156,109,.35);stroke-width:1.5}
+.cursor-ring-text{fill:#c69c6d;font-family:var(--ff-body,sans-serif);font-size:5.5px;letter-spacing:1.8px;text-transform:uppercase;font-weight:600}
+.cursor-ring-dot-inner{fill:#c69c6d}
+body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
+@media(pointer:coarse){#cursorDot,#cursorRing{display:none}*{cursor:auto}}
+
+/* ── 5. PRICE COUNT-UP ── */
+.count-up{display:inline-block}
+
+/* ── 6. BOOKING MODAL ── */
+#bookingModal{position:fixed;inset:0;z-index:99997;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .45s ease;background:rgba(10,9,8,.7);backdrop-filter:blur(6px)}
+#bookingModal.open{opacity:1;pointer-events:all}
+.bm-card{background:linear-gradient(145deg,#1c1a17,#141210);border:1px solid rgba(198,156,109,.2);padding:clamp(2rem,5vw,3.5rem);max-width:480px;width:90%;position:relative;transform:translateY(24px);transition:transform .45s cubic-bezier(.23,1,.32,1);box-shadow:0 40px 80px rgba(0,0,0,.7)}
+#bookingModal.open .bm-card{transform:translateY(0)}
+.bm-close{position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(240,235,228,.4);font-size:18px;cursor:pointer;padding:4px 8px;transition:color .25s}
+.bm-close:hover{color:var(--gold,#c69c6d)}
+.bm-eyebrow{font-family:var(--ff-body,sans-serif);font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold,#c69c6d);font-weight:600;margin-bottom:1rem;display:block}
+.bm-title{font-family:var(--ff-display,Georgia,serif);font-size:clamp(1.6rem,3vw,2.2rem);color:#f0ebe4;font-weight:500;margin-bottom:.5rem;line-height:1.15}
+.bm-sub{font-size:13px;color:rgba(240,235,228,.5);margin-bottom:2rem;font-family:var(--ff-display,Georgia,serif);font-style:italic}
+.bm-rule{height:1px;background:linear-gradient(90deg,transparent,rgba(198,156,109,.3),transparent);margin-bottom:2rem;border:0}
+.bm-field{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(198,156,109,.15);color:#f0ebe4;font-family:var(--ff-body,sans-serif);font-size:12px;letter-spacing:.06em;padding:14px 16px;margin-bottom:14px;outline:none;transition:border-color .25s;box-sizing:border-box}
+.bm-field:focus{border-color:rgba(198,156,109,.5)}
+.bm-field::placeholder{color:rgba(240,235,228,.25);letter-spacing:.06em}
+.bm-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c69c6d' opacity='.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer}
+.bm-btn{width:100%;padding:16px;background:transparent;border:1px solid #b8922a;color:#b8922a;font-family:var(--ff-body,sans-serif);font-size:9px;letter-spacing:.32em;text-transform:uppercase;font-weight:600;cursor:pointer;position:relative;overflow:hidden;transition:color .4s;margin-top:6px}
+.bm-btn::before{content:"";position:absolute;inset:0;background:#b8922a;transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.bm-btn:hover{color:#1a1508}.bm-btn:hover::before{transform:scaleX(1)}
+.bm-btn span{position:relative;z-index:1}
+.bm-note{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,235,228,.25);text-align:center;margin-top:16px;font-family:var(--ff-body,sans-serif)}
 </style>
 </head>
 <body style="cursor:none">
@@ -553,7 +604,7 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
       <span class="vline-drop"></span>
       <p class="house-of-am-text">House of AM</p>
       <span class="bottom-rule"></span>
-      <h1 class="hero-h1">For Those Who Expect More.<br>Not A Destination.<br><em>A Standard.</em></h1>
+      <h1 class="hero-h1" id="heroH1" style="opacity:0;transform:translateY(20px);transition:opacity .9s ease .3s,transform .9s cubic-bezier(.23,1,.32,1) .3s">For Those Who Expect More.<br>Not A Destination.<br><em>A Standard.</em></h1>
       <p class="hero-sub">Precision Grooming<span class="dot">·</span>Recovery<span class="dot">·</span>Products<span class="dot">·</span>Identity</p>
       <div class="hero-cta-wrap">
         <button class="btn-gold" data-nav="barber-lounge">Enter The House</button>
@@ -568,7 +619,7 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
   </section>
 
   <section class="manifesto" id="about">
-    <div class="manifesto-eyebrow">The House</div>
+    <div class="manifesto-eyebrow reveal">The House</div>
     <h2>This Is Not Built For Everyone.</h2>
     <h2>Most Move Without Direction. They Follow. They Repeat. Some Don't.</h2>
     <hr class="manifesto-divider">
@@ -588,10 +639,10 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
         <h2 class="pillars-title">Four Pillars. <em>One Standard.</em></h2>
       </div>
       <div class="pillar-list">
-        <div class="pillar"><div class="pillar-num">01</div><div><span class="pillar-accent"></span><p class="pillar-principle">Standard Over Volume</p><span class="pillar-brand">AM Barber Lounge</span><p class="pillar-lead">We Turn Away Before We Compromise.</p><p>A Full Book At The Right Standard Is Worth More Than A Full Building At The Wrong One. This Is Not Arrogance. It Is Architecture.</p></div></div>
-        <div class="pillar"><div class="pillar-num">02</div><div><span class="pillar-accent"></span><p class="pillar-principle">Premium Without Apology</p><span class="pillar-brand">AM Essence</span><p class="pillar-lead">Every Decision Passes One Filter.</p><p>Does It Increase The Standard Or Dilute It? No Middle Ground.</p></div></div>
-        <div class="pillar"><div class="pillar-num">03</div><div><span class="pillar-accent"></span><p class="pillar-principle">Built To Last</p><span class="pillar-brand">AM Rénovaïr</span><p class="pillar-lead">Performance Fades When Recovery Is Ignored.</p><p>Weight, Permanence, Results That Outlast Any Movement.</p></div></div>
-        <div class="pillar"><div class="pillar-num">04</div><div><span class="pillar-accent"></span><p class="pillar-principle">Identity Over Image</p><span class="pillar-brand">AM Attire</span><p class="pillar-lead">Not Merch. Not Fashion For Fashion's Sake.</p><p>For The Man Who Doesn't Dress To Be Seen, But Because He Knows Exactly Who He Is.</p></div></div>
+        <div class="pillar reveal"><div class="pillar-num">01</div><div><span class="pillar-accent"></span><p class="pillar-principle">Standard Over Volume</p><span class="pillar-brand">AM Barber Lounge</span><p class="pillar-lead">We Turn Away Before We Compromise.</p><p>A Full Book At The Right Standard Is Worth More Than A Full Building At The Wrong One. This Is Not Arrogance. It Is Architecture.</p></div></div>
+        <div class="pillar reveal"><div class="pillar-num">02</div><div><span class="pillar-accent"></span><p class="pillar-principle">Premium Without Apology</p><span class="pillar-brand">AM Essence</span><p class="pillar-lead">Every Decision Passes One Filter.</p><p>Does It Increase The Standard Or Dilute It? No Middle Ground.</p></div></div>
+        <div class="pillar reveal"><div class="pillar-num">03</div><div><span class="pillar-accent"></span><p class="pillar-principle">Built To Last</p><span class="pillar-brand">AM Rénovaïr</span><p class="pillar-lead">Performance Fades When Recovery Is Ignored.</p><p>Weight, Permanence, Results That Outlast Any Movement.</p></div></div>
+        <div class="pillar reveal"><div class="pillar-num">04</div><div><span class="pillar-accent"></span><p class="pillar-principle">Identity Over Image</p><span class="pillar-brand">AM Attire</span><p class="pillar-lead">Not Merch. Not Fashion For Fashion's Sake.</p><p>For The Man Who Doesn't Dress To Be Seen, But Because He Knows Exactly Who He Is.</p></div></div>
       </div>
     </div>
   </section>
@@ -1184,7 +1235,7 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
     <div class="shell">
       <div class="head">
         <span class="ab-eyebrow">The Philosophy</span>
-        <h2>Most businesses chase clients. We set a <em>standard</em> and let it speak.</h2>
+        <h2 class="reveal">Most businesses chase clients. We set a <em>standard</em> and let it speak.</h2>
       </div>
       <div class="principles">
         <div class="principle">
@@ -1475,7 +1526,267 @@ body { height: auto !important; min-height: 100vh !important; overflow-y: auto !
       }
     });
   })();
+
+
+/* ══════════════════════════════════════════════════
+   WORLD-CLASS ENHANCEMENTS
+   ══════════════════════════════════════════════════ */
+
+(function(){
+  var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  /* ── 1. HERO H1 ANIMATE IN ── */
+  var heroH1 = document.getElementById('heroH1');
+  if(heroH1){
+    setTimeout(function(){
+      heroH1.style.opacity = '1';
+      heroH1.style.transform = 'translateY(0)';
+    }, 600);
+  }
+
+  /* ── 2. SCROLL REVEAL — IntersectionObserver ── */
+  if('IntersectionObserver' in window){
+    var revealObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var el = entry.target;
+          var delay = el.dataset.delay || 0;
+          setTimeout(function(){ el.classList.add('revealed'); }, +delay);
+          revealObs.unobserve(el);
+        }
+      });
+    }, {threshold: 0.12});
+
+    document.querySelectorAll('.reveal').forEach(function(el, i){
+      el.dataset.delay = i * 80;
+      revealObs.observe(el);
+    });
+  }
+
+  /* ── 3. PRICE COUNT-UP ── */
+  function countUp(el, target, dur){
+    var start = 0, step = (target / dur) * 16;
+    var prefix = el.dataset.prefix || '';
+    var suffix = el.dataset.suffix || '';
+    var iv = setInterval(function(){
+      start = Math.min(start + step, target);
+      el.textContent = prefix + Math.round(start) + suffix;
+      if(start >= target) clearInterval(iv);
+    }, 16);
+  }
+
+  if('IntersectionObserver' in window){
+    var countObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var el = entry.target;
+          countUp(el, +el.dataset.target, 800);
+          countObs.unobserve(el);
+        }
+      });
+    }, {threshold: 0.5});
+    document.querySelectorAll('.count-up').forEach(function(el){
+      countObs.observe(el);
+    });
+  }
+
+  /* ── 4. DOOR LOGO PARALLAX ── */
+  if(!isTouch){
+    document.querySelectorAll('.door').forEach(function(door){
+      var logo = door.querySelector('.door-logo');
+      if(!logo) return;
+      door.addEventListener('mousemove', function(e){
+        var r = door.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width  - 0.5;
+        var y = (e.clientY - r.top)  / r.height - 0.5;
+        logo.style.transform = 'translate(' + (x * 14) + 'px,' + (y * 10) + 'px) scale(0.95)';
+      });
+      door.addEventListener('mouseleave', function(){
+        logo.style.transform = '';
+        logo.style.transition = 'transform .6s cubic-bezier(.23,1,.32,1)';
+        setTimeout(function(){ logo.style.transition = ''; }, 620);
+      });
+    });
+  }
+
+  /* ── 5. ROTATING CURSOR UPGRADE ── */
+  if(!isTouch){
+    // Replace plain ring with SVG ring that shows rotating text on hover
+    var existingRing = document.getElementById('cursorRing');
+    var existingDot  = document.getElementById('cursorDot');
+    if(existingRing && existingDot){
+      // Build SVG ring
+      var ns = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(ns, 'svg');
+      svg.id = 'cursorRing';
+      svg.setAttribute('width', '80');
+      svg.setAttribute('height', '80');
+      svg.setAttribute('viewBox', '-40 -40 80 80');
+      svg.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);overflow:visible;will-change:left,top';
+
+      // Track circle
+      var track = document.createElementNS(ns, 'circle');
+      track.setAttribute('r', '20');
+      track.setAttribute('fill', 'none');
+      track.setAttribute('stroke', 'rgba(198,156,109,0)');
+      track.setAttribute('stroke-width', '1.5');
+      track.id = 'cursorTrack';
+      svg.appendChild(track);
+
+      // Text path
+      var defs = document.createElementNS(ns, 'defs');
+      var tp = document.createElementNS(ns, 'path');
+      tp.id = 'cursorTextPath';
+      tp.setAttribute('d', 'M 0,0 m -20,0 a 20,20 0 1,1 40,0 a 20,20 0 1,1 -40,0');
+      defs.appendChild(tp);
+      svg.appendChild(defs);
+
+      var textEl = document.createElementNS(ns, 'text');
+      textEl.style.cssText = 'font-family:var(--ff-body,sans-serif);font-size:5.2px;letter-spacing:2.4px;text-transform:uppercase;fill:rgba(198,156,109,0);font-weight:600;transition:fill .3s ease';
+      textEl.id = 'cursorText';
+      var tp2 = document.createElementNS(ns, 'textPath');
+      tp2.setAttribute('href', '#cursorTextPath');
+      tp2.setAttribute('startOffset', '0%');
+      tp2.textContent = 'EXPLORE · HOUSE OF AM · ';
+      textEl.appendChild(tp2);
+      svg.appendChild(textEl);
+
+      // Replace
+      existingRing.parentNode.replaceChild(svg, existingRing);
+
+      // Animate rotation
+      var angle = 0;
+      var targetAngle = 0;
+      var hovered = false;
+      (function rotateCursor(){
+        if(hovered) targetAngle += 0.6;
+        angle += (targetAngle - angle) * 0.08;
+        svg.style.transform = 'translate(-50%,-50%) rotate(' + angle + 'deg)';
+        requestAnimationFrame(rotateCursor);
+      })();
+
+      // Cursor position — inherit from existing dot tracking
+      var rx2 = 0, ry2 = 0, mx2 = 0, my2 = 0;
+      document.addEventListener('mousemove', function(e){
+        mx2 = e.clientX; my2 = e.clientY;
+      });
+      (function trackSvgRing(){
+        rx2 += (mx2 - rx2) * .12;
+        ry2 += (my2 - ry2) * .12;
+        svg.style.left = rx2 + 'px';
+        svg.style.top  = ry2 + 'px';
+        requestAnimationFrame(trackSvgRing);
+      })();
+
+      // Hover states
+      document.addEventListener('mouseover', function(e){
+        var t = e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more');
+        if(t){
+          hovered = true;
+          track.setAttribute('stroke', 'rgba(198,156,109,.5)');
+          track.setAttribute('r', '28');
+          track.style.transition = 'r .3s ease';
+          textEl.style.fill = 'rgba(198,156,109,.9)';
+          existingDot.style.width = '5px';
+          existingDot.style.height = '5px';
+          existingDot.style.background = '#1a1508';
+        } else {
+          hovered = false;
+          track.setAttribute('stroke', 'rgba(198,156,109,0)');
+          track.setAttribute('r', '20');
+          textEl.style.fill = 'rgba(198,156,109,0)';
+          existingDot.style.width = '8px';
+          existingDot.style.height = '8px';
+          existingDot.style.background = '#c69c6d';
+        }
+      });
+    }
+  }
+
+  /* ── 6. BOOKING MODAL ── */
+  var modal = document.getElementById('bookingModal');
+  var bmClose = document.getElementById('bmClose');
+  var bmSubmit = document.getElementById('bmSubmit');
+
+  function openBooking(){
+    if(modal){ modal.classList.add('open'); document.body.style.overflow='hidden'; }
+  }
+  function closeBooking(){
+    if(modal){ modal.classList.remove('open'); document.body.style.overflow=''; }
+  }
+
+  if(bmClose) bmClose.addEventListener('click', closeBooking);
+  if(modal) modal.addEventListener('click', function(e){ if(e.target===modal) closeBooking(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeBooking(); });
+
+  // Hook Explore buttons on Barber Lounge door and page
+  document.querySelectorAll('[data-nav="barber-lounge"].door-cta, [data-booking]').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      openBooking();
+    });
+  });
+
+  // Book button in BL page hero — look for btn-gold on BL page
+  var blPage = document.getElementById('page-barber-lounge');
+  if(blPage){
+    blPage.querySelectorAll('.btn-gold, .btn-solid').forEach(function(btn){
+      if(btn.textContent.toLowerCase().indexOf('book') > -1 || btn.textContent.toLowerCase().indexOf('appointment') > -1){
+        btn.addEventListener('click', openBooking);
+      }
+    });
+  }
+
+  if(bmSubmit){
+    bmSubmit.addEventListener('click', function(){
+      var name = document.getElementById('bmName').value.trim();
+      if(!name){ document.getElementById('bmName').focus(); return; }
+      bmSubmit.querySelector('span').textContent = 'Request Sent ✓';
+      bmSubmit.style.borderColor = '#4a7c59';
+      bmSubmit.style.color = '#4a7c59';
+      setTimeout(closeBooking, 1800);
+    });
+  }
+
+  /* ── 7. MOBILE: ensure smooth tap on doors ── */
+  document.querySelectorAll('.door').forEach(function(door){
+    door.addEventListener('touchstart', function(){}, {passive:true});
+  });
+
+})();
+
 </script>
+
+
+<div id="bookingModal" role="dialog" aria-modal="true">
+  <div class="bm-card">
+    <button class="bm-close" id="bmClose" aria-label="Close">&#x2715;</button>
+    <span class="bm-eyebrow">AM Barber Lounge · Harrow</span>
+    <h2 class="bm-title">Request an Appointment</h2>
+    <p class="bm-sub">Every seat is earned. We'll confirm within 24 hours.</p>
+    <hr class="bm-rule">
+    <input class="bm-field" type="text" placeholder="Full Name" id="bmName">
+    <input class="bm-field" type="tel" placeholder="Phone Number" id="bmPhone">
+    <input class="bm-field" type="email" placeholder="Email Address" id="bmEmail">
+    <select class="bm-field bm-select" id="bmService">
+      <option value="" disabled selected>Select a Service</option>
+      <option>Skinfade / Taperfade &amp; Beard — £46</option>
+      <option>Hair &amp; Beard — £43</option>
+      <option>Skinfade / Taperfade — £29</option>
+      <option>Haircut — £26</option>
+      <option>Luxury Wet Shave — £29</option>
+      <option>Deluxe Facial — £48</option>
+    </select>
+    <select class="bm-field bm-select" id="bmTime">
+      <option value="" disabled selected>Preferred Time</option>
+      <option>Morning (9am – 12pm)</option>
+      <option>Afternoon (12pm – 4pm)</option>
+      <option>Evening (4pm – 7pm)</option>
+    </select>
+    <button class="bm-btn" id="bmSubmit"><span>Send Request</span></button>
+    <p class="bm-note">329 High Road · Harrow · HA3 5EQ</p>
+  </div>
+</div>
 
 </body>
 </html>
