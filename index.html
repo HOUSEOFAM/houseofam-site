@@ -28,12 +28,12 @@ a{color:inherit;text-decoration:none}
 /* LOADER */
 .loader{position:fixed;inset:0;z-index:99999;background:#1a1714;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .8s ease,visibility .8s ease}
 .loader.done{opacity:0;visibility:hidden;pointer-events:none}
-.loader-mark{width:100px;height:auto;animation:pulseGold 2.4s ease-in-out infinite}
+.loader-mark{width:min(220px,55vw);height:auto;animation:pulseGold 2.4s ease-in-out infinite}
 @keyframes pulseGold{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.97)}}
-.loader-bar-track{width:140px;height:1.5px;background:rgba(184,146,42,.18);border-radius:1px;overflow:hidden}
+.loader-bar-track{width:min(260px,60vw);height:1.5px;background:rgba(184,146,42,.18);border-radius:1px;overflow:hidden}
 .loader-bar{height:100%;background:linear-gradient(90deg,#8a6d1c,#b8922a,#d4b158);animation:loadBar 2.4s ease-in-out forwards;border-radius:1px;width:0}
 @keyframes loadBar{0%{width:0}65%{width:100%}100%{width:100%}}
-.loader-sub{font-family:var(--ff-body);font-size:8px;letter-spacing:.38em;text-transform:uppercase;color:#8a8178}
+.loader-sub{font-family:var(--ff-body);font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:#8a8178}
 
 /* PAGE TRANSITION */
 .page-transition{display:none!important}
@@ -47,13 +47,13 @@ a{color:inherit;text-decoration:none}
 .site-header{position:fixed;inset:0 0 auto 0;z-index:10000;display:flex;align-items:center;justify-content:space-between;padding:16px var(--shell);background:rgba(26,23,20,.95);backdrop-filter:saturate(140%) blur(14px);-webkit-backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid rgba(240,235,228,.07);transition:box-shadow .3s ease}
 .site-header.scrolled{box-shadow:0 8px 32px -16px rgba(0,0,0,.7)}
 .logo-lockup{display:flex;flex-direction:column;align-items:center;flex-shrink:0;cursor:pointer}
-.nav-logo-mark{width:34px;height:auto;display:block}
-.nav-wordmark{margin-top:4px;width:88px}
-.gold-rule{width:100%;height:1px;background:linear-gradient(90deg,transparent,#b8922a,#d4b158,#b8922a,transparent);display:block}
-.nav-house{font-family:var(--ff-logo);font-size:5.5px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;color:#b8922a;display:block;text-align:center;padding:3px 0;white-space:nowrap}
+.nav-logo-mark{display:none}
+.nav-wordmark{margin-top:0;width:auto}
+.gold-rule{width:100%;height:1px;background:linear-gradient(90deg,transparent,#b8922a,#d4b158,#b8922a,transparent);display:block;opacity:.7}
+.nav-house{font-family:var(--ff-logo);font-size:9px;letter-spacing:.32em;text-transform:uppercase;font-weight:600;color:#b8922a;display:block;text-align:center;padding:4px 0;white-space:nowrap}
 .nav-links{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:0;list-style:none;white-space:nowrap}
 .nav-links li{display:inline-flex;align-items:center}
-.nav-links li a{font-size:8px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:rgba(240,235,228,.6);text-decoration:none;font-family:var(--ff-body);padding:4px 13px;white-space:nowrap;position:relative;transition:color .25s ease;cursor:pointer}
+.nav-links li a{font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:rgba(240,235,228,.6);text-decoration:none;font-family:var(--ff-body);padding:6px 14px;white-space:nowrap;position:relative;transition:color .25s ease;cursor:pointer}
 .nav-links li a::after{content:"";position:absolute;left:13px;right:13px;bottom:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
 .nav-links li a:hover{color:rgba(240,235,228,1)}
 .nav-links li a:hover::after,.nav-links li a.active::after{transform:scaleX(1)}
@@ -125,17 +125,17 @@ a{color:inherit;text-decoration:none}
 .pillars .inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 var(--shell);display:grid;gap:clamp(3rem,5vw,5rem)}
 @media(min-width:900px){.pillars .inner{grid-template-columns:1fr 2fr;gap:7rem;align-items:start}}
 .pillars-label{font-family:var(--ff-body);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1.25rem;font-weight:600}
-.pillars-title{font-family:var(--ff-display);font-size:clamp(2rem,4.8vw,3.25rem);font-weight:500;line-height:1.1}
+.pillars-title{font-family:var(--ff-display);font-size:clamp(2.4rem,5.5vw,4rem);font-weight:500;line-height:1.1}
 .pillars-title em{font-style:italic;color:var(--gold)}
 .pillar-list{display:grid;gap:0}
 .pillar{display:grid;grid-template-columns:48px 1fr;gap:1rem 1.5rem;align-items:start;padding:2.25rem 0;border-bottom:1px solid var(--line-p)}
 .pillar:last-child{border-bottom:0}
-.pillar-num{font-family:var(--ff-display);font-size:2.25rem;font-style:italic;color:var(--gold);line-height:1}
+.pillar-num{font-family:var(--ff-display);font-size:2.75rem;font-style:italic;color:var(--gold);line-height:1}
 .pillar-accent{display:block;width:2px;height:24px;background:var(--gold);margin-bottom:.75rem;opacity:.6}
-.pillar-principle{font-family:var(--ff-display);font-size:clamp(1.2rem,2.2vw,1.5rem);font-weight:500;color:var(--parchment);margin-bottom:.35rem;line-height:1.15}
-.pillar-brand{font-family:var(--ff-display);font-style:italic;color:var(--gold);font-size:clamp(1rem,1.4vw,1.15rem);display:block;margin-bottom:.6rem}
-.pillar-lead{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(240,235,228,.55);margin-bottom:.5rem;font-weight:600}
-.pillar p{font-family:var(--ff-display);color:rgba(240,235,228,.75);max-width:50ch;font-size:1rem;line-height:1.7}
+.pillar-principle{font-family:var(--ff-display);font-size:clamp(1.45rem,2.6vw,1.85rem);font-weight:500;color:var(--parchment);margin-bottom:.35rem;line-height:1.15}
+.pillar-brand{font-family:var(--ff-display);font-style:italic;color:var(--gold);font-size:clamp(1.1rem,1.6vw,1.3rem);display:block;margin-bottom:.6rem}
+.pillar-lead{font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(240,235,228,.65);margin-bottom:.5rem;font-weight:600}
+.pillar p{font-family:var(--ff-display);color:rgba(240,235,228,.82);max-width:50ch;font-size:1.1rem;line-height:1.7}
 
 /* FOUR DOORS */
 .doors-section{padding:clamp(5rem,10vw,8rem) 0;background:var(--cream)}
