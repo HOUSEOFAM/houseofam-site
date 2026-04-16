@@ -1710,78 +1710,16 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
       },500);
     }
 
-    /* ── UNIVERSAL SCROLL REVEAL — every element every page ── */
-    var SELS=[
-      'h1','h2','h3','h4','h5',
-      'p','.manifesto-eyebrow','.manifesto-close p',
-      '.pillars-label','.pillars-title','.pillar',
-      '.pillar-principle','.pillar-brand','.pillar p','.pillar-lead','.pillar-num',
-      '.doors-eyebrow','.door',
-      '.page-eyebrow','.page-hero-sub','.page-hero h1',
-      '.ab-eyebrow','.ab-origin p','.ab-quote blockquote','.ab-quote cite',
-      '.principle','.ab-why p','.ab-house p',
-      '.section-eyebrow','.section-head',
-      '.pricing-card','.pricing-col','.pricing-col-label',
-      '.addl-card','.disc-card','.treat-opt',
-      '.members-block','.mem-h3-large',
-      '.disc-more','.footer-brand-wrap','.footer-nav li',
-      '.pc-row','.pc-cat','.locked',
-      'blockquote','cite','em','strong'
-    ];
-
-    var revealIO;
-
-    function doReveal(el){
-      el.style.transition='opacity .75s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)';
-      el.style.opacity='1';
-      el.style.transform='translateY(0)';
-      el.dataset.amRevealed='1';
-    }
-    function doRevealInstant(el){
-      el.style.transition='none';
-      el.style.opacity='1';
-      el.style.transform='translateY(0)';
-      el.dataset.amRevealed='1';
-    }
-
-    function setupReveal(root){
-      SELS.forEach(function(sel){
-        (root||document).querySelectorAll(sel).forEach(function(el){
-          if(el.dataset.amR)return;
-          el.dataset.amR='1';
-          // Use opacity fade but start with a short delay so page is never blank
-          el.style.opacity='0';
-          el.style.transform='translateY(28px)';
-          el.style.transition='opacity .75s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)';
-          if(revealIO)revealIO.observe(el);
-        });
+    /* ── REVEAL: show all elements immediately, no opacity tricks ── */
+    document.querySelectorAll('.page').forEach(function(page){
+      page.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,section').forEach(function(el){
+        el.style.opacity = '';
+        el.style.transform = '';
+        el.style.transition = '';
+        delete el.dataset.amR;
+        delete el.dataset.amRevealed;
       });
-    }
-
-    if('IntersectionObserver' in window){
-      revealIO=new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if(e.isIntersecting){doReveal(e.target);revealIO.unobserve(e.target);}
-        });
-      },{threshold:0.05,rootMargin:'0px 0px -20px 0px'});
-
-      // Setup all pages now
-      document.querySelectorAll('.page').forEach(function(page){setupReveal(page);});
-
-      // On every page switch: instantly reveal ALL elements, then scroll handles below-fold
-      var lastPg='';
-      setInterval(function(){
-        var active=document.querySelector('.page.active');
-        if(!active||active.id===lastPg)return;
-        lastPg=active.id;
-        // Instantly reveal everything on the new page (no delay, no blank screen)
-        active.querySelectorAll('[data-am-r]').forEach(function(el){
-          doRevealInstant(el);
-        });
-      },350);
-    } else {
-      document.querySelectorAll('[data-am-r]').forEach(doReveal);
-    }
+    });
 
     /* ── SHIMMER on every button ── */
     function applyShimmer(){
