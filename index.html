@@ -1313,59 +1313,83 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
   var transBar=document.getElementById('transitionBar');
 
   var transitioning = false;
-  var ptBar = document.getElementById('ptBar');
+  var ptEl = document.getElementById('pageTransition');
 
-  function showPage(id,scrollTarget){
-    if((id===currentPage&&!scrollTarget)||transitioning){return;}
+  // Build transition overlay entirely in JS — WordPress-proof
+  (function(){
+    if(!ptEl) return;
+    ptEl.style.cssText = 'position:fixed;inset:0;z-index:99998;pointer-events:none;background:#1a1714;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;transition:opacity 0s';
+    ptEl.innerHTML =
+      '<svg id="ptSvg" style="width:min(220px,55vw);height:auto" viewBox="200 130 1520 680" xmlns="http://www.w3.org/2000/svg">' +
+        '<defs>' +
+          '<linearGradient id="ptGA" x1="963" y1="167" x2="956" y2="737" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#C8C8C8"/><stop offset="1" stop-color="#909090"/></linearGradient>' +
+          '<linearGradient id="ptGB" x1="694" y1="632" x2="1225" y2="632" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#DDC18E"/><stop offset="1" stop-color="#B1915D"/></linearGradient>' +
+        '</defs>' +
+        '<polygon fill="url(#ptGA)" points="960,260 1033,463 1109,463 1083,390 998,156 960,156 959,156 921,156 836,390 810,463 886,463"/>' +
+        '<polygon fill="url(#ptGB)" points="1118,485 1117,484 1041,484 1041,485 960,675 878,485 878,484 802,484 801,485 694,780 771,780 843,580 929,780 959,780 960,780 990,780 1076,580 1148,780 1225,780"/>' +
+      '</svg>' +
+      '<div style="width:min(260px,60vw);height:1.5px;background:rgba(184,146,42,.18);border-radius:1px;overflow:hidden">' +
+        '<div id="ptBar" style="height:100%;width:0;background:linear-gradient(90deg,#8a6d1c,#b8922a,#d4b158);border-radius:1px;transition:none"></div>' +
+      '</div>' +
+      '<span style="font-family:var(--ff-body,sans-serif);font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:#8a8178;font-weight:600">House of AM</span>';
+  })();
+
+  function showPage(id, scrollTarget){
+    if((id === currentPage && !scrollTarget) || transitioning){ return; }
     transitioning = true;
+    if(!ptEl){ transitioning=false; return; }
 
-    // Phase 1: fade IN — screen goes dark (550ms)
-    ptBar.style.animation = 'none';
-    ptBar.style.width = '0';
-    transition.className = 'page-transition pt-in';
+    var bar = document.getElementById('ptBar');
+    var svg = document.getElementById('ptSvg');
+
+    // Reset
+    if(bar){ bar.style.transition='none'; bar.style.width='0'; }
+    if(svg){ svg.style.animation='none'; }
+
+    // Phase 1: FADE IN (550ms)
+    ptEl.style.transition = 'opacity 0s';
+    ptEl.style.opacity = '0';
+    ptEl.style.pointerEvents = 'all';
+    void ptEl.offsetWidth;
+    ptEl.style.transition = 'opacity .55s ease';
+    ptEl.style.opacity = '1';
 
     setTimeout(function(){
-      // Phase 2: HOLD — exactly like the loader
-      // Bar animates across, mark pulses — swap page underneath invisibly
-      transition.className = 'page-transition pt-hold';
-      // Force bar reflow so animation restarts cleanly
-      void ptBar.offsetWidth;
-      ptBar.style.animation = '';
+      // Phase 2: HOLD — pulse mark, run bar, swap page
+      if(svg){ svg.style.animation = 'pulseGold 2.4s ease-in-out infinite'; }
+      if(bar){ void bar.offsetWidth; bar.style.transition='width 1.4s ease-in-out'; bar.style.width='100%'; }
 
       PAGES.forEach(function(p){
         var el=document.getElementById('page-'+p);
-        if(el){el.classList.remove('active');}
+        if(el){ el.classList.remove('active'); }
       });
       var target=document.getElementById('page-'+id);
-      if(target){
-        target.classList.add('active');
-        currentPage=id;
-        window.scrollTo(0,0);
-      }
+      if(target){ target.classList.add('active'); currentPage=id; window.scrollTo(0,0); }
       document.querySelectorAll('[data-nav]').forEach(function(a){
-        a.classList.toggle('active',a.getAttribute('data-nav')===id&&!a.getAttribute('data-scroll'));
+        a.classList.toggle('active', a.getAttribute('data-nav')===id && !a.getAttribute('data-scroll'));
       });
       navList.classList.remove('open');
-      if(typeof toggle !== 'undefined'){toggle.setAttribute('aria-expanded','false');}
+      if(typeof toggle!=='undefined'){ toggle.setAttribute('aria-expanded','false'); }
       document.body.style.overflow='';
       document.documentElement.style.overflow='';
       document.documentElement.style.height='auto';
       document.body.style.height='auto';
 
-      // Phase 3: after bar completes (1.4s), fade OUT (650ms)
+      // Phase 3: FADE OUT after bar (1.55s)
       setTimeout(function(){
-        transition.className = 'page-transition pt-out';
+        if(svg){ svg.style.animation='none'; }
+        ptEl.style.transition = 'opacity .6s ease';
+        ptEl.style.opacity = '0';
         setTimeout(function(){
-          transition.className = 'page-transition';
-          ptBar.style.animation = 'none';
-          ptBar.style.width = '0';
-          transitioning = false;
+          ptEl.style.pointerEvents='none';
+          if(bar){ bar.style.transition='none'; bar.style.width='0'; }
+          transitioning=false;
           if(scrollTarget){
             var el=document.getElementById(scrollTarget);
-            if(el){el.scrollIntoView({behavior:'smooth'});}
+            if(el){ el.scrollIntoView({behavior:'smooth'}); }
           }
-        }, 680);
-      }, 1500);
+        }, 640);
+      }, 1550);
 
     }, 580);
   }
