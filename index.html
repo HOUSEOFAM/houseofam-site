@@ -38,34 +38,50 @@ a{color:inherit;text-decoration:none}
 /* PAGE TRANSITION */
 .page-transition{
   position:fixed;inset:0;z-index:99998;pointer-events:none;
-  background:#0f0d07;
+  background:#1a1714;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
   opacity:0;
   transition:opacity 0s;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
 }
-.page-transition.pt-fade-in{
+.page-transition.pt-in{
   pointer-events:all;
   opacity:1;
-  transition:opacity .35s ease;
+  transition:opacity .55s ease;
 }
-.page-transition.pt-visible{
+.page-transition.pt-hold{
   pointer-events:all;
   opacity:1;
   transition:none;
 }
-.page-transition.pt-fade-out{
+.page-transition.pt-out{
   pointer-events:none;
   opacity:0;
-  transition:opacity .35s ease;
+  transition:opacity .65s ease;
 }
-.curtain-mark{
-  display:flex;flex-direction:column;align-items:center;gap:14px;
-  opacity:0;transition:opacity .2s ease .15s;
+.pt-mark{
+  width:min(220px,55vw);height:auto;
+  animation:none;
 }
-.page-transition.pt-visible .curtain-mark{opacity:1;}
-.curtain-mark-svg{width:min(100px,22vw);height:auto;animation:pulseGold 2s ease-in-out infinite;}
-.curtain-line{width:min(140px,30vw);height:1px;background:linear-gradient(90deg,transparent,#b8922a,#d4b158,#b8922a,transparent);opacity:.6;}
-.curtain-word{font-family:var(--ff-body);font-size:10px;letter-spacing:.38em;text-transform:uppercase;color:#8a8178;font-weight:600;}
+.page-transition.pt-hold .pt-mark{
+  animation:pulseGold 2.4s ease-in-out infinite;
+}
+.pt-bar-track{
+  width:min(260px,60vw);height:1.5px;
+  background:rgba(184,146,42,.18);border-radius:1px;overflow:hidden;
+}
+.pt-bar{
+  height:100%;width:0;
+  background:linear-gradient(90deg,#8a6d1c,#b8922a,#d4b158);
+  border-radius:1px;
+  transition:none;
+}
+.page-transition.pt-hold .pt-bar{
+  animation:loadBar 1.4s ease-in-out forwards;
+}
+.pt-sub{
+  font-family:var(--ff-body);font-size:11px;letter-spacing:.38em;
+  text-transform:uppercase;color:#8a8178;
+}
 .transition-mark{width:70px;height:auto}
 .transition-bar-track{width:100px;height:1px;background:rgba(184,146,42,.18);border-radius:1px;overflow:hidden}
 .transition-bar{height:100%;width:0;background:linear-gradient(90deg,#8a6d1c,#b8922a,#d4b158);border-radius:1px;transition:width .6s ease}
@@ -1297,17 +1313,24 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
   var transBar=document.getElementById('transitionBar');
 
   var transitioning = false;
+  var ptBar = document.getElementById('ptBar');
 
   function showPage(id,scrollTarget){
     if((id===currentPage&&!scrollTarget)||transitioning){return;}
     transitioning = true;
 
-    // Phase 1: fade to black
-    transition.className = 'page-transition pt-fade-in';
+    // Phase 1: fade IN — screen goes dark (550ms)
+    ptBar.style.animation = 'none';
+    ptBar.style.width = '0';
+    transition.className = 'page-transition pt-in';
 
     setTimeout(function(){
-      // Phase 2: hold — AM mark visible, swap page underneath
-      transition.className = 'page-transition pt-visible';
+      // Phase 2: HOLD — exactly like the loader
+      // Bar animates across, mark pulses — swap page underneath invisibly
+      transition.className = 'page-transition pt-hold';
+      // Force bar reflow so animation restarts cleanly
+      void ptBar.offsetWidth;
+      ptBar.style.animation = '';
 
       PAGES.forEach(function(p){
         var el=document.getElementById('page-'+p);
@@ -1323,26 +1346,28 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
         a.classList.toggle('active',a.getAttribute('data-nav')===id&&!a.getAttribute('data-scroll'));
       });
       navList.classList.remove('open');
-      if(typeof toggle!=='undefined'){toggle.setAttribute('aria-expanded','false');}
+      if(typeof toggle !== 'undefined'){toggle.setAttribute('aria-expanded','false');}
       document.body.style.overflow='';
       document.documentElement.style.overflow='';
       document.documentElement.style.height='auto';
       document.body.style.height='auto';
 
-      // Phase 3: brief hold then fade back out
+      // Phase 3: after bar completes (1.4s), fade OUT (650ms)
       setTimeout(function(){
-        transition.className = 'page-transition pt-fade-out';
+        transition.className = 'page-transition pt-out';
         setTimeout(function(){
           transition.className = 'page-transition';
+          ptBar.style.animation = 'none';
+          ptBar.style.width = '0';
           transitioning = false;
           if(scrollTarget){
             var el=document.getElementById(scrollTarget);
             if(el){el.scrollIntoView({behavior:'smooth'});}
           }
-        }, 380);
-      }, 300);
+        }, 680);
+      }, 1500);
 
-    }, 380);
+    }, 580);
   }
 
   document.addEventListener('click',function(e){
