@@ -36,8 +36,39 @@ a{color:inherit;text-decoration:none}
 .loader-sub{font-family:var(--ff-body);font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:#8a8178}
 
 /* PAGE TRANSITION */
-.page-transition{display:none!important}
-.page-transition.show{opacity:1;pointer-events:all}
+.page-transition{
+  position:fixed;inset:0;z-index:99998;pointer-events:none;
+  background:linear-gradient(160deg,#1a1508 0%,#0f0d07 60%,#1a1305 100%);
+  transform:translateY(100%);
+  transition:transform 0s;
+  will-change:transform;
+}
+.page-transition.curtain-in{
+  pointer-events:all;
+  transform:translateY(0);
+  transition:transform .42s cubic-bezier(.77,0,.18,1);
+}
+.page-transition.curtain-hold{
+  pointer-events:all;
+  transform:translateY(0);
+  transition:none;
+}
+.page-transition.curtain-out{
+  pointer-events:none;
+  transform:translateY(-100%);
+  transition:transform .42s cubic-bezier(.77,0,.18,1);
+}
+.curtain-mark{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  opacity:0;
+  transition:opacity .2s ease;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.page-transition.curtain-hold .curtain-mark{opacity:1;}
+.curtain-mark-svg{width:min(90px,18vw);height:auto;animation:pulseGold 2s ease-in-out infinite;}
+.curtain-line{width:min(120px,24vw);height:1px;background:linear-gradient(90deg,transparent,#b8922a,#d4b158,#b8922a,transparent);opacity:.6;}
+.curtain-word{font-family:var(--ff-body);font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:#8a8178;font-weight:600;}
 .transition-mark{width:70px;height:auto}
 .transition-bar-track{width:100px;height:1px;background:rgba(184,146,42,.18);border-radius:1px;overflow:hidden}
 .transition-bar{height:100%;width:0;background:linear-gradient(90deg,#8a6d1c,#b8922a,#d4b158);border-radius:1px;transition:width .6s ease}
@@ -1268,33 +1299,56 @@ body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);b
   var transition=document.getElementById('pageTransition');
   var transBar=document.getElementById('transitionBar');
 
+  var transitioning = false;
+
   function showPage(id,scrollTarget){
-    if(id===currentPage&&!scrollTarget){return;}
-    PAGES.forEach(function(p){
-      var el=document.getElementById('page-'+p);
-      if(el){el.classList.remove('active');}
-    });
-    var target=document.getElementById('page-'+id);
-    if(target){
-      target.classList.add('active');
-      currentPage=id;
-      window.scrollTo(0,0);
-      if(scrollTarget){
-        setTimeout(function(){
-          var el=document.getElementById(scrollTarget);
-          if(el){el.scrollIntoView({behavior:'smooth'});}
-        },100);
+    if((id===currentPage&&!scrollTarget)||transitioning){return;}
+    transitioning = true;
+
+    // Phase 1: curtain slides UP from bottom (covers screen)
+    transition.className = 'page-transition curtain-in';
+
+    setTimeout(function(){
+      // Phase 2: hold — swap the page underneath
+      transition.className = 'page-transition curtain-hold';
+
+      PAGES.forEach(function(p){
+        var el=document.getElementById('page-'+p);
+        if(el){el.classList.remove('active');}
+      });
+      var target=document.getElementById('page-'+id);
+      if(target){
+        target.classList.add('active');
+        currentPage=id;
+        window.scrollTo(0,0);
       }
-    }
-    document.querySelectorAll('[data-nav]').forEach(function(a){
-      a.classList.toggle('active',a.getAttribute('data-nav')===id&&!a.getAttribute('data-scroll'));
-    });
-    navList.classList.remove('open');
-    toggle.setAttribute('aria-expanded','false');
-    document.body.style.overflow='';
-    document.documentElement.style.overflow='';
-    document.documentElement.style.height='auto';
-    document.body.style.height='auto';
+      document.querySelectorAll('[data-nav]').forEach(function(a){
+        a.classList.toggle('active',a.getAttribute('data-nav')===id&&!a.getAttribute('data-scroll'));
+      });
+      navList.classList.remove('open');
+      if(typeof toggle!=='undefined'){toggle.setAttribute('aria-expanded','false');}
+      document.body.style.overflow='';
+      document.documentElement.style.overflow='';
+      document.documentElement.style.height='auto';
+      document.body.style.height='auto';
+
+      // Phase 3: after brief hold, curtain slides UP off screen
+      setTimeout(function(){
+        transition.className = 'page-transition curtain-out';
+
+        setTimeout(function(){
+          // Reset — back to offscreen below
+          transition.className = 'page-transition';
+          transitioning = false;
+
+          if(scrollTarget){
+            var el=document.getElementById(scrollTarget);
+            if(el){el.scrollIntoView({behavior:'smooth'});}
+          }
+        }, 460);
+      }, 220);
+
+    }, 440);
   }
 
   document.addEventListener('click',function(e){
