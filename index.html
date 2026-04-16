@@ -1780,63 +1780,55 @@ function AMEnhancements() {
     revealEls.forEach(doReveal);
   }
 
-  /* ══ 3. SHIMMER on buttons ══ */
-  document.querySelectorAll('.btn-gold, .door-cta, .btn-solid').forEach(function(btn) {
-    if(btn.dataset.shimmer) return;
-    btn.dataset.shimmer = '1';
-    btn.style.overflow = 'hidden';
-    btn.style.position = 'relative';
-    var sh = document.createElement('span');
-    sh.style.cssText = 'position:absolute;inset:0;background:linear-gradient(110deg,transparent 25%,rgba(255,255,255,.3) 50%,transparent 75%);transform:translateX(-200%) skewX(-20deg);pointer-events:none;z-index:5';
-    btn.appendChild(sh);
-    btn.addEventListener('mouseenter', function() {
-      sh.style.transition = 'transform .55s ease';
-      sh.style.transform = 'translateX(200%) skewX(-20deg)';
-    });
-    btn.addEventListener('mouseleave', function() {
-      sh.style.transition = 'none';
-      sh.style.transform = 'translateX(-200%) skewX(-20deg)';
-    });
-  });
-
-  /* ══ 4. DOOR PARALLAX — strong, visible ══ */
-  if(!isTouch) {
-    document.querySelectorAll('.door').forEach(function(door) {
-      var logo = door.querySelector('.door-logo');
-      var content = door.querySelector('.door-content');
-      if(!logo) return;
-      var leaveTm;
-      door.addEventListener('mousemove', function(e) {
-        clearTimeout(leaveTm);
-        var r = door.getBoundingClientRect();
-        var x = ((e.clientX - r.left) / r.width  - 0.5);
-        var y = ((e.clientY - r.top)  / r.height - 0.5);
-        logo.style.transition = 'transform .04s linear';
-        logo.style.transform = 'translate(' + (x * 28) + 'px,' + (y * 20) + 'px)';
-        if(content) {
-          content.style.transition = 'transform .06s linear';
-          content.style.transform = 'translate(' + (x * -8) + 'px,' + (y * -6) + 'px)';
-        }
-      });
-      door.addEventListener('mouseleave', function() {
-        logo.style.transition = 'transform .8s cubic-bezier(.23,1,.32,1)';
-        logo.style.transform = 'translate(0,0)';
-        if(content) {
-          content.style.transition = 'transform .8s cubic-bezier(.23,1,.32,1)';
-          content.style.transform = 'translate(0,0)';
-        }
+  /* ══ 3. SHIMMER — visible sweep on every button ══ */
+  function applyShimmer() {
+    document.querySelectorAll('.btn-gold, .door-cta, .btn-solid').forEach(function(btn) {
+      if(btn.dataset.shimmer) return;
+      btn.dataset.shimmer = '1';
+      btn.style.cssText += ';overflow:hidden;position:relative';
+      var sh = document.createElement('span');
+      sh.style.cssText = 'position:absolute;top:0;left:0;width:60px;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-100px) skewX(-15deg);pointer-events:none;z-index:10;transition:none';
+      btn.appendChild(sh);
+      btn.addEventListener('mouseenter', function() {
+        sh.style.transition = 'transform .5s ease';
+        sh.style.transform = 'translateX(' + (btn.offsetWidth + 60) + 'px) skewX(-15deg)';
+        setTimeout(function() { sh.style.transition = 'none'; sh.style.transform = 'translateX(-100px) skewX(-15deg)'; }, 520);
       });
     });
   }
+  applyShimmer();
+  // Re-apply after page transitions
+  document.addEventListener('click', function() { setTimeout(applyShimmer, 800); });
 
-  /* ══ 5. ROTATING CURSOR — "EXPLORE · HOUSE OF AM ·" ══ */
+  /* ══ 4. DOOR PARALLAX — directly on mousemove, no transition lag ══ */
+  if(!isTouch) {
+    function initParallax() {
+      document.querySelectorAll('.door').forEach(function(door) {
+        if(door.dataset.parallax) return;
+        door.dataset.parallax = '1';
+        var logo = door.querySelector('.door-logo');
+        var content = door.querySelector('.door-content');
+        door.addEventListener('mousemove', function(e) {
+          var r = door.getBoundingClientRect();
+          var x = (e.clientX - r.left) / r.width - 0.5;
+          var y = (e.clientY - r.top) / r.height - 0.5;
+          if(logo) logo.style.transform = 'translate(' + (x*26) + 'px,' + (y*18) + 'px)';
+          if(content) content.style.transform = 'translate(' + (x*-7) + 'px,' + (y*-5) + 'px)';
+        });
+        door.addEventListener('mouseleave', function() {
+          if(logo) { logo.style.transition = 'transform .9s cubic-bezier(.23,1,.32,1)'; logo.style.transform = 'none'; setTimeout(function(){ logo.style.transition=''; },950); }
+          if(content) { content.style.transition = 'transform .9s cubic-bezier(.23,1,.32,1)'; content.style.transform = 'none'; setTimeout(function(){ content.style.transition=''; },950); }
+        });
+      });
+    }
+    initParallax();
+    document.addEventListener('click', function() { setTimeout(initParallax, 800); });
+  }
+
+  /* ══ 5. CURSOR — ring ALWAYS visible, spins ALWAYS, text on hover ══ */
   if(!isTouch) {
     var dot = document.getElementById('cursorDot');
-    // Remove any existing ring
-    var old = document.getElementById('cursorRing');
-    var oldNew = document.getElementById('cursorRingNew');
-    if(old) old.remove();
-    if(oldNew) oldNew.remove();
+    ['cursorRing','cursorRingNew','amCursorRing'].forEach(function(id){ var e=document.getElementById(id); if(e) e.remove(); });
 
     var NS = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(NS, 'svg');
@@ -1844,61 +1836,89 @@ function AMEnhancements() {
     svg.setAttribute('viewBox', '-44 -44 88 88');
     svg.setAttribute('width', '88');
     svg.setAttribute('height', '88');
-    svg.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none!important;z-index:100001;will-change:left,top,transform;transform:translate(-50%,-50%)';
+    svg.style.cssText = 'position:fixed;top:-200px;left:-200px;pointer-events:none!important;z-index:100001;will-change:transform';
 
     var sdefs = document.createElementNS(NS, 'defs');
     var sPath = document.createElementNS(NS, 'path');
     sPath.id = 'amTp';
-    sPath.setAttribute('d', 'M 0 0 m -24 0 a 24 24 0 1 1 48 0 a 24 24 0 1 1 -48 0');
+    sPath.setAttribute('d', 'M 0 0 m -26 0 a 26 26 0 1 1 52 0 a 26 26 0 1 1 -52 0');
     sdefs.appendChild(sPath);
     svg.appendChild(sdefs);
 
+    // Ring — ALWAYS visible at low opacity
     var sCircle = document.createElementNS(NS, 'circle');
-    sCircle.setAttribute('r', '24');
+    sCircle.setAttribute('r', '26');
     sCircle.setAttribute('fill', 'none');
-    sCircle.setAttribute('stroke-width', '1.2');
-    sCircle.style.cssText = 'stroke:rgba(198,156,109,0);transition:stroke .4s,r .4s';
+    sCircle.setAttribute('stroke', 'rgba(198,156,109,.35)');
+    sCircle.setAttribute('stroke-width', '1');
     svg.appendChild(sCircle);
 
+    // Text — ALWAYS rotating, visible at rest and on hover
     var sTxt = document.createElementNS(NS, 'text');
-    sTxt.style.cssText = 'font-family:Arial,sans-serif;font-size:5px;letter-spacing:3px;font-weight:700;fill:rgba(198,156,109,0);transition:fill .4s;text-transform:uppercase';
+    sTxt.style.cssText = 'font-family:Arial,sans-serif;font-size:4.8px;letter-spacing:2.6px;font-weight:700;fill:rgba(198,156,109,.5);text-transform:uppercase';
     var sTP = document.createElementNS(NS, 'textPath');
     sTP.setAttribute('href', '#amTp');
     sTP.setAttribute('startOffset', '0%');
-    sTP.textContent = 'EXPLORE · HOUSE OF AM · ';
+    sTP.textContent = 'EXPERIENCE · HOUSE OF AM · ';
     sTxt.appendChild(sTP);
     svg.appendChild(sTxt);
 
     document.body.appendChild(svg);
 
-    var mx=0,my=0,rx=0,ry=0,ang=0,hovering=false;
-    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-    (function frame(){
-      rx += (mx-rx)*.1; ry += (my-ry)*.1;
-      if(dot){dot.style.left=mx+'px';dot.style.top=my+'px';}
-      svg.style.left=rx+'px'; svg.style.top=ry+'px';
-      if(hovering) ang += 0.8;
-      svg.style.transform='translate(-50%,-50%) rotate('+ang+'deg)';
+    var mx=0, my=0, rx=0, ry=0, ang=0, hovering=false, entered=false;
+
+    document.addEventListener('mousemove', function(e) {
+      mx = e.clientX; my = e.clientY;
+      if(!entered) { entered=true; svg.style.top='0'; svg.style.left='0'; }
+    });
+
+    (function frame() {
+      rx += (mx - rx) * .12;
+      ry += (my - ry) * .12;
+      if(dot) { dot.style.left = mx+'px'; dot.style.top = my+'px'; }
+      // Always spin — faster on hover
+      ang += hovering ? 1.1 : 0.4;
+      svg.style.transform = 'translate(calc('+rx+'px - 50%),calc('+ry+'px - 50%)) rotate('+ang+'deg)';
       requestAnimationFrame(frame);
     })();
 
-    document.addEventListener('mouseover',function(e){
-      var t=e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more,.nav-links a,.logo-lockup');
-      if(t){
-        hovering=true;
-        sCircle.style.stroke='rgba(198,156,109,.7)';
-        sCircle.setAttribute('r','30');
-        sTxt.style.fill='rgba(198,156,109,1)';
-        if(dot){dot.style.width='5px';dot.style.height='5px';dot.style.background='#1a1508';}
+    document.addEventListener('mouseover', function(e) {
+      var t = e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more,.nav-links a,.logo-lockup,.door-heading,.pricing-card,.addl-card');
+      if(t) {
+        hovering = true;
+        sCircle.setAttribute('stroke', 'rgba(198,156,109,.9)');
+        sCircle.setAttribute('r', '32');
+        sTxt.style.fill = 'rgba(198,156,109,1)';
+        sTxt.style.fontSize = '5.4px';
+        if(dot) { dot.style.width='4px'; dot.style.height='4px'; dot.style.background='#c8a96e'; }
       } else {
-        hovering=false;
-        sCircle.style.stroke='rgba(198,156,109,0)';
-        sCircle.setAttribute('r','24');
-        sTxt.style.fill='rgba(198,156,109,0)';
-        if(dot){dot.style.width='8px';dot.style.height='8px';dot.style.background='#c69c6d';}
+        hovering = false;
+        sCircle.setAttribute('stroke', 'rgba(198,156,109,.35)');
+        sCircle.setAttribute('r', '26');
+        sTxt.style.fill = 'rgba(198,156,109,.5)';
+        sTxt.style.fontSize = '4.8px';
+        if(dot) { dot.style.width='8px'; dot.style.height='8px'; dot.style.background='#c69c6d'; }
       }
     });
   }
+
+  /* ══ 6. DOORS — guarantee clickable on every page ══ */
+  function fixDoorClicks() {
+    document.querySelectorAll('.door-cta, .door, .btn-gold').forEach(function(el) {
+      el.style.setProperty('position','relative','important');
+      el.style.setProperty('z-index','10','important');
+    });
+    // Make sure nothing covers them
+    ['pageTransition','bookingModal'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if(el && !el.classList.contains('open') && !el.classList.contains('pt-in') && !el.classList.contains('pt-hold')) {
+        el.style.setProperty('pointer-events','none','important');
+      }
+    });
+  }
+  fixDoorClicks();
+  setInterval(fixDoorClicks, 1000);
+  document.addEventListener('click', function() { setTimeout(fixDoorClicks, 900); });
 }
 </script>
 </body>
