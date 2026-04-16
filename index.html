@@ -500,8 +500,8 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
 .count-up{display:inline-block}
 
 /* ── 6. BOOKING MODAL ── */
-#bookingModal{position:fixed;inset:0;z-index:99997;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .45s ease;background:rgba(10,9,8,.7);backdrop-filter:blur(6px)}
-#bookingModal.open{opacity:1;pointer-events:all}
+#bookingModal{position:fixed;inset:0;z-index:99997;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none!important;transition:opacity .45s ease;background:rgba(10,9,8,.7);backdrop-filter:blur(6px)}
+#bookingModal.open{opacity:1;pointer-events:all!important}
 .bm-card{background:linear-gradient(145deg,#1c1a17,#141210);border:1px solid rgba(198,156,109,.2);padding:clamp(2rem,5vw,3.5rem);max-width:480px;width:90%;position:relative;transform:translateY(24px);transition:transform .45s cubic-bezier(.23,1,.32,1);box-shadow:0 40px 80px rgba(0,0,0,.7)}
 #bookingModal.open .bm-card{transform:translateY(0)}
 .bm-close{position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(240,235,228,.4);font-size:18px;cursor:pointer;padding:4px 8px;transition:color .25s}
@@ -1369,7 +1369,7 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
   // Build transition overlay entirely in JS — WordPress-proof
   (function(){
     if(!ptEl) return;
-    ptEl.style.cssText = 'position:fixed;inset:0;z-index:99998;pointer-events:none;background:#1a1714;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;transition:opacity 0s';
+    ptEl.style.cssText = 'position:fixed;inset:0;z-index:99998;pointer-events:none!important;background:#1a1714;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;transition:opacity 0s';
     ptEl.innerHTML =
       '<svg id="ptSvg" style="width:min(220px,55vw);height:auto" viewBox="200 130 1520 680" xmlns="http://www.w3.org/2000/svg">' +
         '<defs>' +
@@ -1529,141 +1529,264 @@ body { height: auto !important; min-height: 100vh !important; overflow-y: auto !
 
 
 /* ══════════════════════════════════════════════════
-   WORLD-CLASS ENHANCEMENTS
+   HOUSE OF AM — WORLD CLASS ENHANCEMENTS v2
    ══════════════════════════════════════════════════ */
-
 (function(){
   var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-  /* ── 1. HERO H1 ANIMATE IN ── */
+  /* ── 1. HERO ANIMATE IN — staggered word by word ── */
   var heroH1 = document.getElementById('heroH1');
-  if(heroH1){
-    setTimeout(function(){
-      heroH1.style.opacity = '1';
-      heroH1.style.transform = 'translateY(0)';
-    }, 600);
+  if(heroH1) {
+    // Split into words, wrap each
+    heroH1.style.opacity = '1';
+    heroH1.style.transform = 'none';
+    var rawHTML = heroH1.innerHTML;
+    // Replace spaces with wrapped spans but preserve <br> and <em>
+    var words = rawHTML.split(/(\s+|<br>|<em>.*?<\/em>)/g);
+    var wrapped = words.map(function(w, i) {
+      if(!w || /^\s+$/.test(w) || w === '<br>') return w || '';
+      if(w.indexOf('<em>') === 0) {
+        return '<em style="font-style:italic;color:#d4b158;display:inline-block;opacity:0;transform:translateY(60px) skewX(-4deg);transition:opacity .7s ease ' + (0.5 + i*0.06) + 's,transform .8s cubic-bezier(.23,1,.32,1) ' + (0.5 + i*0.06) + 's">' + w.replace(/<\/?em>/g,'') + '</em>';
+      }
+      return '<span style="display:inline-block;opacity:0;transform:translateY(60px) skewX(-4deg);transition:opacity .7s ease ' + (0.4 + i*0.055) + 's,transform .8s cubic-bezier(.23,1,.32,1) ' + (0.4 + i*0.055) + 's">' + w + '</span>';
+    });
+    heroH1.innerHTML = wrapped.join('');
+    setTimeout(function() {
+      heroH1.querySelectorAll('span,em').forEach(function(el) {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0) skewX(0)';
+      });
+    }, 700);
   }
 
-  /* ── 2. SCROLL REVEAL — IntersectionObserver ── */
-  if('IntersectionObserver' in window){
-    var revealObs = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          var el = entry.target;
-          var delay = el.dataset.delay || 0;
-          setTimeout(function(){ el.classList.add('revealed'); }, +delay);
-          revealObs.unobserve(el);
-        }
-      });
-    }, {threshold: 0.12});
-
-    document.querySelectorAll('.reveal').forEach(function(el, i){
-      el.dataset.delay = i * 80;
-      revealObs.observe(el);
+  /* ── 2. SCROLL REVEAL — everything animates in ── */
+  function addReveal(selector, delay, yOffset, skew) {
+    document.querySelectorAll(selector).forEach(function(el, i) {
+      if(el.hasAttribute('data-reveal-set')) return;
+      el.setAttribute('data-reveal-set','1');
+      var d = (delay || 0) + i * 90;
+      var y = yOffset || 40;
+      var sk = skew ? 'skewY(-2deg)' : '';
+      el.style.cssText += ';opacity:0;transform:translateY('+y+'px) '+sk+';transition:opacity .85s cubic-bezier(.23,1,.32,1) '+d+'ms,transform .9s cubic-bezier(.23,1,.32,1) '+d+'ms';
     });
   }
 
-  /* ── 3. PRICE COUNT-UP ── */
-  function countUp(el, target, dur){
-    var start = 0, step = (target / dur) * 16;
-    var prefix = el.dataset.prefix || '';
-    var suffix = el.dataset.suffix || '';
-    var iv = setInterval(function(){
-      start = Math.min(start + step, target);
-      el.textContent = prefix + Math.round(start) + suffix;
-      if(start >= target) clearInterval(iv);
-    }, 16);
-  }
+  // Target every meaningful text element
+  addReveal('.manifesto h2', 0, 50, true);
+  addReveal('.manifesto-eyebrow', 0, 30, false);
+  addReveal('.manifesto-close h3', 100, 40, true);
+  addReveal('.manifesto-close p', 150, 30, false);
+  addReveal('.pillars-title', 0, 60, true);
+  addReveal('.pillars-label', 50, 20, false);
+  addReveal('.pillar', 0, 45, false);
+  addReveal('.pillar-principle', 0, 35, false);
+  addReveal('.pillar-brand', 60, 25, false);
+  addReveal('.pillar p', 100, 25, false);
+  addReveal('.doors-eyebrow', 0, 25, false);
+  addReveal('.doors h2', 50, 50, true);
+  addReveal('.door', 0, 60, false);
+  addReveal('.ab-hero h1', 0, 60, true);
+  addReveal('.ab-origin p', 0, 35, false);
+  addReveal('.ab-quote blockquote', 0, 40, true);
+  addReveal('.ab-philosophy .head h2', 0, 45, true);
+  addReveal('.principle', 0, 40, false);
+  addReveal('.ab-why h2', 0, 50, true);
+  addReveal('.ab-why p', 0, 30, false);
+  addReveal('.section-head h2', 0, 45, true);
+  addReveal('.page-eyebrow', 0, 20, false);
+  addReveal('.page-hero h1', 0, 55, true);
+  addReveal('.page-hero-sub', 100, 25, false);
+  addReveal('.pricing-card', 0, 50, false);
+  addReveal('.addl-card', 0, 40, false);
+  addReveal('.disc-card', 0, 40, false);
+  addReveal('.members-block', 0, 35, false);
+  addReveal('.cta-section h2', 0, 45, true);
+  addReveal('.footer-brand', 0, 30, false);
 
-  if('IntersectionObserver' in window){
-    var countObs = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          var el = entry.target;
-          countUp(el, +el.dataset.target, 800);
-          countObs.unobserve(el);
+  if('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if(e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0) skewY(0) skewX(0)';
+          obs.unobserve(e.target);
         }
       });
-    }, {threshold: 0.5});
-    document.querySelectorAll('.count-up').forEach(function(el){
-      countObs.observe(el);
+    }, {threshold: 0.08, rootMargin: '0px 0px -40px 0px'});
+
+    document.querySelectorAll('[data-reveal-set]').forEach(function(el) {
+      obs.observe(el);
+    });
+
+    // Re-observe when page changes
+    document.addEventListener('pageChanged', function() {
+      document.querySelectorAll('[data-reveal-set]').forEach(function(el) {
+        obs.observe(el);
+      });
     });
   }
 
-  /* ── 4. DOOR LOGO PARALLAX ── */
-  if(!isTouch){
-    document.querySelectorAll('.door').forEach(function(door){
+  /* ── 3. GOLD SHIMMER — much more aggressive ── */
+  function addShimmer(selector) {
+    document.querySelectorAll(selector).forEach(function(el) {
+      if(el.dataset.shimmer) return;
+      el.dataset.shimmer = '1';
+      el.style.position = 'relative';
+      el.style.overflow = 'hidden';
+      var sh = document.createElement('span');
+      sh.style.cssText = 'position:absolute;inset:0;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,.28) 50%,transparent 80%);transform:translateX(-200%) skewX(-25deg);pointer-events:none;z-index:10;transition:none';
+      el.appendChild(sh);
+      el.addEventListener('mouseenter', function() {
+        sh.style.transition = 'transform .6s ease';
+        sh.style.transform = 'translateX(200%) skewX(-25deg)';
+      });
+      el.addEventListener('mouseleave', function() {
+        sh.style.transition = 'none';
+        sh.style.transform = 'translateX(-200%) skewX(-25deg)';
+      });
+    });
+  }
+  addShimmer('.btn-gold');
+  addShimmer('.door-cta');
+  addShimmer('.btn-solid');
+  addShimmer('.bm-btn');
+
+  /* ── 4. DOOR PARALLAX — much stronger ── */
+  if(!isTouch) {
+    document.querySelectorAll('.door').forEach(function(door) {
       var logo = door.querySelector('.door-logo');
+      var content = door.querySelector('.door-content');
       if(!logo) return;
-      door.addEventListener('mousemove', function(e){
+      door.addEventListener('mousemove', function(e) {
         var r = door.getBoundingClientRect();
         var x = (e.clientX - r.left) / r.width  - 0.5;
         var y = (e.clientY - r.top)  / r.height - 0.5;
-        logo.style.transform = 'translate(' + (x * 14) + 'px,' + (y * 10) + 'px) scale(0.95)';
+        logo.style.transition = 'transform .05s linear';
+        logo.style.transform = 'translate(' + (x * 22) + 'px,' + (y * 16) + 'px) scale(0.94)';
+        if(content) {
+          content.style.transition = 'transform .08s linear';
+          content.style.transform = 'translate(' + (x * -6) + 'px,' + (y * -4) + 'px)';
+        }
       });
-      door.addEventListener('mouseleave', function(){
-        logo.style.transform = '';
-        logo.style.transition = 'transform .6s cubic-bezier(.23,1,.32,1)';
-        setTimeout(function(){ logo.style.transition = ''; }, 620);
+      door.addEventListener('mouseleave', function() {
+        logo.style.transition = 'transform .7s cubic-bezier(.23,1,.32,1)';
+        logo.style.transform = 'translate(0,0) scale(1)';
+        if(content) {
+          content.style.transition = 'transform .7s cubic-bezier(.23,1,.32,1)';
+          content.style.transform = 'translate(0,0)';
+        }
       });
     });
   }
 
-  /* ── 5. ROTATING CURSOR UPGRADE ── */
-  if(!isTouch){
-    // Replace plain ring with SVG ring that shows rotating text on hover
-    var existingRing = document.getElementById('cursorRing');
-    var existingDot  = document.getElementById('cursorDot');
-    if(existingRing && existingDot){
-      // Build SVG ring
-      var ns = 'http://www.w3.org/2000/svg';
-      var svg = document.createElementNS(ns, 'svg');
-      svg.id = 'cursorRing';
-      svg.setAttribute('width', '80');
-      svg.setAttribute('height', '80');
-      svg.setAttribute('viewBox', '-40 -40 80 80');
-      svg.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);overflow:visible;will-change:left,top';
+  /* ── 5. ROTATING CURSOR ── */
+  if(!isTouch) {
+    var dot = document.getElementById('cursorDot');
+    var oldRing = document.getElementById('cursorRing');
 
-      // Track circle
-      var track = document.createElementNS(ns, 'circle');
-      track.setAttribute('r', '20');
-      track.setAttribute('fill', 'none');
-      track.setAttribute('stroke', 'rgba(198,156,109,0)');
-      track.setAttribute('stroke-width', '1.5');
-      track.id = 'cursorTrack';
-      svg.appendChild(track);
+    // Build proper SVG ring
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var ring = document.createElementNS(svgNS, 'svg');
+    ring.setAttribute('viewBox', '-40 -40 80 80');
+    ring.setAttribute('width', '80');
+    ring.setAttribute('height', '80');
+    ring.id = 'cursorRingNew';
+    ring.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);will-change:left,top';
 
-      // Text path
-      var defs = document.createElementNS(ns, 'defs');
-      var tp = document.createElementNS(ns, 'path');
-      tp.id = 'cursorTextPath';
-      tp.setAttribute('d', 'M 0,0 m -20,0 a 20,20 0 1,1 40,0 a 20,20 0 1,1 -40,0');
-      defs.appendChild(tp);
-      svg.appendChild(defs);
+    var defs = document.createElementNS(svgNS, 'defs');
+    var ciPath = document.createElementNS(svgNS, 'path');
+    ciPath.id = 'ciTp';
+    ciPath.setAttribute('d', 'M 0,0 m -22,0 a 22,22 0 1,1 44,0 a 22,22 0 1,1 -44,0');
+    defs.appendChild(ciPath);
+    ring.appendChild(defs);
 
-      var textEl = document.createElementNS(ns, 'text');
-      textEl.style.cssText = 'font-family:var(--ff-body,sans-serif);font-size:5.2px;letter-spacing:2.4px;text-transform:uppercase;fill:rgba(198,156,109,0);font-weight:600;transition:fill .3s ease';
-      textEl.id = 'cursorText';
-      var tp2 = document.createElementNS(ns, 'textPath');
-      tp2.setAttribute('href', '#cursorTextPath');
-      tp2.setAttribute('startOffset', '0%');
-      tp2.textContent = 'EXPLORE · HOUSE OF AM · ';
-      textEl.appendChild(tp2);
-      svg.appendChild(textEl);
+    var circle = document.createElementNS(svgNS, 'circle');
+    circle.setAttribute('r', '22');
+    circle.setAttribute('fill', 'none');
+    circle.setAttribute('stroke', 'rgba(198,156,109,0)');
+    circle.setAttribute('stroke-width', '1');
+    circle.id = 'ciCircle';
+    ring.appendChild(circle);
 
-      // Replace
-      existingRing.parentNode.replaceChild(svg, existingRing);
+    var txt = document.createElementNS(svgNS, 'text');
+    txt.id = 'ciText';
+    txt.style.cssText = 'font-size:5px;letter-spacing:2.8px;text-transform:uppercase;font-weight:700;fill:rgba(198,156,109,0);font-family:sans-serif;transition:fill .3s';
+    var tpath = document.createElementNS(svgNS, 'textPath');
+    tpath.setAttribute('href', '#ciTp');
+    tpath.setAttribute('startOffset', '0%');
+    tpath.textContent = 'EXPLORE · HOUSE OF AM · ';
+    txt.appendChild(tpath);
+    ring.appendChild(txt);
 
-      // Animate rotation
-      var angle = 0;
-      var targetAngle = 0;
-      var hovered = false;
-      (function rotateCursor(){
-        if(hovered) targetAngle += 0.6;
-        angle += (targetAngle - angle) * 0.08;
-        svg.style.transform = 'translate(-50%,-50%) rotate(' + angle + 'deg)';
-        requestAnimationFrame(rotateCursor);
-      })();
+    document.body.appendChild(ring);
+    if(oldRing) oldRing.remove();
+
+    // Position tracking
+    var mx = 0, my = 0, rx = 0, ry = 0;
+    var dotX = 0, dotY = 0;
+    document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+
+    var angle = 0, hov = false;
+    (function tick() {
+      rx += (mx - rx) * .11;
+      ry += (my - ry) * .11;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      if(dot) { dot.style.left = mx + 'px'; dot.style.top = my + 'px'; }
+      if(hov) angle += 0.7;
+      ring.style.transform = 'translate(-50%,-50%) rotate(' + angle + 'deg)';
+      requestAnimationFrame(tick);
+    })();
+
+    document.addEventListener('mouseover', function(e) {
+      var t = e.target.closest('a,button,.door,.door-cta,.btn-gold,.btn-solid,.disc-more');
+      if(t) {
+        hov = true;
+        circle.setAttribute('stroke', 'rgba(198,156,109,.6)');
+        circle.setAttribute('r', '30');
+        txt.style.fill = 'rgba(198,156,109,1)';
+        if(dot) { dot.style.width='5px'; dot.style.height='5px'; dot.style.background='#c8a96e'; }
+      } else {
+        hov = false;
+        circle.setAttribute('stroke', 'rgba(198,156,109,0)');
+        circle.setAttribute('r', '22');
+        txt.style.fill = 'rgba(198,156,109,0)';
+        if(dot) { dot.style.width='8px'; dot.style.height='8px'; dot.style.background='#c69c6d'; }
+      }
+    });
+  }
+
+  /* ── 6. FIRE reveal for current page on load ── */
+  setTimeout(function() {
+    document.querySelectorAll('#page-home [data-reveal-set]').forEach(function(el) {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0) skewY(0)';
+    });
+  }, 200);
+
+  /* ── 7. Fire reveal on page switch ── */
+  var origShow = window._origShowPage;
+  document.addEventListener('click', function() {
+    setTimeout(function() {
+      var active = document.querySelector('.page.active');
+      if(active) {
+        active.querySelectorAll('[data-reveal-set]').forEach(function(el) {
+          // Reset then re-trigger
+          el.style.opacity = '0';
+          el.style.transform = el.style.transform.replace('translateY(0)','translateY(40px)');
+        });
+        setTimeout(function() {
+          if('IntersectionObserver' in window) {
+            active.querySelectorAll('[data-reveal-set]').forEach(function(el) {
+              obs && obs.observe(el);
+            });
+          }
+        }, 100);
+      }
+    }, 600);
+  });
+
+})();
 
       // Cursor position — inherit from existing dot tracking
       var rx2 = 0, ry2 = 0, mx2 = 0, my2 = 0;
