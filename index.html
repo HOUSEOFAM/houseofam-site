@@ -39,9 +39,13 @@ a{color:inherit;text-decoration:none}
 .page-transition{
   position:fixed;inset:0;z-index:99998;pointer-events:none;
   background:#1a1714;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:22px;
   opacity:0;
   transition:opacity 0s;
+}
+.page-transition.pt-in,
+.page-transition.pt-hold{
+  display:flex;
 }
 .page-transition.pt-in{
   pointer-events:all;
@@ -54,6 +58,7 @@ a{color:inherit;text-decoration:none}
   transition:none;
 }
 .page-transition.pt-out{
+  display:flex;
   pointer-events:none;
   opacity:0;
   transition:opacity .65s ease;
@@ -1595,7 +1600,7 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
   // Build transition overlay entirely in JS — WordPress-proof
   (function(){
     if(!ptEl) return;
-    ptEl.style.cssText = 'position:fixed;inset:0;z-index:99998;pointer-events:none!important;background:#1a1714;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;transition:opacity 0s';
+    ptEl.style.cssText = 'position:fixed;inset:0;z-index:99998;pointer-events:none!important;background:#1a1714;display:none;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;transition:opacity 0s';
     ptEl.innerHTML =
       '<svg id="ptSvg" style="width:min(220px,55vw);height:auto" viewBox="200 130 1520 680" xmlns="http://www.w3.org/2000/svg">' +
         '<defs>' +
@@ -1634,6 +1639,7 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
     if(svg){ svg.style.animation='none'; }
 
     // Phase 1: FADE IN
+    ptEl.style.display = 'flex';
     ptEl.style.transition = 'opacity 0s';
     ptEl.style.opacity = '0';
     ptEl.style.setProperty('pointer-events','all','important');
@@ -1664,6 +1670,7 @@ body.cursor-hover #cursorDot{width:5px;height:5px;background:#1a1508}
         ptEl.style.transition = 'opacity .6s ease';
         ptEl.style.opacity = '0';
         setTimeout(function(){
+          ptEl.style.display='none';
           ptEl.style.setProperty('pointer-events','none','important');
           if(bar){ bar.style.transition='none'; bar.style.width='0'; }
           transitioning=false;
